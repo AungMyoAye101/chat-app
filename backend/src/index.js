@@ -2,9 +2,12 @@
 import dotenv from "dotenv"
 import express from "express"
 import cookiePaser from "cookie-parser"
-dotenv.config()
 import { app, server, io } from "./lib/socket.js"
+import { connectToDb } from "./lib/db.js"
+dotenv.config()
 
+
+connectToDb()
 
 app.use(express.json())
 app.use(cookiePaser())

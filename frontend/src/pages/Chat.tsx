@@ -24,8 +24,7 @@ const currUser = {
 
 const Chat = () => {
     const [message, setmessage] = useState('')
-    const [receivedData, setReceivedData] = useState<string[]>([])
-
+    const [receivedData, setReceivedData] = useState<any[]>([])
     const [selectedUser, setselectedUser] = useState<any>()
 
     useEffect(() => {
@@ -67,13 +66,14 @@ const Chat = () => {
                 <div className='w-full'>
                     <h1 className='text-xl font-semibold'>{selectedUser?.name || ""}</h1>
 
-                    <div className='h-96 bg-white border p-4 w-full'>
+                    <div className='h-96 bg-white border p-4 w-full flex flex-col '>
                         {
                             receivedData.map(data => (
-                                <div key={data.id}>
+                                <div key={data.id} className={`${data.sender.id === currUser.id ? "self-end bg-blue-200 " : "self-start"} px-2 py-1 rounded-2xl  bg-amber-200 flex gap-1 items-start`}>
+
                                     <div>
                                         <p>{data.message}</p>
-                                        <p>{data.sender.name}</p>
+                                        <p className='text-xs'>{data.sender.name}</p>
                                     </div>
                                 </div>
                             ))
