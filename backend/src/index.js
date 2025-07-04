@@ -4,6 +4,7 @@ import express from "express"
 import cookiePaser from "cookie-parser"
 import { app, server, io } from "./lib/socket.js"
 import { connectToDb } from "./lib/db.js"
+import router from "./routes/auth.route.js"
 dotenv.config()
 
 
@@ -15,6 +16,8 @@ app.use(cookiePaser())
 app.get("/", async (req, res) => (
     res.send("Server is alive ")
 ))
+
+app.use("/api/auth", router)
 
 
 server.listen(3000, () => (
