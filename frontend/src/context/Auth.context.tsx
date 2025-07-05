@@ -13,13 +13,14 @@ const AuthContext = ({ children }: { children: ReactNode }) => {
         const checkAuth = async () => {
             try {
                 const res = await axiosInstance.get("/api/auth/me")
-                console.log(res)
+                setUser(res.data.user)
             } catch (error) {
                 console.log(error)
             }
         }
         checkAuth()
     }, [])
+    console.log(user)
 
     return (<auth.Provider value={user}>{children}</auth.Provider>
     )

@@ -9,7 +9,7 @@ router.post("/login", login)
 router.get("/me", verifyToken, async (req, res) => {
     try {
         const user = await User.findById(req.id).select("-password")
-        res.status(201).json({ message: "Get user", data: user })
+        res.status(201).json({ message: "Get user", user })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
