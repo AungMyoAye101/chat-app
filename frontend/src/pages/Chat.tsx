@@ -1,26 +1,9 @@
+import User from '@/components/User'
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 const socket = io('http://localhost:3000')
 
 
-const user = [
-    {
-        id: 1,
-        name: "Alice"
-    },
-    {
-        id: 2,
-        name: "Bob"
-    },
-    {
-        id: 3,
-        name: "Andrew"
-    },
-]
-const currUser = {
-    id: 3,
-    name: "Andrew"
-}
 
 const Chat = () => {
     const [message, setmessage] = useState('')
@@ -53,16 +36,7 @@ const Chat = () => {
     return (
         <section className='bg-white p-4 h-screen w-full'>
             <div className='flex w-full'>
-                <div className='w-56 flex flex-col gap-2 p-2 bg-neutral-100'>
-                    {
-                        user.filter(u => u.id !== currUser.id).map(u => (
-                            <div key={u.id} className='flex gap-2 bg-neutral-200 p-2' onClick={() => setselectedUser(u)}>
-                                <div className='w-10 h-10 rounded-full bg-yellow-50'></div>
-                                <div><h1>{u.name}</h1></div>
-                            </div>
-                        ))
-                    }
-                </div>
+                <User />
                 <div className='w-full'>
                     <h1 className='text-xl font-semibold'>{selectedUser?.name || ""}</h1>
 

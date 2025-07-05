@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/axios.config'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const Login = () => {
     const [data, setData] = useState({
@@ -12,7 +12,7 @@ const Login = () => {
             const res = await axiosInstance.post("/api/auth/login", data)
             console.log(res.data.user)
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
     }
     return (

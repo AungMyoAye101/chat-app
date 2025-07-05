@@ -1,10 +1,7 @@
 import { axiosInstance } from '@/lib/axios.config'
+import type { UserType } from '@/lib/types'
 import { createContext, useEffect, useState, type ReactNode } from 'react'
-interface UserType {
-    name: string,
-    email: string,
-    avatar?: string
-}
+
 const auth = createContext<UserType | null>(null)
 
 const AuthContext = ({ children }: { children: ReactNode }) => {
