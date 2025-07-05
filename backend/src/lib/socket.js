@@ -1,6 +1,7 @@
 import http from "http"
 import express from "express"
 import { Server } from "socket.io"
+import Message from "../model/message.model.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -16,16 +17,18 @@ io.on("connection", (socket) => {
 
 
     socket.on("setup", (userId) => {
-        console.log(userId)
+
         socket.join(userId)
-        console.log("user " + userId + "joined")
+        console.log("user " + userId + " joined")
     })
 
-    socket.on("send-message", ({ sender, receiverId, message }) => {
+    socket.on("send-message", async ({ senderId, receiverId, message }) => {
         const payload = {
-            sender, message
+            senderId, message
         }
-        io.to(receiverId).to(sender.id).emit("received-message", payload)
+        const newMessage = await Message.create({ sender: senderId, recevier: receiverId, message })
+        console.log(senderId, receiverId, message)
+        io.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })
     socket.on("disconnected", () => {
