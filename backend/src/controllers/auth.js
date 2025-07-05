@@ -4,7 +4,6 @@ import User from "../model/user.model.js"
 
 export const createUser = async (req, res) => {
     const { email, password } = req.body
-    console.log(req.body)
     try {
         const userExit = await User.findOne({ email })
         if (userExit) {
@@ -23,7 +22,7 @@ export const createUser = async (req, res) => {
             httpOnly: true,
             maxAge: 1 * 24 * 60 * 60 * 1000
         })
-        console.log("success")
+
         res.status(201).json({ message: "User created", user: newUser })
 
     } catch (error) {

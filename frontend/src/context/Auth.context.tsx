@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
-import { createContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 
 const auth = createContext<UserType | null>(null)
 
@@ -17,10 +17,11 @@ const AuthContext = ({ children }: { children: ReactNode }) => {
         }
         checkAuth()
     }, [])
-    console.log(user)
-
     return (<auth.Provider value={user}>{children}</auth.Provider>
     )
 }
-
+export const useAuth = () => {
+    const user = useContext(auth)
+    return user
+}
 export default AuthContext

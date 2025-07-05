@@ -7,6 +7,7 @@ import { app, server, io } from "./lib/socket.js"
 import { connectToDb } from "./lib/db.js"
 import router from "./routes/auth.route.js"
 import userRouter from "./routes/user.route.js"
+import messageRouter from "./routes/message.route.js"
 dotenv.config()
 
 
@@ -25,6 +26,7 @@ app.get("/", async (req, res) => (
 
 app.use("/api/auth", router)
 app.use("/api/users", userRouter)
+app.use("/api/message", messageRouter)
 
 
 server.listen(3000, () => (
