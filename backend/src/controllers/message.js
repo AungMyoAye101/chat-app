@@ -5,10 +5,10 @@ export const getMessages = async (req, res) => {
     const { receiverId } = req.params
     const senderId = req.id
     if (!mongoose.Types.ObjectId.isValid(senderId)) {
-        return console.log("invalid senderId")
+        return res.status(400).json({ message: "Invalid senderId" })
     }
     if (!mongoose.Types.ObjectId.isValid(receiverId)) {
-        return console.log("invalid receiverId")
+        return res.status(400).json({ message: "Invalid receiverId" })
     }
     try {
         const message = await Message.find({

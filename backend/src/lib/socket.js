@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
         io.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })
-    socket.on("disconnected", () => {
+    socket.on("disconnect", () => {
         console.log("user is disconnected", socket.id)
     })
 

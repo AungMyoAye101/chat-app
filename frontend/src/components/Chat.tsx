@@ -40,25 +40,40 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
         const res = await axiosInstance.get("/api/message/" + selectedUser._id)
         setReceivedData(res.data)
     }
-    console.log(receivedData)
 
     useEffect(() => {
         getMessage()
-    }, [])
+    }, [selectedUser._id])
 
+
+    function formatRelativeTime(createdAt: any): React.ReactNode {
+        const date = new Date(createdAt)
+        const now = new Date()
+        const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+        if (diff < 60) return 'just now'
+        if (diff < 3600) return `${Math.floor(diff / 60)} min ago`
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`
+        return date.toLocaleDateString()
+    }
 
     return (
         <div className='w-full'>
             <h1 className='text-xl font-semibold'>{selectedUser?.name || ""}</h1>
 
-            <div className='h-96 bg-white border p-2 w-full flex flex-col gap-1 '>
+            <div className='h-96 overflow-hidden overflow-y-scroll bg-white border p-2 w-full flex flex-col gap-1 '>
                 {
                     receivedData.length > 0 && receivedData.map((data, i) => (
-                        <div key={i} className={`${data.sender._id === user?._id ? "self-end bg-blue-200 " : "self-start bg-neutral-200"} px-4 py-1.5 rounded-2xl   flex gap-1 items-start`}>
+                        <div key={i} className={`${data.sender._id === user?._id ? "self-end bg-blue-100 " : "self-start bg-neutral-200"} px-4 py-1.5 rounded-2xl   flex gap-1 items-start`}>
 
                             <div>
-                                <p>{data.message}</p>
-                                <p className='text-xs'>{data.sender.name}</p>
+                                <p className='text-sm '>{data.message}</p>
+                                {
+                                    data.createdAt && (
+                                        <span className="text-xs text-gray-500">
+                                            {formatRelativeTime(data.createdAt)}
+                                        </span>
+                                    )}
                             </div>
                         </div>
                     ))
@@ -72,7 +87,15 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                     onChange={(e) => setmessage(e.target.value)}
                     className='bg-neutral-200 w-full px-4 py-2'
                 />
-                <button onClick={() => { handleSend(), getMessage() }} className='px-4 py-2 bg-blue-200 cursor-pointer'>Send</button>
+                <button
+                    onClick={() => {
+                        handleSend();
+                        getMessage();
+                    }}
+                    className='px-4 py-2 bg-blue-200 cursor-pointer'
+                >
+                    Send
+                </button>
             </div>
         </div>
     )
