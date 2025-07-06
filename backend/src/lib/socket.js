@@ -13,14 +13,17 @@ const io = new Server(server, {
     },
 
 })
+
+const onlineUsers = new Map()
 io.on("connection", (socket) => {
 
 
     socket.on("setup", (userId) => {
 
-        socket.join(userId)
         socket.userId = userId
-
+        onlineUsers.set(userId, socket.id)
+        socket.join(userId)
+        io.emit("online-users", Array.from(onlineUsers.keys()))
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
@@ -42,6 +45,10 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         console.log("user is disconnected", socket.id)
+        if (socket.userId) {
+            onlineUsers.delete(socket.userId)
+            io.emit("online-users", Array.from(onlineUsers.keys()))
+        }
     })
 
 })

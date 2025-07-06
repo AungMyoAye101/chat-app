@@ -2,6 +2,8 @@
 import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
 import { useEffect, useState } from "react"
+import { socket } from "./Chat"
+
 
 interface SelectUserProps {
     setSelectedUser: React.Dispatch<React.SetStateAction<UserType>>
@@ -9,6 +11,7 @@ interface SelectUserProps {
 
 const User = ({ setSelectedUser }: SelectUserProps) => {
     const [users, setUsers] = useState<UserType[]>([])
+    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -20,9 +23,15 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
 
         }
         fetchUser()
-
+        socket.on("online-users", (userId) => {
+            console.log(userId)
+            setOnlineUsers(userId)
+        })
 
     }, [])
+
+    const isOnline = (id: string) => (onlineUsers.includes(id))
+    console.log("online", onlineUsers)
 
     return (
         <section className="w-96 p-4">
@@ -32,6 +41,7 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
                         <div className="flex gap-1 p-2 bg-neutral-200 border border-white" key={user._id} onClick={() => setSelectedUser(user)}>
                             <div className="w-6 h-6 rounded-full bg-blue-300"></div>
                             <div>{user.name}</div>
+                            <div className={`w-3 h-3 rounded-full ${onlineUsers.includes(user._id) ? "bg-green-400" : "bg-gray-400"} `}></div>
                         </div>
                     ))
                 }
