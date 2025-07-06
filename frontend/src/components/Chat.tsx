@@ -13,7 +13,7 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     const user = useAuth()
     const [receivedData, setReceivedData] = useState<any[]>([])
     const [message, setmessage] = useState('')
-    console.log(receivedData)
+
     useEffect(() => {
         socket.emit("setup", user?._id)
         socket.on("received-message", (data) => {
@@ -40,6 +40,11 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
         const res = await axiosInstance.get("/api/message/" + selectedUser._id)
         setReceivedData(res.data)
     }
+    console.log(receivedData)
+
+    useEffect(() => {
+        getMessage()
+    }, [])
 
 
     return (
@@ -49,7 +54,7 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
             <div className='h-96 bg-white border p-2 w-full flex flex-col gap-1 '>
                 {
                     receivedData.length > 0 && receivedData.map((data, i) => (
-                        <div key={i} className={`${data.sender === user?._id ? "self-end bg-blue-200 " : "self-start bg-neutral-200"} px-4 py-1.5 rounded-2xl   flex gap-1 items-start`}>
+                        <div key={i} className={`${data.sender._id === user?._id ? "self-end bg-blue-200 " : "self-start bg-neutral-200"} px-4 py-1.5 rounded-2xl   flex gap-1 items-start`}>
 
                             <div>
                                 <p>{data.message}</p>
