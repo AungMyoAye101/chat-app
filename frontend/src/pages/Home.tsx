@@ -18,9 +18,6 @@ const Home = () => {
 
 
 
-    console.log(selectedUser)
-
-
     return (
         <section className='bg-white p-4 h-screen w-full'>
             <div className='flex w-full'>

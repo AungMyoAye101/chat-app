@@ -19,15 +19,27 @@ io.on("connection", (socket) => {
     socket.on("setup", (userId) => {
 
         socket.join(userId)
-        console.log("user " + userId + " joined")
+        socket.userId = userId
+
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
         const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        console.log(senderId, receiverId, message)
         io.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })
+
+    // for typing indicator
+    socket.on("typing", (receiverId) => {
+        if (socket.userId) {
+            console.log("typing...", receiverId)
+            socket.to(receiverId).emit("typing", socket.userId)
+        }
+    })
+    socket.on("stop-typing", (receiverId) => {
+        socket.to(receiverId).emit("stop-typing", socket.userId)
+    })
+
     socket.on("disconnect", () => {
         console.log("user is disconnected", socket.id)
     })

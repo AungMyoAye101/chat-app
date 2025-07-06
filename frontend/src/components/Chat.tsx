@@ -1,7 +1,7 @@
 import { useAuth } from '@/context/Auth.context'
 import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
 const socket = io('http://localhost:3000')
 
@@ -9,11 +9,14 @@ interface ChatPropsType {
     selectedUser: UserType
 }
 
+
 const Chat = ({ selectedUser }: ChatPropsType) => {
     const user = useAuth()
     const [receivedData, setReceivedData] = useState<any[]>([])
-    const [message, setmessage] = useState('')
-
+    const [message, setMessage] = useState('')
+    const [typing, setTyping] = useState(false)
+    const [typingStatus, setTypingStatus] = useState(false)
+    const typingTimeOut = useRef<NodeJS.Timeout | null>(null)
     useEffect(() => {
         socket.emit("setup", user?._id)
         socket.on("received-message", (data) => {
@@ -25,6 +28,8 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
         }
     }, [user])
 
+
+
     const handleSend = () => {
         if (!message.trim()) return
 
@@ -33,7 +38,7 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
             receiverId: selectedUser._id,
             message
         })
-        setmessage('')
+        setMessage('')
     }
 
     const getMessage = async () => {
@@ -42,8 +47,46 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     }
 
     useEffect(() => {
+        if (!selectedUser) return;
         getMessage()
+
+        const handleTyping = (senderId: string) => {
+            if (senderId === selectedUser._id) {
+                setTypingStatus(true);
+            }
+        };
+
+        const handleStopTyping = (senderId: string) => {
+            if (senderId === selectedUser._id) {
+                setTypingStatus(false);
+            }
+        };
+
+        socket.on("typing", handleTyping);
+        socket.on("stop-typing", handleStopTyping);
+
+        return () => {
+            socket.off("typing", handleTyping);
+            socket.off("stop-typing", handleStopTyping);
+        };
+
     }, [selectedUser._id])
+
+
+    const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMessage(e.target.value)
+        if (!typing) {
+            setTyping(true)
+            socket.emit("typing", selectedUser._id)
+        }
+        if (typingTimeOut.current) {
+            clearTimeout(typingTimeOut.current)
+            typingTimeOut.current = setTimeout(() => {
+                socket.emit("stop-typing", selectedUser._id)
+                setTyping(false)
+            }, 1000)
+        }
+    }
 
 
     function formatRelativeTime(createdAt: any): React.ReactNode {
@@ -78,13 +121,16 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                         </div>
                     ))
                 }
+                {
+                    typingStatus && <span>typing...</span>
+                }
 
             </div>
             <div className='flex border border-neutral-50 rounded'>
                 <input
                     type="text"
                     value={message}
-                    onChange={(e) => setmessage(e.target.value)}
+                    onChange={(e) => handleTyping(e)}
                     className='bg-neutral-200 w-full px-4 py-2'
                 />
                 <button
