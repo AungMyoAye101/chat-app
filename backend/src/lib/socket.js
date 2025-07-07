@@ -35,11 +35,11 @@ io.on("connection", (socket) => {
     // for typing indicator
     socket.on("typing", (receiverId) => {
         if (socket.userId) {
-            console.log("typing...", receiverId)
-            socket.to(receiverId).emit("typing", socket.userId)
+            socket.to(receiverId).emit("isTyping", socket.userId)
         }
     })
     socket.on("stop-typing", (receiverId) => {
+        console.log("stop typing")
         socket.to(receiverId).emit("stop-typing", socket.userId)
     })
 

@@ -23,15 +23,17 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
 
         }
         fetchUser()
-        socket.on("online-users", (userId) => {
-            console.log(userId)
+        const handleOnlineUsers = (userId: string[]) => {
             setOnlineUsers(userId)
-        })
+        }
+        socket.on("online-users", handleOnlineUsers)
 
+        return () => {
+            socket.off("online-users", handleOnlineUsers)
+        }
     }, [])
 
-    const isOnline = (id: string) => (onlineUsers.includes(id))
-    console.log("online", onlineUsers)
+
 
     return (
         <section className="w-96 p-4">

@@ -15,13 +15,14 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     const [receivedData, setReceivedData] = useState<any[]>([])
     const [message, setMessage] = useState('')
     const [typing, setTyping] = useState(false)
-    const [typingStatus, setTypingStatus] = useState(false)
-    const typingTimeOut = useRef<NodeJS.Timeout | null>(null)
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     useEffect(() => {
         socket.emit("setup", user?._id)
         socket.on("received-message", (data) => {
             setReceivedData(pre => ([...pre, data]))
         });
+
 
         return () => {
             socket.off("received-message")
@@ -29,8 +30,13 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     }, [user])
 
 
+    const getMessage = async () => {
+        const res = await axiosInstance.get("/api/message/" + selectedUser._id)
+        setReceivedData(res.data)
+    }
 
-    const handleSend = () => {
+    const handleSend = (e: React.FormEvent) => {
+        e.preventDefault()
         if (!message.trim()) return
 
         socket.emit('send-message', {
@@ -38,39 +44,34 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
             receiverId: selectedUser._id,
             message
         })
+        getMessage()
         setMessage('')
-    }
-
-    const getMessage = async () => {
-        const res = await axiosInstance.get("/api/message/" + selectedUser._id)
-        setReceivedData(res.data)
     }
 
     useEffect(() => {
         if (!selectedUser) return;
         getMessage()
 
-        const handleTyping = (senderId: string) => {
-            if (senderId === selectedUser._id) {
-                setTypingStatus(true);
+        const handleTyping = (id: string) => {
+            if (selectedUser && id === selectedUser._id) {
+                setTyping(true)
             }
-        };
-
-        const handleStopTyping = (senderId: string) => {
-            if (senderId === selectedUser._id) {
-                setTypingStatus(false);
+        }
+        const handleStopTyping = (id: string) => {
+            if (selectedUser && id === selectedUser._id) {
+                setTyping(false)
             }
-        };
+        }
 
-        socket.on("typing", handleTyping);
-        socket.on("stop-typing", handleStopTyping);
+        socket.on("isTyping", handleTyping)
+        socket.on("stop-typing", handleStopTyping)
 
         return () => {
-            socket.off("typing", handleTyping);
-            socket.off("stop-typing", handleStopTyping);
+            socket.off("isTyping", handleTyping)
+            socket.off("stop-typing", handleStopTyping)
         };
 
-    }, [selectedUser._id])
+    }, [selectedUser])
 
 
     const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,13 +80,13 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
             setTyping(true)
             socket.emit("typing", selectedUser._id)
         }
-        if (typingTimeOut.current) {
-            clearTimeout(typingTimeOut.current)
-            typingTimeOut.current = setTimeout(() => {
-                socket.emit("stop-typing", selectedUser._id)
-                setTyping(false)
-            }, 1000)
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
         }
+        typingTimeoutRef.current = setTimeout(() => {
+            socket.emit("stop-typing", selectedUser._id);
+            setTyping(false);
+        }, 2000);
     }
 
 
@@ -122,11 +123,11 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                     ))
                 }
                 {
-                    typingStatus && <span>typing...</span>
+                    typing && <span>typing...</span>
                 }
 
             </div>
-            <div className='flex border border-neutral-50 rounded'>
+            <form onSubmit={handleSend} className='flex border border-neutral-50 rounded'>
                 <input
                     type="text"
                     value={message}
@@ -134,15 +135,12 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                     className='bg-neutral-200 w-full px-4 py-2'
                 />
                 <button
-                    onClick={() => {
-                        handleSend();
-                        getMessage();
-                    }}
+                    type='submit'
                     className='px-4 py-2 bg-blue-200 cursor-pointer'
                 >
                     Send
                 </button>
-            </div>
+            </form>
         </div>
     )
 }

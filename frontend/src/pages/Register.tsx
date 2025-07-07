@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/axios.config'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const Register = () => {
     const [data, setData] = useState({
@@ -13,11 +13,11 @@ const Register = () => {
             const res = await axiosInstance.post("/api/auth/register", data)
             console.log("register ", res.data)
         } catch (error) {
-            console.log(error.message)
+            if (error instanceof Error) console.log(error.message)
         }
     }
     return (
-        <form onSubmit={handleSubmit} className='bg-white p-2 border space-y-4'>
+        <form onSubmit={handleSubmit} className='bg-white p-4 flex flex-col gap-4 '>
             <div>
                 <input type="name" placeholder='name' name="name" onChange={(e) => setData(pre => ({ ...pre, name: e.target.value }))} />
             </div>
@@ -27,7 +27,7 @@ const Register = () => {
             <div>
                 <input type="password" placeholder='password' name='password' onChange={(e) => setData(pre => ({ ...pre, password: e.target.value }))} />
             </div>
-            <button type='submit'>Submit</button>
+            <button type='submit' className='bg-blue-400 px-4 py-2'>Submit</button>
         </form>
     )
 }
