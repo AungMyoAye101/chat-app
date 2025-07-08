@@ -32,6 +32,10 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
             socket.off("online-users", handleOnlineUsers)
         }
     }, [])
+    const formatLastSeen = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
 
 
 
@@ -44,6 +48,7 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
                             <div className="w-6 h-6 rounded-full bg-blue-300"></div>
                             <div>{user.name}</div>
                             <div className={`w-3 h-3 rounded-full ${onlineUsers.includes(user._id) ? "bg-green-400" : "bg-gray-400"} `}></div>
+                            {!onlineUsers.includes(user._id) && <div>Last seen {formatLastSeen(user.lastSeen)}</div>}
                         </div>
                     ))
                 }

@@ -2,6 +2,7 @@ import http from "http"
 import express from "express"
 import { Server } from "socket.io"
 import Message from "../model/message.model.js"
+import User from "../model/user.model.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -43,11 +44,23 @@ io.on("connection", (socket) => {
         socket.to(receiverId).emit("stop-typing", socket.userId)
     })
 
-    socket.on("disconnect", () => {
-        console.log("user is disconnected", socket.id)
+    socket.on("disconnect", async () => {
         if (socket.userId) {
+
+
             onlineUsers.delete(socket.userId)
+
+            try {
+                await User.findByIdAndUpdate(socket.userId, { lastSeen: Date.now() })
+            } catch (error) {
+                console.error(error.message)
+            }
+
+
             io.emit("online-users", Array.from(onlineUsers.keys()))
+
+
+
         }
     })
 
