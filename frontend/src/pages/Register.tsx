@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
     const [data, setData] = useState({
@@ -7,11 +8,12 @@ const Register = () => {
         email: '',
         password: ''
     })
+    const navigate = useNavigate()
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         try {
             const res = await axiosInstance.post("/api/auth/register", data)
-            console.log("register ", res.data)
+            navigate('/')
         } catch (error) {
             if (error instanceof Error) console.log(error.message)
         }

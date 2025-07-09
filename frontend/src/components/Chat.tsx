@@ -3,7 +3,7 @@ import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
 import { useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
-export const socket = io('http://localhost:3000')
+export const socket = io('http://localhost:5000')
 
 interface ChatPropsType {
     selectedUser: UserType
@@ -19,19 +19,14 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
 
     useEffect(() => {
         socket.emit("setup", user?._id)
-        socket.on("received-message", (data) => {
-            setReceivedData(pre => ([...pre, data]))
-        });
 
 
-        return () => {
-            socket.off("received-message")
-        }
+
     }, [user])
 
 
     const getMessage = async () => {
-        const res = await axiosInstance.get("/api/message/" + selectedUser._id)
+        const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
         setReceivedData(res.data)
     }
 
@@ -50,6 +45,9 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
 
     useEffect(() => {
         if (!selectedUser) return;
+        socket.on("received-message", (data) => {
+            setReceivedData(pre => ([...pre, data]))
+        });
         getMessage()
 
         const handleTyping = (id: string) => {
@@ -69,6 +67,8 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
         return () => {
             socket.off("isTyping", handleTyping)
             socket.off("stop-typing", handleStopTyping)
+            socket.off("received-message")
+
         };
 
     }, [selectedUser])

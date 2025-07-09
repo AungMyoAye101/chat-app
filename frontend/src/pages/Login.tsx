@@ -12,13 +12,13 @@ const Login = () => {
     const navigate = useNavigate()
     const handleSubmit = async (e: any) => {
         e.preventDefault()
+        console.log("click")
         try {
             const res = await axiosInstance.post("/api/auth/login", data)
+            console.log(res.data.user)
             navigate('/')
         } catch (error: any) {
             console.log(error)
-
-
             setErrorMessage(error.response.data.message)
 
         }
