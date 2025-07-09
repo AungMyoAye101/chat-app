@@ -1,3 +1,4 @@
+
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import User from "../model/user.model.js"
@@ -53,3 +54,4 @@ export const login = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
