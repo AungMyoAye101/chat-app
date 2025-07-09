@@ -1,8 +1,6 @@
-
 import jwt from "jsonwebtoken"
-
 export const verifyToken = async (req, res, next) => {
-    const { token } = req.cookies
+    const token = req.cookies.token
     if (!token) {
         return res.status(400).json({ message: 'Invailed token' })
     }

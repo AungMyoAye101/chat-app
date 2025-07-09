@@ -5,19 +5,19 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import { useAuth } from './context/Auth.context';
 
-const ProcetiveRoute = ({ children }: { children: React.ReactNode }) => {
-  const user = useAuth()
-  if (!user) {
+// const ProcetiveRoute = ({ children }: { children: React.ReactNode }) => {
+//   const user = useAuth()
+//   if (!user) {
 
-    return <Navigate to={"/login"} />
-  }
-}
+//     return <Navigate to={"/login"} />
+//   }
+// }
 
 const App = () => {
 
   return (
     <Routes>
-      <Route path='/' element={<ProcetiveRoute><Home /></ProcetiveRoute>} />
+      <Route path='/' element={<Home />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
     </Routes>

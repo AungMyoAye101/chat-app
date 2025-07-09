@@ -1,15 +1,20 @@
+
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import User from "../model/user.model.js"
 
 export const createUser = async (req, res) => {
+
     const { email, password } = req.body
     try {
+
         const userExit = await User.findOne({ email })
         if (userExit) {
             return res.status(400).json({ message: "User already exists." })
         }
+
         const hashed = await bcrypt.hash(password, 10)
+
         const newUser = await User.create({ ...req.body, password: hashed })
 
         const token = jwt.sign({
@@ -53,3 +58,4 @@ export const login = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+

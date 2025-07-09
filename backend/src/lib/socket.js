@@ -4,16 +4,14 @@ import { Server } from "socket.io"
 import Message from "../model/message.model.js"
 import User from "../model/user.model.js"
 
-const app = express()
-const server = http.createServer(app)
-
+const app = express();
+const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:5173',
-        credentials: true
+        origin: ["http://localhost:5173"],
+        credentials: true,
     },
-
-})
+});
 
 const onlineUsers = new Map()
 io.on("connection", (socket) => {

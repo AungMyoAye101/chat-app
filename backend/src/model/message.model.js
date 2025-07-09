@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-
+import mongoose from "mongoose"
 
 const messageSchema = new mongoose.Schema({
     sender: {
@@ -10,6 +9,7 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
+    group: { type: mongoose.Schema.Types.ObjectId, ref: "Group" },
     message: {
         type: String,
         required: true
