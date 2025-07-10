@@ -65,15 +65,14 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                 setTyping(true)
             }
         })
-        socket.on("stop-typing", (typerId) => {
-            setTyping(false)
-            console.log(typerId, selectedUser._id)
-
+        socket.on("stopped-typing", (receiverId) => {
+            if (receiverId === user?._id) setTyping(false)
         })
+
 
         return () => {
             socket.off("isTyping")
-            socket.off("stop-typing")
+            socket.off("stopped-typing")
             socket.off("received-message")
 
         };
@@ -91,7 +90,6 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
         }
         typingTimeoutRef.current = setTimeout(() => {
             socket.emit("stop-typing", selectedUser._id);
-            setTyping(false);
         }, 2000);
     }
 
@@ -129,7 +127,7 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                     ))
                 }
                 {
-                    typing && <span>typing...</span>
+                    typing && <span className='italic bg-neutral-200 px-4 py-1.5 text-sm self-start rounded-2xl'>typing...</span>
                 }
 
             </div>
