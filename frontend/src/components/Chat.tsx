@@ -26,8 +26,10 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
 
 
     const getMessage = async () => {
-        const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
-        setReceivedData(res.data)
+        if (selectedUser._id) {
+            const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
+            setReceivedData(res.data)
+        }
     }
 
     const handleSend = (e: React.FormEvent) => {
