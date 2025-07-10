@@ -19,9 +19,6 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
 
     useEffect(() => {
         socket.emit("setup", user?._id)
-
-
-
     }, [user])
 
 
@@ -46,29 +43,37 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     }
 
     useEffect(() => {
-        if (!selectedUser) return;
+        if (!selectedUser._id) return;
         socket.on("received-message", (data) => {
             setReceivedData(pre => ([...pre, data]))
         });
         getMessage()
 
-        const handleTyping = (id: string) => {
-            if (selectedUser && id === selectedUser._id) {
+        // const handleTyping = (id: string) => {
+        //     if (selectedUser && id === selectedUser._id) {
+        //         setTyping(true)
+        //     }
+        // }
+        // const handleStopTyping = (id: string) => {
+        //     if (selectedUser && id === selectedUser._id) {
+        //         setTyping(false)
+        //     }
+        // }
+
+        socket.on("isTyping", (typerId) => {
+            if (typerId === selectedUser._id) {
                 setTyping(true)
             }
-        }
-        const handleStopTyping = (id: string) => {
-            if (selectedUser && id === selectedUser._id) {
-                setTyping(false)
-            }
-        }
+        })
+        socket.on("stop-typing", (typerId) => {
+            setTyping(false)
+            console.log(typerId, selectedUser._id)
 
-        socket.on("isTyping", handleTyping)
-        socket.on("stop-typing", handleStopTyping)
+        })
 
         return () => {
-            socket.off("isTyping", handleTyping)
-            socket.off("stop-typing", handleStopTyping)
+            socket.off("isTyping")
+            socket.off("stop-typing")
             socket.off("received-message")
 
         };
@@ -79,7 +84,6 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
         if (!typing) {
-            setTyping(true)
             socket.emit("typing", selectedUser._id)
         }
         if (typingTimeoutRef.current) {

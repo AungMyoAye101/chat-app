@@ -38,8 +38,7 @@ io.on("connection", (socket) => {
         }
     })
     socket.on("stop-typing", (receiverId) => {
-        console.log("stop typing")
-        socket.to(receiverId).emit("stop-typing", socket.userId)
+        socket.to(receiverId).emit("stop-typing", receiverId)
     })
 
     socket.on("disconnect", async () => {
