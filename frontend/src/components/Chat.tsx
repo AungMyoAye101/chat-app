@@ -19,15 +19,14 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
 
     useEffect(() => {
         socket.emit("setup", user?._id)
-
-
-
     }, [user])
 
 
     const getMessage = async () => {
-        const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
-        setReceivedData(res.data)
+        if (selectedUser._id) {
+            const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
+            setReceivedData(res.data)
+        }
     }
 
     const handleSend = (e: React.FormEvent) => {
@@ -44,29 +43,36 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     }
 
     useEffect(() => {
-        if (!selectedUser) return;
+        if (!selectedUser._id) return;
         socket.on("received-message", (data) => {
             setReceivedData(pre => ([...pre, data]))
         });
         getMessage()
 
-        const handleTyping = (id: string) => {
-            if (selectedUser && id === selectedUser._id) {
+        // const handleTyping = (id: string) => {
+        //     if (selectedUser && id === selectedUser._id) {
+        //         setTyping(true)
+        //     }
+        // }
+        // const handleStopTyping = (id: string) => {
+        //     if (selectedUser && id === selectedUser._id) {
+        //         setTyping(false)
+        //     }
+        // }
+
+        socket.on("isTyping", (typerId) => {
+            if (typerId === selectedUser._id) {
                 setTyping(true)
             }
-        }
-        const handleStopTyping = (id: string) => {
-            if (selectedUser && id === selectedUser._id) {
-                setTyping(false)
-            }
-        }
+        })
+        socket.on("stopped-typing", (receiverId) => {
+            if (receiverId === user?._id) setTyping(false)
+        })
 
-        socket.on("isTyping", handleTyping)
-        socket.on("stop-typing", handleStopTyping)
 
         return () => {
-            socket.off("isTyping", handleTyping)
-            socket.off("stop-typing", handleStopTyping)
+            socket.off("isTyping")
+            socket.off("stopped-typing")
             socket.off("received-message")
 
         };
@@ -77,7 +83,6 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
     const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(e.target.value)
         if (!typing) {
-            setTyping(true)
             socket.emit("typing", selectedUser._id)
         }
         if (typingTimeoutRef.current) {
@@ -85,7 +90,6 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
         }
         typingTimeoutRef.current = setTimeout(() => {
             socket.emit("stop-typing", selectedUser._id);
-            setTyping(false);
         }, 2000);
     }
 
@@ -123,7 +127,7 @@ const Chat = ({ selectedUser }: ChatPropsType) => {
                     ))
                 }
                 {
-                    typing && <span>typing...</span>
+                    typing && <span className='italic bg-neutral-200 px-4 py-1.5 text-sm self-start rounded-2xl'>typing...</span>
                 }
 
             </div>

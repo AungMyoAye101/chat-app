@@ -38,14 +38,11 @@ io.on("connection", (socket) => {
         }
     })
     socket.on("stop-typing", (receiverId) => {
-        console.log("stop typing")
-        socket.to(receiverId).emit("stop-typing", socket.userId)
+        socket.to(receiverId).emit("stopped-typing", receiverId)
     })
 
     socket.on("disconnect", async () => {
         if (socket.userId) {
-
-
             onlineUsers.delete(socket.userId)
 
             try {
