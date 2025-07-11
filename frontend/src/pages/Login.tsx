@@ -26,14 +26,14 @@ const Login = () => {
     return (
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-white p-6'>
             <div>
-                <input type="email" placeholder='email' name="email" onChange={(e) => setData(pre => ({ ...pre, [e.target.name]: e.target.value }))} />
+                <input type="email" placeholder='email' name="email" onChange={(e) => setData(pre => ({ ...pre, [e.target.name]: e.target.value }))} className='w-full ' />
             </div>
             <div>
-                <input type="password" placeholder='password' name='password' onChange={(e) => setData(pre => ({ ...pre, [e.target.name]: e.target.value }))} />
+                <input type="password" placeholder='password' name='password' onChange={(e) => setData(pre => ({ ...pre, [e.target.name]: e.target.value }))} className='w-full ' />
             </div>
             <Button type='submit' text='Submit' />
             {
-                errorMessage && <p>{errorMessage}</p>
+                errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
             }
         </form>
     )

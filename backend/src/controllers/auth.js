@@ -36,6 +36,7 @@ export const createUser = async (req, res) => {
 }
 
 export const login = async (req, res) => {
+    console.log("login")
     const { email, password } = req.body
     try {
         const userExit = await User.findOne({ email })
