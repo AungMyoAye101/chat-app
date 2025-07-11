@@ -6,7 +6,6 @@ import { useState } from "react"
 const Group = () => {
     const [data, setData] = useState({
         name: "",
-        members: []
     })
 
     const handelSubmit = async (e: React.FormEvent) => {

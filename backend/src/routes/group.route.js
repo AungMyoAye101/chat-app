@@ -8,7 +8,7 @@ groupRouter.get("/", (req, res) => {
     res.send("hello group")
 })
 groupRouter.post('/create-group', verifyToken, async (req, res) => {
-    const { name, member } = req.body
+    const { name } = req.body
     const userId = req.id
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "Invaild user id!" })
