@@ -5,3 +5,10 @@ export interface UserType {
     avatar?: string,
     lastSeen: string
 }
+
+export interface GroupTypes {
+    _id: string,
+    name: string,
+    createdBy: string,
+    members: string[]
+}

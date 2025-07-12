@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import { useAuth } from './context/Auth.context';
 import Group from './pages/Group';
+import NotFound from './pages/NotFound';
 
 // const ProcetiveRoute = ({ children }: { children: React.ReactNode }) => {
 //   const user = useAuth()
@@ -22,6 +23,7 @@ const App = () => {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/create-group' element={<Group />} />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   )
 }

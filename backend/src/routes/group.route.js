@@ -2,11 +2,10 @@ import express from "express"
 import { verifyToken } from "../middleware/verify.js"
 import mongoose from "mongoose"
 import Group from "../model/group.model.js"
+import { getGroups } from "../controllers/group.js"
 
 const groupRouter = express.Router()
-groupRouter.get("/", (req, res) => {
-    res.send("hello group")
-})
+groupRouter.get("/", verifyToken, getGroups)
 groupRouter.post('/create-group', verifyToken, async (req, res) => {
     const { name } = req.body
     const userId = req.id
