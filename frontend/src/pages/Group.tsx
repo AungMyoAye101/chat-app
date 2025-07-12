@@ -11,7 +11,7 @@ const Group = () => {
     const handelSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            const res = await axiosInstance.post("/api/groups/create-group", data)
+            const res = await axiosInstance.post("/api/group/create-group", data)
             console.log(res.data)
         } catch (error) {
             console.log(error)

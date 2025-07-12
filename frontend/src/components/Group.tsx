@@ -1,13 +1,14 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { GroupTypes } from '@/lib/types'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Group = () => {
     const [data, setData] = useState<GroupTypes[]>([])
     useEffect(() => {
         const fetchGroup = async () => {
             try {
-                const res = await axiosInstance.get('/api/groups')
+                const res = await axiosInstance.get('/api/group')
                 setData(res.data.groups)
             } catch (error) {
                 console.log(error)
@@ -28,6 +29,7 @@ const Group = () => {
                             <div key={g._id} className='flex px-4 py-2 bg-neutral-200 border border-white'>
                                 <div className='w-6 h-6 rounded-full bg-blue-400'></div>
                                 <h2>{g.name}</h2>
+                                <Link to={`/update-group/${g._id}`} className='ml-auto text-blue-500'>Update</Link>
                             </div>
                         ))
                     }
