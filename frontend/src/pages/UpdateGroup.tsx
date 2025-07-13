@@ -1,7 +1,7 @@
 import Button from '@/components/UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
 import type { GroupTypes } from '@/lib/types'
-import React, { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 interface MembersType {
@@ -9,17 +9,19 @@ interface MembersType {
     name: string;
     avatar?: string;
 }
-
+interface GroupWithMembers extends Omit<GroupTypes, "members"> {
+    members: MembersType[]
+}
 
 const UpdateGroup = () => {
-    const [data, setData] = useState<GroupTypes>({
+    const [data, setData] = useState<GroupWithMembers>({
         _id: '',
         name: "",
         members: [],
         createdBy: ''
     })
     const { groupId } = useParams()
-    console.log(groupId)
+
 
     useEffect(() => {
         const fetchGroup = async () => {
@@ -31,13 +33,14 @@ const UpdateGroup = () => {
             }
         }
         fetchGroup()
-    }, [groupId])
+    }, [])
 
 
-    const handleSubmit = async () => {
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
         try {
-            const res = await axiosInstance.put("/api/group/update/", data)
-            console.log(res.data.result)
+            await axiosInstance.put(`/api/group/update/${groupId}`, data)
         } catch (error) {
             console.log(error)
         }
@@ -46,16 +49,22 @@ const UpdateGroup = () => {
         <section>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-white p-6'>
                 <div>
-                    <input type="name" placeholder='group name' name="name" onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className='w-full ' />
+                    <input type="name" placeholder='group name' name="name" value={data.name} onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className='w-full ' />
                 </div>
-                {
-                    data.members.map((m) => (
-                        <div key={m._id} className='flex flex-col items-center gap-1'>
-                            <div className='w-6 h-6 rounded-full flex justify-center items-center bg-blue-400'>{m.name[0]}</div>
-                            <h2>{m.name}</h2>
-                        </div>
-                    ))
-                }
+                <div>
+                    <h2>Group members</h2>
+                    <div className='flex gap-2'>
+
+                        {
+                            data.members.map((m) => (
+                                <div key={m._id} className='flex flex-col items-center gap-1'>
+                                    <div className='w-8 h-8 rounded-full flex justify-center items-center bg-blue-400'>{m.name[0]}</div>
+                                    <h2>{m.name}</h2>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
 
                 <Button type='submit' text='Update' />
                 {/* {

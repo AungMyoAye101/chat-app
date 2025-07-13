@@ -40,7 +40,8 @@ export const updateGroup = async (req, res) => {
         return res.status(400).json({ message: "Invalid group Id." })
     }
     try {
-        const updatedGroup = await Group.findOneAndUpdate(groupId, { ...req.body })
+        const updatedGroup = await Group.findOneAndUpdate({ _id: groupId }, { ...req.body }, { new: true })
+        console.log(updatedGroup)
 
         res.status(200).json({ message: 'Group updated successful', })
     } catch (error) {
