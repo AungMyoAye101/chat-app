@@ -45,6 +45,19 @@ const UpdateGroup = () => {
             console.log(error)
         }
     }
+
+    //for remove members 
+    const handleRemoveMember = (memberId: string) => {
+        setData(prev => ({
+            ...prev,
+            members: prev.members.filter(member => member._id !== memberId)
+        }))
+
+    }
+
+    const handleAddMember = (newMember: MembersType) => {
+        setData(prev => ({ ...prev, members: [...prev.members, newMember] }))
+    }
     return (
         <section>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-white p-6'>
@@ -57,7 +70,8 @@ const UpdateGroup = () => {
 
                         {
                             data.members.map((m) => (
-                                <div key={m._id} className='flex flex-col items-center gap-1'>
+                                <div key={m._id} className='flex flex-col items-center gap-1 relative'>
+                                    <div className='bg-white text-red-400 p-2 absolute top-0 right-0 rounded-full text-xs'>X</div>
                                     <div className='w-8 h-8 rounded-full flex justify-center items-center bg-blue-400'>{m.name[0]}</div>
                                     <h2>{m.name}</h2>
                                 </div>
