@@ -1,8 +1,8 @@
 import Button from '@/components/UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
-import type { GroupTypes } from '@/lib/types'
+import type { UserType, GroupTypes } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 interface MembersType {
     _id: string;
@@ -20,9 +20,20 @@ const UpdateGroup = () => {
         members: [],
         createdBy: ''
     })
+    const [user, setUser] = useState<UserType[]>([])
     const { groupId } = useParams()
 
+    const alreadyMembers = user.filter(m => data.members.some(member => member._id === m._id))
+    console.log(alreadyMembers)
 
+    const fetchUser = async () => {
+        try {
+            const res = await axiosInstance.get('/api/users')
+            setUser(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         const fetchGroup = async () => {
             try {
@@ -33,6 +44,7 @@ const UpdateGroup = () => {
             }
         }
         fetchGroup()
+        fetchUser()
     }, [])
 
 
@@ -48,6 +60,10 @@ const UpdateGroup = () => {
 
     //for remove members 
     const handleRemoveMember = (memberId: string) => {
+        if (data.createdBy === memberId) {
+            alert("You cannot remove the group admin")
+            return
+        }
         setData(prev => ({
             ...prev,
             members: prev.members.filter(member => member._id !== memberId)
@@ -61,23 +77,33 @@ const UpdateGroup = () => {
     return (
         <section>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-white p-6'>
-                <div>
-                    <input type="name" placeholder='group name' name="name" value={data.name} onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className='w-full ' />
+                <div className='flex justify-center items-center gap-4'>
+                    <div className='w-32 h-32 rounded-full bg-gray-300'></div>
+                    <input type="name" placeholder='group name' name="name" value={data.name} onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className="flex-1" />
                 </div>
                 <div>
-                    <h2>Group members</h2>
-                    <div className='flex gap-2'>
+                    <div className='flex justify-between items-center'>
+
+                        <h2 className='text-xl font-semibold font-serif '>Group members <span className='text-sm'>({data.members.length} members)</span></h2>
+                        <Link to="/add-members">Add members</Link>
+                    </div>
+                    <div className='flex flex-col gap-2'>
 
                         {
                             data.members.map((m) => (
-                                <div key={m._id} className='flex flex-col items-center gap-1 relative'>
-                                    <div className='bg-white text-red-400 p-2 absolute top-0 right-0 rounded-full text-xs'>X</div>
-                                    <div className='w-8 h-8 rounded-full flex justify-center items-center bg-blue-400'>{m.name[0]}</div>
+                                <div key={m._id} className='flex  items-center gap-1 relative'>
+
+                                    <div className='w-10 h-10 rounded-full flex justify-center items-center bg-gray-300'>{m.name[0]}</div>
                                     <h2>{m.name}</h2>
+                                    {
+                                        data.createdBy === m._id && <span className='text-xs text-green-500'> (Admin)</span>
+                                    }
+                                    <button onClick={() => handleRemoveMember(m._id)} className='text-red-400'>Remove</button>
                                 </div>
                             ))
                         }
                     </div>
+
                 </div>
 
                 <Button type='submit' text='Update' />
