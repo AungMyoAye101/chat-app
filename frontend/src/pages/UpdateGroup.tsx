@@ -85,7 +85,7 @@ const UpdateGroup = () => {
                     <div className='flex justify-between items-center'>
 
                         <h2 className='text-xl font-semibold font-serif '>Group members <span className='text-sm'>({data.members.length} members)</span></h2>
-                        <Link to="/add-members">Add members</Link>
+                        <Link to="add-members">Add members</Link>
                     </div>
                     <div className='flex flex-col gap-2'>
 
