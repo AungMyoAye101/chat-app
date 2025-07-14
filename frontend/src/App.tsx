@@ -1,27 +1,30 @@
 
-import { Navigate, replace, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
-import { useAuth } from './context/Auth.context';
+
 import Group from './pages/Group';
 import NotFound from './pages/NotFound';
 import UpdateGroup from './pages/UpdateGroup';
 import AddMembers from './pages/AddMembers';
+import { useAuth } from './context/Auth.context';
 
-// const ProcetiveRoute = ({ children }: { children: React.ReactNode }) => {
-//   const user = useAuth()
-//   if (!user) {
+const ProctedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = useAuth()
+  if (!user?._id) {
+    return <Navigate to="/login" replace />
+  } else {
+    return <>{children}</>
+  }
 
-//     return <Navigate to={"/login"} />
-//   }
-// }
+}
 
 const App = () => {
 
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<ProctedRoute><Home /></ProctedRoute>} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/create-group' element={<Group />} />

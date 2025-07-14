@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import Group from "../model/group.model.js"
+import User from "../model/user.model.js"
 
 
 export const createGroup = async (req, res) => {
@@ -61,6 +62,50 @@ export const getGroupById = async (req, res) => {
             return res.status(404).json({ message: "Group not found." })
         }
         res.status(200).json({ message: 'success', group })
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Interval server error" })
+    }
+}
+
+export const checkAvailableGroupMembers = async (req, res) => {
+    const { groupId } = req.params
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).json({ message: "Invalid group Id." })
+    }
+    try {
+        const group = await Group.findById(groupId)
+        if (!group) {
+            return res.status(404).json({ message: "Group not found." })
+        }
+
+        const allUsers = await User.find({ _id: { $nin: group.members } }).select('-password -__v -createdAt -updatedAt')
+        console.log(allUsers)
+
+        res.status(200).json({ message: 'success', avaliableUser: allUsers })
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Interval server error" })
+    }
+
+}
+
+export const addMembersToGroup = async (req, res) => {
+    const { groupId } = req.params
+    const { members } = req.body
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).json({ message: "Invalid group Id." })
+    }
+    try {
+        const updatedGroup = await Group.findByIdAndUpdate(
+            groupId,
+            { $addToSet: { members: { $each: members } } },
+            { new: true }
+        ).populate('members', 'name')
+        if (!updatedGroup) {
+            return res.status(404).json({ message: "Group not found." })
+        }
+        res.status(200).json({ message: 'Members added successfully', group: updatedGroup })
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Interval server error" })

@@ -71,9 +71,9 @@ const UpdateGroup = () => {
 
     }
 
-    const handleAddMember = (newMember: MembersType) => {
-        setData(prev => ({ ...prev, members: [...prev.members, newMember] }))
-    }
+    // const handleAddMember = (newMember: MembersType) => {
+    //     setData(prev => ({ ...prev, members: [...prev.members, newMember] }))
+    // }
     return (
         <section>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-white p-6'>
