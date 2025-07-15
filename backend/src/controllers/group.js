@@ -70,6 +70,11 @@ export const getGroupById = async (req, res) => {
 
 export const checkAvailableGroupMembers = async (req, res) => {
     const { groupId } = req.params
+    const { name } = req.query
+    console.log(name)
+    // if (!name) {
+    //     return res.status(400).json({ message: "Name query parameter is required." })
+    // }
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
         return res.status(400).json({ message: "Invalid group Id." })
     }
@@ -79,7 +84,7 @@ export const checkAvailableGroupMembers = async (req, res) => {
             return res.status(404).json({ message: "Group not found." })
         }
 
-        const allUsers = await User.find({ _id: { $nin: group.members } }).select('-password -__v -createdAt -updatedAt')
+        const allUsers = await User.find({ _id: { $nin: group.members }, name: { $regex: name, } }).select('-password -__v -createdAt -updatedAt')
         console.log(allUsers)
 
         res.status(200).json({ message: 'success', avaliableUser: allUsers })

@@ -1,3 +1,4 @@
+import Button from "@/components/UI/Button"
 import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
 import { useEffect, useState } from "react"
@@ -7,24 +8,25 @@ import { useParams } from "react-router-dom"
 const AddMembers = () => {
     const [users, setusers] = useState<UserType[]>([])
     const [selectedUser, setSelectedUser] = useState<string[]>([])
+    const [searchUser, setSearchUser] = useState('')
     const { groupId } = useParams()
-    useEffect(() => {
-        const fetchAvailableUser = async () => {
-            try {
-                const res = await axiosInstance.get(`/api/group/check-available-user/${groupId}`)
-                setusers(res.data.avaliableUser)
-            } catch (error) {
-                console.log(error)
-            }
+    const fetchAvailableUser = async () => {
+        try {
+            const res = await axiosInstance.get(`/api/group/check-available-user/${groupId}?name=${searchUser}`)
+            setusers(res.data.avaliableUser)
+        } catch (error) {
+            console.log(error)
         }
+    }
+    useEffect(() => {
         fetchAvailableUser()
-    }, [])
+    }, [searchUser, groupId])
 
     const addGroupMember = async () => {
         if (selectedUser.length < 1) return
         console.log(selectedUser, " selected user")
         try {
-            const res = await axiosInstance.put(`/api/group/${groupId}/add-members`, { memberId: selectedUser })
+            const res = await axiosInstance.put(`/api/group/${groupId}/add-members?`, { memberId: selectedUser })
             console.log(res.data)
             // Optionally, you can update the state to reflect the new member added 
 
@@ -36,7 +38,10 @@ const AddMembers = () => {
     return (
         <section className=''>
             <div className='flex flex-col gap-4' >
-                <div className='flex w-full gap-4'><input type="text" className='flex-1' /><button>search</button></div>
+                <form className='flex w-full gap-4'>
+                    <input type="text" className='flex-1' onChange={e => setSearchUser(e.target.value)} />
+                    <Button type="submit" text="Search" />
+                </form>
                 <div className='flex flex-col  border gap-1 '>
                     {
                         users.map((user) => (
