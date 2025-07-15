@@ -20,6 +20,10 @@ const AddMembers = () => {
     }
     useEffect(() => {
         fetchAvailableUser()
+        const interval = setInterval(() => {
+            fetchAvailableUser()
+        }, 2000) // Fetch every 5 seconds
+        return () => clearInterval(interval) // Cleanup on unmount
     }, [searchUser, groupId])
 
     const addGroupMember = async () => {

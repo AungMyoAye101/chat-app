@@ -36,14 +36,13 @@ export const createUser = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    console.log("login")
     const { email, password } = req.body
     try {
         const userExit = await User.findOne({ email })
         if (!userExit) {
             return res.status(404).json({ message: "User doesn't exist." })
         }
-        const checkPassword = await bcrypt.compare(password, userExit.password)
+        const checkPassword = bcrypt.compare(password, userExit.password)
         if (!checkPassword) {
             return res.status(400).json({ message: "Email or password doesn't match." })
 
