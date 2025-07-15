@@ -1,6 +1,6 @@
 import Button from '@/components/UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
-import type { UserType, GroupTypes } from '@/lib/types'
+import type { GroupTypes } from '@/lib/types'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -20,20 +20,10 @@ const UpdateGroup = () => {
         members: [],
         createdBy: ''
     })
-    const [user, setUser] = useState<UserType[]>([])
+
     const { groupId } = useParams()
 
-    const alreadyMembers = user.filter(m => data.members.some(member => member._id === m._id))
-    console.log(alreadyMembers)
 
-    const fetchUser = async () => {
-        try {
-            const res = await axiosInstance.get('/api/users')
-            setUser(res.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
     useEffect(() => {
         const fetchGroup = async () => {
             try {
@@ -44,7 +34,7 @@ const UpdateGroup = () => {
             }
         }
         fetchGroup()
-        fetchUser()
+
     }, [])
 
 

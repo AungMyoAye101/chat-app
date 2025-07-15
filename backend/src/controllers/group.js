@@ -92,16 +92,20 @@ export const checkAvailableGroupMembers = async (req, res) => {
 
 export const addMembersToGroup = async (req, res) => {
     const { groupId } = req.params
-    const { members } = req.body
+    const { memberId } = req.body
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
         return res.status(400).json({ message: "Invalid group Id." })
+    }
+    console.log(memberId)
+    if (!Array.isArray(memberId) || memberId.length === 0) {
+        return res.status(400).json({ message: "Members should be an array and cannot be empty." })
     }
     try {
         const updatedGroup = await Group.findByIdAndUpdate(
             groupId,
-            { $addToSet: { members: { $each: members } } },
+            { $addToSet: { members: { $each: memberId } } },
             { new: true }
-        ).populate('members', 'name')
+        )
         if (!updatedGroup) {
             return res.status(404).json({ message: "Group not found." })
         }
