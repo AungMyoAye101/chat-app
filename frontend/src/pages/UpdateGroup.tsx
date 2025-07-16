@@ -1,17 +1,9 @@
 import Button from '@/components/UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
-import type { GroupTypes } from '@/lib/types'
+import type { GroupWithMembers } from '@/lib/types'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-interface MembersType {
-    _id: string;
-    name: string;
-    avatar?: string;
-}
-interface GroupWithMembers extends Omit<GroupTypes, "members"> {
-    members: MembersType[]
-}
 
 const UpdateGroup = () => {
     const [data, setData] = useState<GroupWithMembers>({

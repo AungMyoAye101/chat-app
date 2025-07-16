@@ -12,3 +12,13 @@ export interface GroupTypes {
     createdBy: string,
     members: string[]
 }
+
+export interface MembersType {
+    _id: string;
+    name: string;
+    avatar?: string;
+    lastSeen: string
+}
+export interface GroupWithMembers extends Omit<GroupTypes, "members"> {
+    members: MembersType[]
+}
