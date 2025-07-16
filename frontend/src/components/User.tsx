@@ -3,6 +3,7 @@ import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
 import { useEffect, useState } from "react"
 import { socket } from "./Chat"
+import { formatLastSeen } from "@/lib/helper"
 
 
 interface SelectUserProps {
@@ -32,10 +33,7 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
             socket.off("online-users", handleOnlineUsers)
         }
     }, [])
-    const formatLastSeen = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    };
+
 
 
 

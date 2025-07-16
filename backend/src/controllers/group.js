@@ -57,7 +57,7 @@ export const getGroupById = async (req, res) => {
         return res.status(400).json({ message: "Invalid group Id." })
     }
     try {
-        const group = await Group.findById(groupId).populate('members', 'name ')
+        const group = await Group.findById(groupId).populate('members', 'name lastSeen ').populate('createdBy', 'name ')
         if (!group) {
             return res.status(404).json({ message: "Group not found." })
         }
@@ -71,7 +71,7 @@ export const getGroupById = async (req, res) => {
 export const checkAvailableGroupMembers = async (req, res) => {
     const { groupId } = req.params
     const { name } = req.query
-    console.log(name)
+
     // if (!name) {
     //     return res.status(400).json({ message: "Name query parameter is required." })
     // }
@@ -84,8 +84,8 @@ export const checkAvailableGroupMembers = async (req, res) => {
             return res.status(404).json({ message: "Group not found." })
         }
 
-        const allUsers = await User.find({ _id: { $nin: group.members }, name: { $regex: name, } }).select('-password -__v -createdAt -updatedAt')
-        console.log(allUsers)
+        const allUsers = await User.find({ _id: { $nin: group.members }, name: { $regex: name, $option: "i" } }).select('-password -__v -createdAt -updatedAt')
+
 
         res.status(200).json({ message: 'success', avaliableUser: allUsers })
     } catch (error) {

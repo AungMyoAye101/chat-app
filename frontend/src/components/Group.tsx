@@ -27,8 +27,11 @@ const Group = () => {
                     {
                         data.map((g) => (
                             <div key={g._id} className='flex px-4 py-2 bg-neutral-200 border border-white'>
-                                <div className='w-6 h-6 rounded-full bg-blue-400'></div>
-                                <h2>{g.name}</h2>
+                                <Link to={`/group/${g._id}`}>
+
+                                    <div className='w-6 h-6 rounded-full bg-blue-400'></div>
+                                    <h2>{g.name}</h2>
+                                </Link>
                                 <Link to={`/update-group/${g._id}`} className='ml-auto text-blue-500'>Update</Link>
                             </div>
                         ))

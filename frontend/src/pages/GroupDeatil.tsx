@@ -1,15 +1,31 @@
 import { axiosInstance } from "@/lib/axios.config"
-import type { GroupWithMembers } from "@/lib/types"
+import { formatLastSeen } from "@/lib/helper"
+import type { GroupWithMembers, MembersType } from "@/lib/types"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
-
+interface GroupTypes {
+    _id: string,
+    name: string,
+    createdBy: { name: string },
+    members: MembersType[]
+}
 const GroupDeatil = () => {
-    const [group, setGroup] = useState<GroupWithMembers[]>([])
+    const [group, setGroup] = useState<GroupTypes>({
+        _id: "",
+        name: "",
+        createdBy: { name: "" },
+        members: []
+    })
+
+
+    //toogle edit group modal
+    const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false)
     const { groupId } = useParams()
     const fetchGroupById = async () => {
         try {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
+            console.log(res.data)
             setGroup(res.data.group)
 
         } catch (error) {
@@ -20,35 +36,51 @@ const GroupDeatil = () => {
         fetchGroupById()
     }, [])
 
+
     return (
         <section>
-            <div>
-                {
-                    group.map(g => (
-                        <div>
-                            <div className="w-32 h-32 rounded-full bg-gray-300"></div>
-                            <div>
-                                <h1 className="text-xl font-semibold font-serif">{g.name}</h1>
-                                <p>{ }</p>
-                            </div>
-                            <div>
-                                <h2>Members</h2>
-                                {
-                                    g.members.map(m => (
-                                        <div>
-                                            <div className="w-32 h-32 rounded-full bg-gray-300"></div>
-                                            <div>
-                                                <h1 className="text-xl font-semibold font-serif">{m.name}</h1>
-                                                <p>{m.lastSeen}</p>
-                                            </div>
+            <div className="border-2 border-gray-300 rounded-lg shadow-md max-w-4xl mx-auto ">
+                <div className="flex items-center gap-4 border-b-2 border-gray-200 p-4 relative">
+                    <div className="w-32 h-32 rounded-full bg-gray-300"></div>
+                    <div>
+                        <h1 className="text-xl font-semibold font-serif">{group.name}</h1>
+                        <p>{group.createdBy.name}</p>
+                    </div>
+                    <div className="absolute right-4 top-4 flex gap-2">
+                        <button
+                            onClick={() => setIsEditGroupModalOpen(pre => !pre)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Edit Group</button>
 
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    ))
-                }
+                        {
+                            isEditGroupModalOpen && (
+                                <div className="absolute top-12 right-0 bg-white border border-gray-300  shadow-lg rounded-lg p-4 w-64 flex flex-col gap-1 font-serif">
+
+                                    <Link to={'/group/update'} className=" font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Update </Link>
+                                    <button className="text-red-400 font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Delete</button>
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-4 p-4">
+                    <h2 className="text-xl font-semibold ">Members</h2>
+                    {
+                        group.members.map(m => (
+                            <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2" key={m._id}>
+                                <div className="w-14 h-14 rounded-full bg-gray-300"></div>
+                                <div className="font-sans">
+                                    <h1 className="text-xl font-semibold ">{m.name}</h1>
+                                    <p className="text-sm">Last seen in - {formatLastSeen(m.lastSeen)}</p>
+                                </div>
+
+                            </Link>
+                        ))
+                    }
+                </div>
+
+
+
             </div>
         </section>
     )
