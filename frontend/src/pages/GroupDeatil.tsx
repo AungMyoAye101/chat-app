@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/lib/axios.config"
-import { formatLastSeen } from "@/lib/helper"
-import type { GroupWithMembers, MembersType } from "@/lib/types"
-import { useEffect, useState } from "react"
+import { deleteGroup, formatLastSeen } from "@/lib/helper"
+import type { MembersType } from "@/lib/types"
+import { useEffect, useRef, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 
 interface GroupTypes {
@@ -22,6 +22,23 @@ const GroupDeatil = () => {
     //toogle edit group modal
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false)
     const { groupId } = useParams()
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+            setIsEditGroupModalOpen(false)
+        }
+    };
+
+    useEffect(() => {
+
+        window.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            window.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [])
+
+
     const fetchGroupById = async () => {
         try {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
@@ -46,7 +63,7 @@ const GroupDeatil = () => {
                         <h1 className="text-xl font-semibold font-serif">{group.name}</h1>
                         <p>{group.createdBy.name}</p>
                     </div>
-                    <div className="absolute right-4 top-4 flex gap-2">
+                    <div ref={containerRef} className="absolute right-4 top-4 flex gap-2">
                         <button
                             onClick={() => setIsEditGroupModalOpen(pre => !pre)}
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Edit Group</button>
@@ -56,7 +73,7 @@ const GroupDeatil = () => {
                                 <div className="absolute top-12 right-0 bg-white border border-gray-300  shadow-lg rounded-lg p-4 w-64 flex flex-col gap-1 font-serif">
 
                                     <Link to={'/group/update'} className=" font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Update </Link>
-                                    <button className="text-red-400 font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Delete</button>
+                                    <button onClick={() => deleteGroup(groupId!)} className="text-red-400 font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Delete</button>
                                 </div>
                             )
                         }

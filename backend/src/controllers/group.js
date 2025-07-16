@@ -120,3 +120,20 @@ export const addMembersToGroup = async (req, res) => {
         res.status(500).json({ message: "Interval server error" })
     }
 }
+
+export const deleteGroup = async (req, res) => {
+    const { groupId } = req.params
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).json({ message: "Invalid group Id." })
+    }
+    try {
+        const deletedGroup = await Group.findByIdAndDelete(groupId)
+        if (!deletedGroup) {
+            return res.status(404).json({ message: "Group not found." })
+        }
+        res.status(200).json({ message: 'Group deleted successfully' })
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Interval server error" })
+    }
+}
