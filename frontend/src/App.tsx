@@ -10,6 +10,7 @@ import UpdateGroup from './pages/UpdateGroup';
 import AddMembers from './pages/AddMembers';
 import { useAuth } from './context/Auth.context';
 import GroupDeatil from './pages/GroupDeatil';
+import UserDeatil from './pages/UserDeatil';
 
 const ProctedRoute = () => {
   const user = useAuth()
@@ -26,6 +27,7 @@ const App = () => {
       <Route index element={<Home />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
+      <Route path='/user/:userId' element={<UserDeatil />} />
       <Route path='/create-group' element={<Group />} />
       <Route path='/group/:groupId' element={<GroupDeatil />} />
       <Route path='/group/update/:groupId' element={<UpdateGroup />} />

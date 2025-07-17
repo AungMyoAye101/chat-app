@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     lastSeen: {
         type: Date,
         default: Date.now()
-    }
+    },
+    groups: [{ type: mongoose.Types.ObjectId }]
 }, { timestamps: true })
 
 const User = mongoose.model("User", userSchema)

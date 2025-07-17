@@ -19,7 +19,7 @@ app.use(cookiePaser())
 
 // Routes
 app.use("/api/auth", authRouter)
-app.use('/api/users', userRouter)
+app.use('/api/user', userRouter)
 app.use("/api/messages", messageRouter);
 app.use("/api/group", groupRouter);
 

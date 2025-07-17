@@ -73,14 +73,16 @@ const UpdateGroup = () => {
 
                         {
                             data.members.map((m) => (
-                                <div key={m._id} className='flex  items-center gap-1 relative'>
+                                <div key={m._id} className='flex  justify-between   px-4 py-1 gap-1 relative'>
+                                    <div className='flex  items-center gap-1'>
 
-                                    <div className='w-10 h-10 rounded-full flex justify-center items-center bg-gray-300'>{m.name[0]}</div>
-                                    <h2>{m.name}</h2>
-                                    {
-                                        data.createdBy === m._id && <span className='text-xs text-green-500'> (Admin)</span>
-                                    }
-                                    <button onClick={() => handleRemoveMember(m._id)} className='text-red-400'>Remove</button>
+                                        <div className='w-10 h-10 rounded-full flex justify-center items-center bg-gray-300'>{m.name[0]}</div>
+                                        <h2>{m.name}</h2>
+                                        {
+                                            data.createdBy === m._id && <span className='text-xs text-green-500'> (Admin)</span>
+                                        }
+                                    </div>
+                                    <button onClick={() => handleRemoveMember(m._id)} className='text-red-400 '>Remove</button>
                                 </div>
                             ))
                         }

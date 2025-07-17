@@ -1,4 +1,5 @@
 import Chat from '@/components/Chat'
+import CurrentUser from '@/components/CurrentUser'
 import Group from '@/components/Group'
 import User from '@/components/User'
 import type { UserType } from '@/lib/types'
@@ -23,6 +24,7 @@ const Home = () => {
 
     return (
         <section className='bg-white p-4 h-screen w-full'>
+            <CurrentUser />
             <div className='flex gap-4 '>
                 <Link to={'/register'}>register</Link>
                 <Link to={'/login'}>Login</Link>

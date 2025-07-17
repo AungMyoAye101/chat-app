@@ -13,3 +13,17 @@ export const getAllUsers = async (req, res) => {
         res.status(500).json({ message: "Internal server error" })
     }
 }
+export const getUserById = async (req, res) => {
+    const { userId } = req.params
+    console.log(userId)
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: "Invalid userId" })
+    }
+    try {
+        const users = await User.findById(userId).select("-password").populate('groups')
+        res.status(200).json(users)
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({ message: "Internal server error" })
+    }
+}

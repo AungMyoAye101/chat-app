@@ -16,7 +16,7 @@ const User = ({ setSelectedUser }: SelectUserProps) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axiosInstance.get("/api/users")
+                const res = await axiosInstance.get("/api/user")
                 setUsers(res.data)
             } catch (error) {
                 if (error instanceof Error) console.log(error.message)
