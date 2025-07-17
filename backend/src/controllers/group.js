@@ -84,7 +84,7 @@ export const checkAvailableGroupMembers = async (req, res) => {
             return res.status(404).json({ message: "Group not found." })
         }
 
-        const allUsers = await User.find({ _id: { $nin: group.members }, name: { $regex: name, $option: "i" } }).select('-password -__v -createdAt -updatedAt')
+        const allUsers = await User.find({ _id: { $nin: group.members }, name: { $regex: name, $options: "i" } }).select('-password -__v -createdAt -updatedAt')
 
 
         res.status(200).json({ message: 'success', avaliableUser: allUsers })
@@ -101,7 +101,6 @@ export const addMembersToGroup = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
         return res.status(400).json({ message: "Invalid group Id." })
     }
-    console.log(memberId)
     if (!Array.isArray(memberId) || memberId.length === 0) {
         return res.status(400).json({ message: "Members should be an array and cannot be empty." })
     }

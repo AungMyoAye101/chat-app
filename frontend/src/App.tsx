@@ -28,8 +28,8 @@ const App = () => {
       <Route path='/register' element={<Register />} />
       <Route path='/create-group' element={<Group />} />
       <Route path='/group/:groupId' element={<GroupDeatil />} />
-      <Route path='/update-group/:groupId' element={<UpdateGroup />} />
-      <Route path='/update-group/:groupId/add-members' element={<AddMembers />} />
+      <Route path='/group/update/:groupId' element={<UpdateGroup />} />
+      <Route path='/group/update/:groupId/add-members' element={<AddMembers />} />
       <Route path='*' element={<NotFound />} />
     </Routes>
   )

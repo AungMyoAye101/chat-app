@@ -1,18 +1,23 @@
 import Button from "@/components/UI/Button"
 import { axiosInstance } from "@/lib/axios.config"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 const Group = () => {
     const [data, setData] = useState({
         name: "",
     })
+    const navigate = useNavigate()
 
     const handelSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
             const res = await axiosInstance.post("/api/group/create-group", data)
-            console.log(res.data)
+            if (res.status === 201) {
+                setData({ name: "" })
+                navigate(`/group/${res.data.group._id}`)
+            }
         } catch (error) {
             console.log(error)
         }

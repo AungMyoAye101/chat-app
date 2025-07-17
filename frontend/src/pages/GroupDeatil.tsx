@@ -72,7 +72,7 @@ const GroupDeatil = () => {
                             isEditGroupModalOpen && (
                                 <div className="absolute top-12 right-0 bg-white border border-gray-300  shadow-lg rounded-lg p-4 w-64 flex flex-col gap-1 font-serif">
 
-                                    <Link to={'/group/update'} className=" font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Update </Link>
+                                    <Link to={`/group/update/${group._id}`} className=" font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Update </Link>
                                     <button onClick={() => deleteGroup(groupId!)} className="text-red-400 font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Delete</button>
                                 </div>
                             )
