@@ -59,6 +59,13 @@ io.on("connection", (socket) => {
         }
     })
 
+
+    //For Group Chat 
+    socket.on("join-group", ({ groupId, userId }) => {
+        socket.join(groupId)
+        console.log(`User ${userId} joined group ${groupId}`);
+    })
+
 })
 
 export { io, server, app }
