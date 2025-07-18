@@ -7,14 +7,14 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 interface GroupTypes {
     _id: string,
     name: string,
-    createdBy: { name: string },
+    createdBy: { _id: string, name: string },
     members: MembersType[]
 }
 const GroupDeatil = () => {
     const [group, setGroup] = useState<GroupTypes>({
         _id: "",
         name: "",
-        createdBy: { name: "" },
+        createdBy: { _id: '', name: "" },
         members: []
     })
 
@@ -44,7 +44,6 @@ const GroupDeatil = () => {
     const fetchGroupById = async () => {
         try {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
-            console.log(res.data)
             setGroup(res.data.group)
 
         } catch (error) {
@@ -56,16 +55,11 @@ const GroupDeatil = () => {
     }, [])
 
     const deleteGroup = async (groupId: string) => {
-
         try {
             const res = await axiosInstance.delete("/api/group/delete/" + groupId)
             if (res.status === 200) {
-                console.log("Group deleted successfully");
-
                 navigate("/")
             }
-
-
         } catch (error) {
             console.log(error)
         }
@@ -105,9 +99,14 @@ const GroupDeatil = () => {
                             <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2" key={m._id}>
                                 <div className="w-14 h-14 rounded-full bg-gray-300"></div>
                                 <div className="font-sans">
-                                    <h1 className="text-xl font-semibold ">{m.name}</h1>
+                                    <h1 className="text-xl font-semibold ">{m.name}
+                                        {
+                                            m._id === group.createdBy._id && <span className="text-sm text-green-500"> (Admin)</span>
+                                        }
+                                    </h1>
                                     <p className="text-sm">Last seen in - {formatLastSeen(m.lastSeen)}</p>
                                 </div>
+
 
                             </Link>
                         ))

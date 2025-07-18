@@ -44,8 +44,6 @@ export const updateGroup = async (req, res) => {
     }
     try {
         const updatedGroup = await Group.findOneAndUpdate({ _id: groupId }, { ...req.body }, { new: true })
-        console.log(updatedGroup)
-
         res.status(200).json({ message: 'Group updated successful', })
     } catch (error) {
         console.log(error.message)
@@ -59,7 +57,7 @@ export const getGroupById = async (req, res) => {
         return res.status(400).json({ message: "Invalid group Id." })
     }
     try {
-        const group = await Group.findById(groupId).populate('members', 'name lastSeen ').populate('createdBy', 'name ')
+        const group = await Group.findById(groupId).populate('members', 'name lastSeen ').populate('createdBy', '_id name ')
         if (!group) {
             return res.status(404).json({ message: "Group not found." })
         }

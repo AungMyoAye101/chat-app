@@ -11,6 +11,7 @@ import AddMembers from './pages/AddMembers';
 import { useAuth } from './context/Auth.context';
 import GroupDeatil from './pages/GroupDeatil';
 import UserDeatil from './pages/UserDeatil';
+import Navbar from './components/Navbar';
 
 const ProctedRoute = () => {
   const user = useAuth()

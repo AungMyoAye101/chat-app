@@ -2,7 +2,7 @@ import Button from '@/components/UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
 import type { GroupWithMembers } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 
 const UpdateGroup = () => {
@@ -14,6 +14,8 @@ const UpdateGroup = () => {
     })
 
     const { groupId } = useParams()
+
+    const navogate = useNavigate()
 
 
     useEffect(() => {
@@ -34,7 +36,10 @@ const UpdateGroup = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
-            await axiosInstance.put(`/api/group/update/${groupId}`, data)
+            const res = await axiosInstance.put(`/api/group/update/${groupId}`, data)
+            if (res.status === 200) {
+                navogate(`/group/${groupId}`)
+            }
         } catch (error) {
             console.log(error)
         }
