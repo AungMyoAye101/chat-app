@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios.config"
-import { deleteGroup, formatLastSeen } from "@/lib/helper"
+import { formatLastSeen } from "@/lib/helper"
 import type { MembersType } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 
 interface GroupTypes {
     _id: string,
@@ -23,6 +23,8 @@ const GroupDeatil = () => {
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false)
     const { groupId } = useParams()
     const containerRef = useRef<HTMLDivElement>(null)
+
+    const navigate = useNavigate()
 
     const handleClickOutside = (event: MouseEvent) => {
         if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -52,6 +54,22 @@ const GroupDeatil = () => {
     useEffect(() => {
         fetchGroupById()
     }, [])
+
+    const deleteGroup = async (groupId: string) => {
+
+        try {
+            const res = await axiosInstance.delete("/api/group/delete/" + groupId)
+            if (res.status === 200) {
+                console.log("Group deleted successfully");
+
+                navigate("/")
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     return (

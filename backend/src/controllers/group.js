@@ -15,7 +15,8 @@ export const createGroup = async (req, res) => {
         if (!newGroup) {
             return res.status(400).json({ message: "Failed to create group." })
         }
-        await User.findByIdAndUpdate(userId, { groups: { $push: newGroup._id } })
+        await User.findByIdAndUpdate(userId, { $push: { groups: newGroup._id } })
+
         res.status(201).json({ message: "group created succeeful", group: newGroup })
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -135,7 +136,7 @@ export const deleteGroup = async (req, res) => {
         if (!deletedGroup) {
             return res.status(404).json({ message: "Group not found." })
         }
-        await User.findByIdAndUpdate(userId, { groups: { $pull: groupId } })
+        await User.findByIdAndUpdate(userId, { $pull: { groups: groupId } })
         res.status(200).json({ message: 'Group deleted successfully' })
     } catch (error) {
         console.log(error.message)
