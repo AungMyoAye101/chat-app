@@ -1,31 +1,31 @@
 
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
-
 import Group from './pages/Group';
 import NotFound from './pages/NotFound';
 import UpdateGroup from './pages/UpdateGroup';
 import AddMembers from './pages/AddMembers';
-import { useAuth } from './context/Auth.context';
 import GroupDeatil from './pages/GroupDeatil';
 import UserDeatil from './pages/UserDeatil';
-import Navbar from './components/Navbar';
+import UserChat from './pages/UserChat';
+import GroupChat from './pages/GroupChat';
 
-const ProctedRoute = () => {
-  const user = useAuth()
-  console.log(user)
-  return user?._id ? <Outlet /> : <Navigate to="/login" replace />
+import DefaultChat from './pages/DefaultChat';
 
-}
+
+
 
 const App = () => {
 
   return (
     <Routes>
-
-      <Route index element={<Home />} />
+      <Route path='/' element={<Home />} >
+        <Route path='/' element={<DefaultChat />} />
+        <Route path='/chat/user/:userId' element={<UserChat />} />
+        <Route path='/chat/group/:groupId' element={<GroupChat />} />
+      </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/user/:userId' element={<UserDeatil />} />

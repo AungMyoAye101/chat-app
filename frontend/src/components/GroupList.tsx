@@ -1,10 +1,12 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { GroupTypes } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
-const Group = ({ setSelectedGroup }: { setSelectedGroup: () => void }) => {
+const GroupList = () => {
     const [data, setData] = useState<GroupTypes[]>([])
+
+    const { groupId } = useParams()
     useEffect(() => {
         const fetchGroup = async () => {
             try {
@@ -26,18 +28,18 @@ const Group = ({ setSelectedGroup }: { setSelectedGroup: () => void }) => {
                 <div>
                     {
                         data.map((g) => (
-                            <div key={g._id} className='flex px-4 py-2 bg-neutral-200 border border-white'>
-                                <Link to={`/group/${g._id}`} className='flex items-center gap-2'>
+                            <Link to={`/chat/group/${groupId}`} key={g._id} className='flex px-4 py-2 cursor-pointer hover:bg-gray-200'>
 
-                                    <div className='w-6 h-6 rounded-full bg-blue-400'></div>
-                                </Link>
-                                <div onClick={() => setSelectedGroup(g)} className='cursor-pointer bg-blue-100 w-full'>
+
+                                <div className='w-6 h-6 rounded-full bg-blue-400'></div>
+
+                                <div>
 
                                     <h2>{g.name}</h2>
+
+
                                 </div>
-
-
-                            </div>
+                            </Link>
                         ))
                     }
                 </div>
@@ -46,4 +48,4 @@ const Group = ({ setSelectedGroup }: { setSelectedGroup: () => void }) => {
     )
 }
 
-export default Group
+export default GroupList

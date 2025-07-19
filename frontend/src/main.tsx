@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
 
       <AuthContext>
-        <div className='max-w-6xl mx-auto p-12'>
+        <div className='max-w-6xl mx-auto p-4'>
           <Navbar />
           <App />
         </div>
