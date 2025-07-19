@@ -1,9 +1,9 @@
 import { useAuth } from '@/context/Auth.context'
 import { axiosInstance } from '@/lib/axios.config'
+import { socket } from '@/lib/socket'
 import type { UserType } from '@/lib/types'
 import { useEffect, useRef, useState } from 'react'
-import { io } from 'socket.io-client'
-export const socket = io('http://localhost:5000')
+
 
 interface ChatPropsType {
     selectedUser: UserType

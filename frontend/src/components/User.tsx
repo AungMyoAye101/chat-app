@@ -2,9 +2,9 @@
 import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
 import { useEffect, useState } from "react"
-import { socket } from "./Chat"
 import { formatLastSeen } from "@/lib/helper"
 import { Link, useNavigate } from "react-router-dom"
+import { socket } from "@/lib/socket"
 
 
 

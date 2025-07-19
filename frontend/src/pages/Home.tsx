@@ -25,8 +25,7 @@ const Home = () => {
     const [selectedGroup, setSelectedGroup] = useState<GroupTypes>()
 
     return (
-        <section className='max-w-6xl mx-auto border border-red-400  h-screen w-full'>
-            <CurrentUser />
+        <section className='max-w-6xl mx-auto border border-red-400 min-h-screen w-full'>
 
             <div className='flex w-full'>
                 <div className='max-w-xs w-full bg-white'>
@@ -34,7 +33,7 @@ const Home = () => {
                     <GroupList />
                     <User />
                 </div>
-                <div className='flex-1 h-[90vh]'>
+                <div className='flex-1 h-screen'>
                     <Outlet />
                 </div>
 

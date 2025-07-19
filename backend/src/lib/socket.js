@@ -26,8 +26,9 @@ io.on("connection", (socket) => {
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
-        const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        io.to(receiverId).to(senderId).emit("received-message", newMessage)
+        console.log(message)
+        // const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
+        io.to(receiverId).to(senderId).emit("received-message", message)
 
     })
 
