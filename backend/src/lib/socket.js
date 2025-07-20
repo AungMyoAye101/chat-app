@@ -28,18 +28,18 @@ io.on("connection", (socket) => {
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
         const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        io.to(receiverId).to(senderId).emit("received-message", newMessage)
+        socket.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })
 
     // for typing indicator
-    socket.on("typing", (receiverId) => {
-        if (socket.userId) {
-            socket.to(receiverId).emit("isTyping", socket.userId)
-        }
+    socket.on("typing", ({ senderId, receiverId }) => {
+
+        socket.to(receiverId).emit("isTyping", senderId)
+
     })
-    socket.on("stop-typing", (receiverId) => {
-        socket.to(receiverId).emit("stopped-typing", receiverId)
+    socket.on("stop-typing", ({ senderId, receiverId }) => {
+        socket.to(receiverId).emit("stopped-typing", senderId)
     })
 
     socket.on("disconnect", async () => {
