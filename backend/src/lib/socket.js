@@ -23,12 +23,13 @@ io.on("connection", (socket) => {
         onlineUsers.set(userId, socket.id)
         socket.join(userId)
         io.emit("online-users", Array.from(onlineUsers.keys()))
+        console.log('user joined as ', userId,)
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
-        console.log(message)
+        console.log(senderId, receiverId, message)
         // const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        io.to(receiverId).to(senderId).emit("received-message", message)
+        io.to(receiverId).to(senderId).emit("received-message", { message, senderId })
 
     })
 

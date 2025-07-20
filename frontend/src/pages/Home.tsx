@@ -4,9 +4,11 @@ import GroupList from '@/components/GroupList'
 
 
 import User from '@/components/User'
+import { useAuth } from '@/context/Auth.context'
+import { socket } from '@/lib/socket'
 import type { GroupTypes, UserType } from '@/lib/types'
 
-import { useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
 
@@ -15,14 +17,12 @@ import { Link, Outlet } from 'react-router-dom'
 const Home = () => {
 
 
-    const [selectedUser, setSelectedUser] = useState<UserType>({
-        _id: '',
-        name: '',
-        email: '',
-        lastSeen: ''
-    })
+    const user = useAuth()
 
-    const [selectedGroup, setSelectedGroup] = useState<GroupTypes>()
+    useEffect(() => {
+        if (!user?._id) return
+        socket.emit("setup", user?._id)
+    }, [user?._id])
 
     return (
         <section className='max-w-6xl mx-auto border border-red-400 min-h-screen w-full'>

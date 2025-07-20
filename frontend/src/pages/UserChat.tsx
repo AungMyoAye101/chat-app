@@ -3,31 +3,34 @@ import { socket } from '@/lib/socket'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+type MessageType = {
+    senderId: string;
+    message: string;
+    // add other fields if needed
+};
+
 const UserChat = () => {
     const [message, setMessage] = useState('')
-    const [receivedData, setReceivedData] = useState()
+    const [receivedData, setReceivedData] = useState<MessageType[]>([])
     const { userId } = useParams()
     const user = useAuth()
     const currUserId = user?._id
 
-    useEffect(() => {
-        socket.emit("setup", userId)
-    }, [currUserId])
+
 
 
     useEffect(() => {
-        console.log("run")
         socket.on("received-message", (data) => {
-            console.log(data, "received")
-            setReceivedData(data)
+            setReceivedData(pre => ([...pre, data]))
         })
 
-    })
+    }, [])
 
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault()
-        socket.emit("send-message", ({ currUserId, userId, message }))
+        console.log(currUserId, userId)
+        socket.emit("send-message", ({ senderId: user?._id, receiverId: userId, message }))
         setMessage('')
     }
 
@@ -37,7 +40,11 @@ const UserChat = () => {
         <section className='bg-blue-100 h-full flex flex-col '>
             <div className='bg-green-200 '>{userId}</div>
             <div className='flex-1'>
-
+                {
+                    receivedData.map((data, i) => (
+                        <div key={i}>{data.message}</div>
+                    ))
+                }
             </div>
             <form onSubmit={handleSendMessage} className='flex '>
                 <input

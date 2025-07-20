@@ -5,7 +5,12 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 const auth = createContext<UserType | null>(null)
 
 const AuthContext = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<UserType | null>(null)
+    const [user, setUser] = useState<UserType>({
+        _id: '',
+        name: "",
+        email: "",
+        lastSeen: "",
+    })
     useEffect(() => {
         const checkAuth = async () => {
             try {
