@@ -2,6 +2,7 @@ import { useAuth } from '@/context/Auth.context'
 import { axiosInstance } from '@/lib/axios.config';
 import { formatLastSeen } from '@/lib/helper';
 import { socket } from '@/lib/socket'
+import type { UserType } from '@/lib/types';
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -20,13 +21,14 @@ type MessageType = {
 };
 
 const UserChat = () => {
+    const [selectedUser, setSelectedUser] = useState<UserType>()
     const [message, setMessage] = useState('')
     const [receivedData, setReceivedData] = useState<MessageType[]>([])
     const [isTyping, setIsTyping] = useState(false)
     const typingTimeOutRef = useRef<NodeJS.Timeout | null>(null)
     const { userId } = useParams()
     const user = useAuth()
-
+    const currUserId = user?._id
 
 
     const getMessage = async () => {
@@ -35,75 +37,86 @@ const UserChat = () => {
             setReceivedData(res.data)
         }
     }
+    const getUser = async () => {
+        if (userId) {
+            const res = await axiosInstance.get("/api/user/" + userId)
+            setSelectedUser(res.data)
+        }
+    }
+    useEffect(() => {
+        getUser()
+    }, [])
+
     // useEffect(() => {
-    //     const getMessage = async () => {
-    //         if (userId) {
-    //             const res = await axiosInstance.get("/api/messages/" + userId)
-    //             setReceivedData(res.data)
-    //         }
-    //     }
+
     //     getMessage()
-    // }, [])
+    // }, [currUserId])
 
     useEffect(() => {
+        console.log("run")
         if (!userId) return;
+        socket.on("received-message", (data) => {
+            console.log(data)
+            if (data.receiver === userId) {
 
-        // Handler for received-message
-        const handleReceivedMessage = (data: MessageType) => {
-            // Only add if the message is for this chat (either sent or received)
-            if (
-                (data.sender._id === userId && data.receiver._id === user?._id) ||
-                (data.receiver._id === userId && data.sender._id === user?._id)
-            ) {
-                setReceivedData(prev => {
-                    const updated = [...prev, data];
-                    // Sort by createdAt
-                    return updated.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-                });
+                setReceivedData(pre => [...pre, data])
             }
-        };
+        })
+        getMessage()
+    }, [userId])
 
-        socket.on("received-message", handleReceivedMessage);
-        getMessage();
 
-        socket.on("isTyping", (senderId: string) => {
-            if (senderId === userId) {
-                setIsTyping(true);
-            }
-        });
-        socket.on("stopped-typing", (senderId: string) => {
-            if (senderId === userId) {
-                setIsTyping(false);
-            }
-        });
+    // useEffect(() => {
+    //     console.log("run")
+    //     if (!selectedUser?._id) return;
+    //     socket.on("received-message", (data) => {
+    //         console.log(data)
+    //     })
 
-        return () => {
-            socket.off("received-message", handleReceivedMessage);
-            socket.off("isTyping");
-            socket.off("stopped-typing");
-        };
-    }, [userId, user?._id]);
+    //     //     // Handler for received-message
+    //     //     const handleReceivedMessage = (data: MessageType) => {
+    //     //         // Only add if the message is for this chat (either sent or received)
+    //     //         if (
+    //     //             (data.sender._id === userId && data.receiver._id === user?._id) ||
+    //     //             (data.receiver._id === userId && data.sender._id === user?._id)
+    //     //         ) {
+    //     //             setReceivedData(prev => {
+    //     //                 const updated = [...prev, data];
+    //     //                 // Sort by createdAt
+    //     //                 return updated.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    //     //             });
+    //     //         }
+    //     //     };
+
+    //     //     socket.on("received-message", handleReceivedMessage);
+    //     //     getMessage();
+
+    //     //     socket.on("isTyping", (senderId: string) => {
+    //     //         if (senderId === userId) {
+    //     //             setIsTyping(true);
+    //     //         }
+    //     //     });
+    //     //     socket.on("stopped-typing", (senderId: string) => {
+    //     //         if (senderId === userId) {
+    //     //             setIsTyping(false);
+    //     //         }
+    //     //     });
+
+    //     //     return () => {
+    //     //         socket.off("received-message", handleReceivedMessage);
+    //     //         socket.off("isTyping");
+    //     //         socket.off("stopped-typing");
+    //     //     };
+    // }, [userId]);
 
 
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!message.trim() || !user?._id || !userId) return;
+        if (!message.trim() || !currUserId || !selectedUser?._id) return;
 
-        // Optimistically add message for sender
-        const newMsg: MessageType = {
-            _id: Math.random().toString(36), // temp id
-            sender: { _id: user._id, name: user.name || "You" },
-            receiver: { _id: userId, name: "" },
-            message,
-            createdAt: new Date().toISOString(),
-        };
-        setReceivedData(prev => {
-            const updated = [...prev, newMsg];
-            return updated.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-        });
 
-        socket.emit("send-message", { senderId: user._id, receiverId: userId, message });
+        socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
         setMessage("");
     };
 
@@ -124,7 +137,11 @@ const UserChat = () => {
 
     return (
         <section className='bg-blue-100 h-full flex flex-col '>
-            <div className='bg-green-200 '>{userId}</div>
+            <div className='bg-white flex gap-2 px-4 py-1 items-center'>
+                <div className='w-10 h-10 rounded-full bg-blue-200'></div>
+                <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
+                    <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
+            </div>
             <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
                 {
                     receivedData.map((data, i) => (
@@ -144,7 +161,7 @@ const UserChat = () => {
                     type="text"
                     value={message}
                     onChange={(e) => handleTyping(e)}
-                    className='flex-1 py-1 px-4 bg-neutral-200'
+                    className='flex-1 py-1 px-4 bg-white'
                 />
                 <button className='px-4 py-1 bg-white'>Send</button>
             </form>

@@ -15,15 +15,12 @@ const io = new Server(server, {
 
 const onlineUsers = new Map()
 io.on("connection", (socket) => {
-
-
     socket.on("setup", (userId) => {
 
         socket.userId = userId
         onlineUsers.set(userId, socket.id)
         socket.join(userId)
         io.emit("online-users", Array.from(onlineUsers.keys()))
-        console.log('user joined as ', userId,)
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
