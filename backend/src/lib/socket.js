@@ -61,9 +61,20 @@ io.on("connection", (socket) => {
         socket.join(groupId)
         console.log(`User ${userId} joined group ${groupId}`);
     })
-    socket.on("send-message-group", ({ groupId, senderId, message }) => {
-        console.log(`user ${senderId} send message ${message} to group ${groupId}`)
-        io.to(groupId).emit("received-group-message", message)
+    socket.on("send-message-group", async ({ groupId, senderId, message }) => {
+        try {
+            const groupMessage = await Message.create({
+                sender: senderId,
+                group: groupId,
+                message,
+            })
+            console.log(groupMessage)
+            io.to(groupId).emit("received-group-message", groupMessage)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ message: "Internal error." })
+        }
+
     })
 })
 

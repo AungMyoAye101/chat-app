@@ -28,3 +28,14 @@ export const getMessages = async (req, res) => {
         res.status(500).json({ message: "Internal error." })
     }
 }
+
+export const getGroupMessage = async (req, res) => {
+    const { groupId } = req.params
+    try {
+        const message = await Message.find({ group: groupId })
+        res.status(200).json(message)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal error." })
+    }
+}

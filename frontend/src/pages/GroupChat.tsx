@@ -6,12 +6,18 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 
+interface GroupMessageType {
+    sender: string,
+    message: string,
+    _id: string,
+    group: string
+}
 
 
 const GroupChat = () => {
     const [group, setGroup] = useState<GroupTypes>()
     const [message, setMessage] = useState('')
-    const [receivedData, setReceivedData] = useState<string[]>([])
+    const [receivedData, setReceivedData] = useState<GroupMessageType[]>([])
     const { groupId } = useParams()
     const user = useAuth()
 
@@ -21,13 +27,17 @@ const GroupChat = () => {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
             setGroup(res.data.group)
         }
+        const getGroupMessage = async () => {
+            const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
+            setReceivedData(res.data)
+        }
         getGroup()
+        getGroupMessage()
     }, [groupId])
 
     useEffect(() => {
         if (!groupId || !user?._id) return;
         socket.emit("join-group", { groupId, userId: user._id });
-
 
         socket.on("received-group-message", (data) => {
             setReceivedData(prev => [...prev, data]);
@@ -54,10 +64,10 @@ const GroupChat = () => {
             </div>
 
             <div className="overflow-hidden overflow-y-scroll flex-1">
-                {receivedData.map((m, i) => (
-                    <div key={i} className={`px-4 py-1.5 rounded-lg w-fit mb-2 `}>
-                        <div className="text-sm">{m}</div>
-
+                {receivedData.map((m) => (
+                    <div key={m._id} className={`px-4 py-1.5 rounded-lg w-fit mb-2 `}>
+                        <div className="text-sm">{m.message}</div>
+                        <p>{m.sender}</p>
                     </div>
                 ))}
             </div>
