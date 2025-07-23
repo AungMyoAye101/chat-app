@@ -61,7 +61,10 @@ io.on("connection", (socket) => {
         socket.join(groupId)
         console.log(`User ${userId} joined group ${groupId}`);
     })
-
+    socket.on("send-message-group", ({ groupId, senderId, message }) => {
+        console.log(`user ${senderId} send message ${message} to group ${groupId}`)
+        io.to(groupId).emit("received-group-message", message)
+    })
 })
 
 export { io, server, app }

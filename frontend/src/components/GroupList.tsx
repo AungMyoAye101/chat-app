@@ -1,12 +1,11 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { GroupTypes } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const GroupList = () => {
     const [data, setData] = useState<GroupTypes[]>([])
 
-    const { groupId } = useParams()
     useEffect(() => {
         const fetchGroup = async () => {
             try {
@@ -15,7 +14,6 @@ const GroupList = () => {
             } catch (error) {
                 console.log(error)
             }
-
         }
         fetchGroup()
     }, [])
@@ -28,7 +26,7 @@ const GroupList = () => {
                 <div>
                     {
                         data.map((g) => (
-                            <Link to={`/chat/group/${groupId}`} key={g._id} className='flex px-4 py-2 cursor-pointer hover:bg-gray-200'>
+                            <Link to={`/chat/group/${g._id}`} key={g._id} className='flex px-4 py-2 cursor-pointer hover:bg-gray-200'>
 
 
                                 <div className='w-6 h-6 rounded-full bg-blue-400'></div>

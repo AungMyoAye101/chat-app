@@ -1,15 +1,14 @@
-import Chat from '@/components/Chat'
-import CurrentUser from '@/components/CurrentUser'
+
 import GroupList from '@/components/GroupList'
 
 
 import User from '@/components/User'
 import { useAuth } from '@/context/Auth.context'
 import { socket } from '@/lib/socket'
-import type { GroupTypes, UserType } from '@/lib/types'
 
-import { use, useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+
+import { useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
 
 
 
