@@ -15,28 +15,27 @@ const io = new Server(server, {
 
 const onlineUsers = new Map()
 io.on("connection", (socket) => {
-
-
     socket.on("setup", (userId) => {
 
         socket.userId = userId
         onlineUsers.set(userId, socket.id)
         socket.join(userId)
         io.emit("online-users", Array.from(onlineUsers.keys()))
-        console.log('user joined as ', userId,)
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
-        const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        socket.to(receiverId).to(senderId).emit("received-message", newMessage)
+        const createMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
+        const newMessage = await Message.findById(createMessage._id).populate([
+            { path: "sender", select: "id name" },
+            { path: "receiver", select: "id name" }
+        ])
+        io.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })
 
     // for typing indicator
     socket.on("typing", ({ senderId, receiverId }) => {
-
         socket.to(receiverId).emit("isTyping", senderId)
-
     })
     socket.on("stop-typing", ({ senderId, receiverId }) => {
         socket.to(receiverId).emit("stopped-typing", senderId)
@@ -45,17 +44,13 @@ io.on("connection", (socket) => {
     socket.on("disconnect", async () => {
         if (socket.userId) {
             onlineUsers.delete(socket.userId)
-
             try {
                 await User.findByIdAndUpdate(socket.userId, { lastSeen: Date.now() })
             } catch (error) {
                 console.error(error.message)
             }
 
-
             io.emit("online-users", Array.from(onlineUsers.keys()))
-
-
 
         }
     })

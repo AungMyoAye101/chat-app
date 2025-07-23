@@ -20,15 +20,19 @@ const Home = () => {
     const user = useAuth()
 
     useEffect(() => {
-        if (!user?._id) return
-        socket.emit("setup", user?._id)
+        if (user?._id) {
+
+            socket.emit("setup", user?._id)
+        } else {
+            socket.emit("dissconnect")
+        }
     }, [user?._id])
 
     return (
         <section className='max-w-6xl mx-auto border border-red-400 min-h-screen w-full'>
 
             <div className='flex w-full'>
-                <div className='max-w-xs w-full bg-white'>
+                <div className='max-w-xs min-w-[120px] bg-white'>
 
                     <GroupList />
                     <User />
@@ -36,9 +40,6 @@ const Home = () => {
                 <div className='flex-1 h-screen'>
                     <Outlet />
                 </div>
-
-                {/* <Chat selectedUser={selectedUser} /> */}
-                {/* <GroupChat selected={selectedGroup!} /> */}
             </div>
         </section>
     )
