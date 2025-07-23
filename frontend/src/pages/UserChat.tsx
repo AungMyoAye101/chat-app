@@ -126,6 +126,7 @@ const UserChat = () => {
         socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
 
         setMessage("");
+        setIsTyping(false)
 
 
     };
