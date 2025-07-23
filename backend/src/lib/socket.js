@@ -24,8 +24,12 @@ io.on("connection", (socket) => {
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message }) => {
-        const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        socket.to(receiverId).to(senderId).emit("received-message", newMessage)
+        const createMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
+        const newMessage = await Message.findById(createMessage._id).populate([
+            { path: "sender", select: "id name" },
+            { path: "receiver", select: "id name" }
+        ])
+        io.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })
 

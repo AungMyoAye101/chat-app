@@ -27,6 +27,7 @@ const UserChat = () => {
     const [isTyping, setIsTyping] = useState(false)
     const typingTimeOutRef = useRef<NodeJS.Timeout | null>(null)
     const { userId } = useParams()
+    const bottomRef = useRef<HTMLDivElement>(null)
     const user = useAuth()
     const currUserId = user?._id
 
@@ -56,14 +57,19 @@ const UserChat = () => {
         console.log("run")
         if (!userId) return;
         socket.on("received-message", (data) => {
-            console.log(data)
-            if (data.receiver === userId) {
 
-                setReceivedData(pre => [...pre, data])
-            }
+
+            setReceivedData(pre => [...pre, data])
+
+
         })
+
         getMessage()
+        return () => {
+            socket.off("received-message")
+        }
     }, [userId])
+
 
 
     // useEffect(() => {
@@ -135,6 +141,17 @@ const UserChat = () => {
         }, 3000)
     }
 
+    //scroll into bottom 
+    useEffect(() => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: "smooth" })
+        }
+
+    }, [receivedData])
+
+
+
+
     return (
         <section className='bg-blue-100 h-full flex flex-col '>
             <div className='bg-white flex gap-2 px-4 py-1 items-center'>
@@ -145,7 +162,7 @@ const UserChat = () => {
             <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
                 {
                     receivedData.map((data, i) => (
-                        <div key={data._id + i} className={` px-4 py-1.5 rounded-lg w-fit  ${data.sender._id === user?._id ? "self-end bg-neutral-100" : "self-start bg-blue-200"}`}>
+                        <div key={data._id + i} className={` px-4 py-1.5 rounded-lg w-fit  ${data.sender._id === currUserId ? "self-end bg-neutral-100" : "self-start bg-blue-200"}`}>
                             <p className='text-sm'>{data.message}</p>
                             <span className='text-xs'>{formatLastSeen(data.createdAt)}</span>
                         </div>
@@ -154,6 +171,8 @@ const UserChat = () => {
                 {
                     isTyping && <div className='bg-neutral-100 px-4 py-1 rounded-lg w-fit italic text-sm' >Typing...</div>
                 }
+
+                <div ref={bottomRef} />
 
             </div>
             <form onSubmit={handleSendMessage} className='flex '>
