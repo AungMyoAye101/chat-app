@@ -35,9 +35,7 @@ io.on("connection", (socket) => {
 
     // for typing indicator
     socket.on("typing", ({ senderId, receiverId }) => {
-
         socket.to(receiverId).emit("isTyping", senderId)
-
     })
     socket.on("stop-typing", ({ senderId, receiverId }) => {
         socket.to(receiverId).emit("stopped-typing", senderId)
@@ -46,17 +44,13 @@ io.on("connection", (socket) => {
     socket.on("disconnect", async () => {
         if (socket.userId) {
             onlineUsers.delete(socket.userId)
-
             try {
                 await User.findByIdAndUpdate(socket.userId, { lastSeen: Date.now() })
             } catch (error) {
                 console.error(error.message)
             }
 
-
             io.emit("online-users", Array.from(onlineUsers.keys()))
-
-
 
         }
     })

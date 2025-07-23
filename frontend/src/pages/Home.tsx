@@ -20,8 +20,12 @@ const Home = () => {
     const user = useAuth()
 
     useEffect(() => {
-        if (!user?._id) return
-        socket.emit("setup", user?._id)
+        if (user?._id) {
+
+            socket.emit("setup", user?._id)
+        } else {
+            socket.emit("dissconnect")
+        }
     }, [user?._id])
 
     return (
@@ -36,9 +40,6 @@ const Home = () => {
                 <div className='flex-1 h-screen'>
                     <Outlet />
                 </div>
-
-                {/* <Chat selectedUser={selectedUser} /> */}
-                {/* <GroupChat selected={selectedGroup!} /> */}
             </div>
         </section>
     )

@@ -48,25 +48,26 @@ const UserChat = () => {
         getUser()
     }, [])
 
-    // useEffect(() => {
 
-    //     getMessage()
-    // }, [currUserId])
 
     useEffect(() => {
-        console.log("run")
         if (!userId) return;
         socket.on("received-message", (data) => {
-
-
             setReceivedData(pre => [...pre, data])
+        })
 
-
+        socket.on("isTyping", () => {
+            setIsTyping(true)
+        })
+        socket.on("stopped-typing", (senderId) => {
+            setIsTyping(false)
         })
 
         getMessage()
         return () => {
             socket.off("received-message")
+            socket.off("isTyping")
+            socket.off("stop-typing")
         }
     }, [userId])
 
@@ -121,14 +122,17 @@ const UserChat = () => {
         e.preventDefault();
         if (!message.trim() || !currUserId || !selectedUser?._id) return;
 
-
+        //for sending message
         socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
+
         setMessage("");
+
+
     };
 
     //For typing indicator 
     const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!user?._id) return
+        if (!currUserId) return
         setMessage(e.target.value)
         if (!isTyping) {
             socket.emit("typing", { senderId: user._id, receiverId: userId })
@@ -147,7 +151,7 @@ const UserChat = () => {
             bottomRef.current.scrollIntoView({ behavior: "smooth" })
         }
 
-    }, [receivedData])
+    }, [receivedData, isTyping])
 
 
 
