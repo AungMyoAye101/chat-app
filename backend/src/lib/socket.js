@@ -68,8 +68,9 @@ io.on("connection", (socket) => {
                 group: groupId,
                 message,
             })
-            console.log(groupMessage)
-            io.to(groupId).emit("received-group-message", groupMessage)
+            const newMessage = await Message.findById(groupMessage._id).populate([{ path: "sender", select: "_id name" }])
+            console.log(newMessage)
+            io.to(groupId).emit("received-group-message", newMessage)
         } catch (error) {
             console.log(error)
             res.status(500).json({ message: "Internal error." })
