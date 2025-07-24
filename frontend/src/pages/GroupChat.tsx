@@ -1,5 +1,6 @@
 import { useAuth } from "@/context/Auth.context"
 import { axiosInstance } from "@/lib/axios.config"
+import { formatChatTime } from "@/lib/helper"
 import { socket } from "@/lib/socket"
 import type { GroupTypes } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
@@ -10,7 +11,8 @@ interface GroupMessageType {
     sender: { name: string, _id: string },
     message: string,
     _id: string,
-    group: string
+    group: string,
+    createdAt: string
 }
 
 
@@ -107,6 +109,7 @@ const GroupChat = () => {
                     <div key={m._id} className={`px-4 py-1.5 rounded-lg w-fit mb-2 ${user?._id === m.sender._id ? "self-end bg-white" : "self-start bg-blue-200"}`}>
                         <div className="text-sm">{m.message}</div>
                         <p className="text-xs">{m.sender.name}</p>
+                        <span>{formatChatTime(m.createdAt)}</span>
                     </div>
                 ))}
                 {
