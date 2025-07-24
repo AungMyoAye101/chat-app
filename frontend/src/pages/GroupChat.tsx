@@ -3,7 +3,7 @@ import { axiosInstance } from "@/lib/axios.config"
 import { socket } from "@/lib/socket"
 import type { GroupTypes } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
-import { Link, useParams, useSearchParams } from "react-router-dom"
+import { Link, useParams, } from "react-router-dom"
 
 
 interface GroupMessageType {
@@ -18,14 +18,16 @@ const GroupChat = () => {
     const [group, setGroup] = useState<GroupTypes>()
     const [message, setMessage] = useState('')
     const [receivedData, setReceivedData] = useState<GroupMessageType[]>([])
+    const [isTyping, setIsTyping] = useState(false)
     const { groupId } = useParams()
     const user = useAuth()
+    const typingTimeOutRef = useRef<NodeJS.Timeout | null>(null)
     const scrollRef = useRef<HTMLDivElement | null>(null)
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollIntoView({ behavior: "smooth" })
         }
-    }, [receivedData])
+    }, [receivedData, isTyping])
 
 
     useEffect(() => {
@@ -49,8 +51,21 @@ const GroupChat = () => {
             setReceivedData(prev => [...prev, data]);
         });
 
+        socket.on("isTyping", (data) => {
+            if (groupId === data.receiverId) {
+                setIsTyping(true)
+            }
+        })
+        socket.on("stopped-typing", (data) => {
+            if (groupId === data.receiverId) {
+                setIsTyping(false)
+            }
+        })
+
         return () => {
             socket.off("received-group-message");
+            socket.off("isTying");
+            socket.off("stopped-tying");
         };
     }, [groupId, user?._id]);
 
@@ -60,8 +75,26 @@ const GroupChat = () => {
         if (!message.trim() || !groupId || !user?._id) return console.log('group ,userid is required');
 
         socket.emit("send-message-group", { groupId, senderId: user._id, message });
+
         setMessage("");
     };
+
+
+    //For typing indicator 
+    const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        setMessage(e.target.value)
+        if (!isTyping) {
+            socket.emit("typing", ({ senderId: user?._id, receiverId: groupId }))
+            if (typingTimeOutRef.current) {
+                clearTimeout(typingTimeOutRef.current)
+            }
+            typingTimeOutRef.current = setTimeout(() => {
+                socket.emit("stop-typing", ({ senderId: user?._id, receiverId: groupId }))
+            }, 3000)
+        }
+    }
+
     return (
         <section className='bg-sky-50 h-screen w-full flex flex-col '>
             <Link to={`/group/${groupId}`} className="flex gap-2 px-4 py-1 bg-white">
@@ -76,10 +109,13 @@ const GroupChat = () => {
                         <p className="text-xs">{m.sender.name}</p>
                     </div>
                 ))}
+                {
+                    isTyping && <p className="px-4 py-1 bg-white text-sm w-fit rounded-lg">Typing...</p>
+                }
                 <div ref={scrollRef} />
             </div>
             <form onSubmit={handleSend} className="flex">
-                <input type="text" value={message} className="flex-1" onChange={e => setMessage(e.target.value)} />
+                <input type="text" value={message} className="flex-1" onChange={e => handleTyping(e)} />
                 <button type="submit" className="px-4 py-1 bg-white">send</button>
             </form>
 

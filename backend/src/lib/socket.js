@@ -35,10 +35,10 @@ io.on("connection", (socket) => {
 
     // for typing indicator
     socket.on("typing", ({ senderId, receiverId }) => {
-        socket.to(receiverId).emit("isTyping", senderId)
+        socket.to(receiverId).emit("isTyping", { senderId, receiverId })
     })
     socket.on("stop-typing", ({ senderId, receiverId }) => {
-        socket.to(receiverId).emit("stopped-typing", senderId)
+        socket.to(receiverId).emit("stopped-typing", { senderId, receiverId })
     })
 
     socket.on("disconnect", async () => {
@@ -69,11 +69,10 @@ io.on("connection", (socket) => {
                 message,
             })
             const newMessage = await Message.findById(groupMessage._id).populate([{ path: "sender", select: "_id name" }])
-            console.log(newMessage)
+
             io.to(groupId).emit("received-group-message", newMessage)
         } catch (error) {
             console.log(error)
-            res.status(500).json({ message: "Internal error." })
         }
 
     })

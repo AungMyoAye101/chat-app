@@ -56,10 +56,13 @@ const UserChat = () => {
             setReceivedData(pre => [...pre, data])
         })
 
-        socket.on("isTyping", () => {
-            setIsTyping(true)
+        socket.on("isTyping", (data) => {
+            if (userId === data.receiverId) {
+                setIsTyping(true)
+            }
+
         })
-        socket.on("stopped-typing", (senderId) => {
+        socket.on("stopped-typing", () => {
             setIsTyping(false)
         })
 
