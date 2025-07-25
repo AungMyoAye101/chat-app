@@ -13,7 +13,8 @@ const messageSchema = new mongoose.Schema({
     message: {
         type: String,
         required: true
-    }
+    },
+    seenBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 },
     { timestamps: true }
 )

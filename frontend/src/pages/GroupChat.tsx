@@ -6,13 +6,17 @@ import type { GroupTypes } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
 import { Link, useParams, } from "react-router-dom"
 
-
+interface SeenUserType {
+    _id: string,
+    name: string
+}
 interface GroupMessageType {
     sender: { name: string, _id: string },
     message: string,
     _id: string,
     group: string,
-    createdAt: string
+    createdAt: string,
+    seenBy: SeenUserType[]
 }
 
 
@@ -41,9 +45,27 @@ const GroupChat = () => {
             const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
             setReceivedData(res.data)
         }
+
         getGroup()
         getGroupMessage()
+
     }, [groupId])
+
+    //For message seen functionally
+
+    useEffect(() => {
+        const seenMessage = async () => {
+            const unseenMessage = receivedData.filter((m) => !m.seenBy.some(u => u._id === user?._id))
+            console.log(unseenMessage.length)
+            if (unseenMessage.length === 0) return;
+            await Promise.all(unseenMessage.map((msg) => {
+                axiosInstance.put(`/api/messages/${msg._id}`)
+            }))
+            // setReceivedData(unseenMessage)
+        }
+        seenMessage()
+    }, [receivedData, groupId])
+
 
     useEffect(() => {
         if (!groupId || !user?._id) return;
@@ -97,6 +119,8 @@ const GroupChat = () => {
         }
     }
 
+    console.log(receivedData)
+
     return (
         <section className=' h-screen w-full flex flex-col '>
             <Link to={`/group/${groupId}`} className="flex gap-2 px-4 py-1 bg-white">
@@ -104,14 +128,19 @@ const GroupChat = () => {
                 <h1>{group?.name}</h1>
             </Link>
 
-            <div className="overflow-hidden overflow-y-scroll flex-1 flex flex-col gap-1 p-4">
+            <div className="overflow-hidden overflow-y-scroll flex-1 flex flex-col gap-2 p-4">
                 {receivedData.map((m) => (
-                    <div key={m._id} className={`px-4 py-1.5 rounded-lg w-fit max-w-[60%] mb-2 flex flex-col  shadow ${user?._id === m.sender._id ? "self-end bg-white" : "self-start bg-blue-50"}`}>
-                        {
-                            m.sender._id !== user?._id && <p className="text-sm font-medium text-blue-400">{m.sender.name}</p>
-                        }
-                        <div className="text-sm">{m.message}</div>
-                        <span className="text-sm self-end text-neutral-600 opacity-80 ">{formatChatTime(m.createdAt)}</span>
+                    <div key={m._id} className={`w-fit max-w-[60%]  ${user?._id === m.sender._id ? "self-end " : "self-start "}`}>
+                        <div className={`mb-2 px-4 py-1.5  rounded-lg flex flex-col  shadow ${user?._id === m.sender._id ? " bg-white" : " bg-blue-50"}`}>
+
+                            {
+                                m.sender._id !== user?._id && <p className="text-sm font-medium text-blue-400">{m.sender.name}</p>
+                            }
+                            <div className="text-sm">{m.message}</div>
+                            <span className="text-sm self-end text-neutral-600 opacity-80 ">{formatChatTime(m.createdAt)}</span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1">{m.seenBy.filter(m => m._id !== user?._id).map(u => <div key={u._id} className="w-6 h-6 flex justify-center items-center bg-green-400 rounded-full text-sm">{u.name[0]}</div>)}</div>
                     </div>
                 ))}
                 {

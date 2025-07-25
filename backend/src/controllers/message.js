@@ -32,10 +32,34 @@ export const getMessages = async (req, res) => {
 export const getGroupMessage = async (req, res) => {
     const { groupId } = req.params
     try {
-        const message = await Message.find({ group: groupId })
+        const message = await Message.find({ group: groupId }).populate([
+            { path: "sender", select: "id name" }, { path: "seenBy", select: "id name" }])
+
         res.status(200).json(message)
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal error." })
     }
+}
+
+export const messageSeenBy = async (req, res) => {
+    const { messageId } = req.params
+    const userId = req.id
+    console.log(messageId + " message seen by user " + userId)
+    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(messageId)) {
+        return res.status(400).json({ message: "Invalid Id" })
+    }
+
+    try {
+        const message = await Message.findByIdAndUpdate(messageId, { $addToSet: { seenBy: userId } }, { new: true })
+        if (!message) {
+            return res.status(400).json({ message: "Failed to update message." })
+        }
+        console.log(message)
+        res.status(200).json(message)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal error." })
+    }
+
 }
