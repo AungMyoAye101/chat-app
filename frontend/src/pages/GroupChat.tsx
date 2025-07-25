@@ -98,7 +98,7 @@ const GroupChat = () => {
     }
 
     return (
-        <section className='bg-sky-50 h-screen w-full flex flex-col '>
+        <section className=' h-screen w-full flex flex-col '>
             <Link to={`/group/${groupId}`} className="flex gap-2 px-4 py-1 bg-white">
                 <div className="w-8 h-8 rounded-full bg-green-400"></div>
                 <h1>{group?.name}</h1>
@@ -106,10 +106,12 @@ const GroupChat = () => {
 
             <div className="overflow-hidden overflow-y-scroll flex-1 flex flex-col gap-1 p-4">
                 {receivedData.map((m) => (
-                    <div key={m._id} className={`px-4 py-1.5 rounded-lg w-fit mb-2 ${user?._id === m.sender._id ? "self-end bg-white" : "self-start bg-blue-200"}`}>
+                    <div key={m._id} className={`px-4 py-1.5 rounded-lg w-fit max-w-[60%] mb-2 flex flex-col  shadow ${user?._id === m.sender._id ? "self-end bg-white" : "self-start bg-blue-50"}`}>
+                        {
+                            m.sender._id !== user?._id && <p className="text-sm font-medium text-blue-400">{m.sender.name}</p>
+                        }
                         <div className="text-sm">{m.message}</div>
-                        <p className="text-xs">{m.sender.name}</p>
-                        <span>{formatChatTime(m.createdAt)}</span>
+                        <span className="text-sm self-end text-neutral-600 opacity-80 ">{formatChatTime(m.createdAt)}</span>
                     </div>
                 ))}
                 {

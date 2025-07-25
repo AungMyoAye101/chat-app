@@ -31,12 +31,12 @@ const Home = () => {
         <section className='max-w-6xl mx-auto border border-red-400 min-h-screen w-full'>
 
             <div className='flex w-full'>
-                <div className='max-w-xs min-w-[120px] bg-white'>
+                <div className='max-w-xs min-w-[120px] bg-white border-r '>
 
                     <GroupList />
                     <User />
                 </div>
-                <div className='flex-1 h-screen'>
+                <div className='flex-1 h-screen bg-purple-100'>
                     <Outlet />
                 </div>
             </div>
