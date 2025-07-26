@@ -1,5 +1,5 @@
-import { useAuth } from "@/context/Auth.context"
 import { axiosInstance } from "@/lib/axios.config"
+import { useAuth } from "@/context/Auth.context"
 import { formatChatTime } from "@/lib/helper"
 import { socket } from "@/lib/socket"
 import type { GroupTypes } from "@/lib/types"
@@ -54,17 +54,39 @@ const GroupChat = () => {
     //For message seen functionally
 
     useEffect(() => {
-        const seenMessage = async () => {
-            const unseenMessage = receivedData.filter((m) => !m.seenBy.some(u => u._id === user?._id))
-            console.log(unseenMessage.length)
-            if (unseenMessage.length === 0) return;
-            await Promise.all(unseenMessage.map((msg) => {
-                axiosInstance.put(`/api/messages/${msg._id}`)
-            }))
-            // setReceivedData(unseenMessage)
-        }
-        seenMessage()
-    }, [receivedData, groupId])
+        // const seenMessage = async () => {
+        //     const unseenMessage = receivedData.filter((m) => !m.seenBy.some(u => u._id === user?._id))
+        //     console.log(unseenMessage.length)
+        //     if (unseenMessage.length === 0) return;
+        //     unseenMessage.forEach(msg => {
+        //         socket.emit("seen-message", { messageId: msg._id, userId: user?._id, chatId: groupId });
+        //     });
+
+        //     // setReceivedData(unseenMessage)
+        // }
+        socket.on("seen", (data) => {
+            setReceivedData(pre => (pre.map(m => m._id === data._id ? data : pre)))
+        })
+
+        return () => { socket.off("seen") }
+    }, [])
+
+    useEffect(() => {
+
+        if (!user?._id || !receivedData) return
+        const unSeenMessage = receivedData.filter((message) => !message.seenBy.some(msg => msg._id === user?._id))
+        console.log(unSeenMessage)
+        if (unSeenMessage.length === 0) return
+        unSeenMessage.forEach(m => {
+            console.log(m._id)
+            socket.emit("seen-message", { messageId: m._id, userId: user?._id, chatId: groupId })
+        })
+
+
+
+
+    }, [receivedData])
+
 
 
     useEffect(() => {
@@ -119,7 +141,7 @@ const GroupChat = () => {
         }
     }
 
-    console.log(receivedData)
+
 
     return (
         <section className=' h-screen w-full flex flex-col '>
@@ -130,17 +152,19 @@ const GroupChat = () => {
 
             <div className="overflow-hidden overflow-y-scroll flex-1 flex flex-col gap-2 p-4">
                 {receivedData.map((m) => (
-                    <div key={m._id} className={`w-fit max-w-[60%]  ${user?._id === m.sender._id ? "self-end " : "self-start "}`}>
-                        <div className={`mb-2 px-4 py-1.5  rounded-lg flex flex-col  shadow ${user?._id === m.sender._id ? " bg-white" : " bg-blue-50"}`}>
-
-                            {
-                                m.sender._id !== user?._id && <p className="text-sm font-medium text-blue-400">{m.sender.name}</p>
-                            }
+                    <div key={m._id} className={`w-fit max-w-[60%]  ${m.sender?._id && user?._id === m.sender._id ? "self-end " : "self-start "}`}>
+                        <div className={`mb-2 px-4 py-1.5  rounded-lg flex flex-col  shadow ${m.sender?._id && user?._id === m.sender._id ? " bg-white" : " bg-blue-50"}`}>
+                            {m.sender?.name && m.sender._id !== user?._id && (
+                                <p className="text-sm font-medium text-blue-400">{m.sender.name}</p>
+                            )}
                             <div className="text-sm">{m.message}</div>
                             <span className="text-sm self-end text-neutral-600 opacity-80 ">{formatChatTime(m.createdAt)}</span>
                         </div>
-
-                        <div className="flex flex-wrap gap-1">{m.seenBy.filter(m => m._id !== user?._id).map(u => <div key={u._id} className="w-6 h-6 flex justify-center items-center bg-green-400 rounded-full text-sm">{u.name[0]}</div>)}</div>
+                        <div className="flex flex-wrap gap-1">
+                            {Array.isArray(m.seenBy) && m.seenBy.filter(u => u._id !== user?._id).map(u =>
+                                <div key={u._id} className="w-6 h-6 flex justify-center items-center bg-green-400 rounded-full text-sm">{u.name[0]}</div>
+                            )}
+                        </div>
                     </div>
                 ))}
                 {

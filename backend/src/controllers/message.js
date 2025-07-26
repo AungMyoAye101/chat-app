@@ -45,7 +45,7 @@ export const getGroupMessage = async (req, res) => {
 export const messageSeenBy = async (req, res) => {
     const { messageId } = req.params
     const userId = req.id
-    console.log(messageId + " message seen by user " + userId)
+
     if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(messageId)) {
         return res.status(400).json({ message: "Invalid Id" })
     }
@@ -55,7 +55,7 @@ export const messageSeenBy = async (req, res) => {
         if (!message) {
             return res.status(400).json({ message: "Failed to update message." })
         }
-        console.log(message)
+
         res.status(200).json(message)
     } catch (error) {
         console.log(error)
