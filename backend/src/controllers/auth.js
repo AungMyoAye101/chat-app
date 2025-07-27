@@ -20,12 +20,12 @@ export const createUser = async (req, res) => {
         const token = jwt.sign({
             id: newUser._id
         }, process.env.SECRET_KEY, {
-            expiresIn: "1d"
+            expiresIn: "7d"
         })
 
         res.cookie("token", token, {
             httpOnly: true,
-            maxAge: 1 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
         res.status(201).json({ message: "User created", user: newUser })
@@ -47,10 +47,10 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email or password doesn't match." })
 
         }
-        const token = jwt.sign({ id: userExit._id }, process.env.SECRET_KEY, { expiresIn: "1d" })
+        const token = jwt.sign({ id: userExit._id }, process.env.SECRET_KEY, { expiresIn: "7d" })
         res.cookie("token", token, {
             httpOnly: true,
-            maxAge: 1 * 24 * 60 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000
         })
         res.status(200).json({ message: "User logged in.", user: userExit })
 

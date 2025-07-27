@@ -36,8 +36,7 @@ io.on("connection", (socket) => {
     //seen message 
     socket.on("seen-message", async ({ messageId, userId, chatId }) => {
 
-        const updatedMessage = await Message.findByIdAndUpdate(messageId, { $addToSet: { seenBy: userId } }, { new: true }).populate([{ path: "sender", select: "id name" }, { path: "seenBy", select: "id name" }])
-        console.log(updatedMessage)
+        const updatedMessage = await Message.findByIdAndUpdate(messageId, { $addToSet: { seenBy: userId } }, { new: true })
         io.to(chatId).emit("seen", updatedMessage)
     })
 

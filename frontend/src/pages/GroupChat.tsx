@@ -29,21 +29,23 @@ const GroupChat = () => {
     const user = useAuth()
     const typingTimeOutRef = useRef<NodeJS.Timeout | null>(null)
     const scrollRef = useRef<HTMLDivElement | null>(null)
+
+    //Scroll to the bottom 
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollIntoView({ behavior: "smooth" })
         }
     }, [receivedData, isTyping])
 
-
+    //Get group or user 
+    const getGroupMessage = async () => {
+        const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
+        setReceivedData(res.data)
+    }
     useEffect(() => {
         const getGroup = async () => {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
             setGroup(res.data.group)
-        }
-        const getGroupMessage = async () => {
-            const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
-            setReceivedData(res.data)
         }
 
         getGroup()
@@ -54,18 +56,12 @@ const GroupChat = () => {
     //For message seen functionally
 
     useEffect(() => {
-        // const seenMessage = async () => {
-        //     const unseenMessage = receivedData.filter((m) => !m.seenBy.some(u => u._id === user?._id))
-        //     console.log(unseenMessage.length)
-        //     if (unseenMessage.length === 0) return;
-        //     unseenMessage.forEach(msg => {
-        //         socket.emit("seen-message", { messageId: msg._id, userId: user?._id, chatId: groupId });
-        //     });
 
-        //     // setReceivedData(unseenMessage)
-        // }
         socket.on("seen", (data) => {
-            setReceivedData(pre => (pre.map(m => m._id === data._id ? data : pre)))
+            console.log("seen")
+            getGroupMessage()
+
+            // setReceivedData(pre => ([...pre, data]))
         })
 
         return () => { socket.off("seen") }
@@ -74,16 +70,17 @@ const GroupChat = () => {
     useEffect(() => {
 
         if (!user?._id || !receivedData) return
-        const unSeenMessage = receivedData.filter((message) => !message.seenBy.some(msg => msg._id === user?._id))
-        console.log(unSeenMessage)
+        const unSeenMessage = receivedData.filter((message) => {
+            if (Array.isArray(message.seenBy)) {
+
+                return !message.seenBy.some(msg => msg._id === user?._id)
+            }
+        }
+        )
         if (unSeenMessage.length === 0) return
         unSeenMessage.forEach(m => {
-            console.log(m._id)
             socket.emit("seen-message", { messageId: m._id, userId: user?._id, chatId: groupId })
         })
-
-
-
 
     }, [receivedData])
 
@@ -161,12 +158,13 @@ const GroupChat = () => {
                             <span className="text-sm self-end text-neutral-600 opacity-80 ">{formatChatTime(m.createdAt)}</span>
                         </div>
                         <div className="flex flex-wrap gap-1">
-                            {Array.isArray(m.seenBy) && m.seenBy.filter(u => u._id !== user?._id).map(u =>
-                                <div key={u._id} className="w-6 h-6 flex justify-center items-center bg-green-400 rounded-full text-sm">{u.name[0]}</div>
+                            {Array.isArray(m.seenBy) && m.seenBy.filter((u) => u._id !== user?._id).map((u, i) =>
+                                <div key={i} className="w-6 h-6 flex justify-center items-center bg-green-400 rounded-full text-sm">{u.name[0]}</div>
                             )}
                         </div>
                     </div>
                 ))}
+
                 {
                     isTyping && <p className="px-4 py-1 bg-white text-sm w-fit rounded-lg">Typing...</p>
                 }
