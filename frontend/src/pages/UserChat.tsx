@@ -1,6 +1,6 @@
 import { useAuth } from '@/context/Auth.context'
 import { axiosInstance } from '@/lib/axios.config';
-import { formatLastSeen } from '@/lib/helper';
+import { formatChatTime, formatLastSeen } from '@/lib/helper';
 import { socket } from '@/lib/socket'
 import type { UserType } from '@/lib/types';
 import { useEffect, useRef, useState } from 'react'
@@ -15,8 +15,9 @@ type MessageType = {
     _id: string,
     sender: { _id: string, name: string, };
     receiver: { _id: string, name: string, };
-    message: string;
-    createdAt: string
+    message: string,
+    createdAt: string,
+    seenBy: string[]
     // add other fields if needed
 };
 
@@ -46,7 +47,21 @@ const UserChat = () => {
     }
     useEffect(() => {
         getUser()
-    }, [])
+    }, [userId])
+
+
+    //seen or unseen message 
+
+    useEffect(() => {
+        if (!user?._id || !receivedData) return
+        const unSeenMessage = receivedData.filter(m => (
+            !m.seenBy.includes(currUserId!)
+        ))
+        if (unSeenMessage.length === 0) return
+        unSeenMessage.forEach(m => (socket.emit("seen-message", ({ messageId: m._id, userId: currUserId, chatId: userId }))))
+
+    }, [receivedData])
+
 
 
 
@@ -56,14 +71,18 @@ const UserChat = () => {
             setReceivedData(pre => [...pre, data])
         })
 
-        socket.on("isTyping", (data) => {
-            if (userId === data.receiverId) {
-                setIsTyping(true)
-            }
+        socket.on("isTyping", () => {
+            setIsTyping(true)
 
         })
         socket.on("stopped-typing", () => {
             setIsTyping(false)
+        })
+        socket.on("seen", (data) => {
+            if (data.seenBy.includes(userId)) {
+
+                getMessage()
+            }
         })
 
         getMessage()
@@ -71,67 +90,20 @@ const UserChat = () => {
             socket.off("received-message")
             socket.off("isTyping")
             socket.off("stop-typing")
+            socket.off("seen")
         }
     }, [userId])
 
-
-
-    // useEffect(() => {
-    //     console.log("run")
-    //     if (!selectedUser?._id) return;
-    //     socket.on("received-message", (data) => {
-    //         console.log(data)
-    //     })
-
-    //     //     // Handler for received-message
-    //     //     const handleReceivedMessage = (data: MessageType) => {
-    //     //         // Only add if the message is for this chat (either sent or received)
-    //     //         if (
-    //     //             (data.sender._id === userId && data.receiver._id === user?._id) ||
-    //     //             (data.receiver._id === userId && data.sender._id === user?._id)
-    //     //         ) {
-    //     //             setReceivedData(prev => {
-    //     //                 const updated = [...prev, data];
-    //     //                 // Sort by createdAt
-    //     //                 return updated.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-    //     //             });
-    //     //         }
-    //     //     };
-
-    //     //     socket.on("received-message", handleReceivedMessage);
-    //     //     getMessage();
-
-    //     //     socket.on("isTyping", (senderId: string) => {
-    //     //         if (senderId === userId) {
-    //     //             setIsTyping(true);
-    //     //         }
-    //     //     });
-    //     //     socket.on("stopped-typing", (senderId: string) => {
-    //     //         if (senderId === userId) {
-    //     //             setIsTyping(false);
-    //     //         }
-    //     //     });
-
-    //     //     return () => {
-    //     //         socket.off("received-message", handleReceivedMessage);
-    //     //         socket.off("isTyping");
-    //     //         socket.off("stopped-typing");
-    //     //     };
-    // }, [userId]);
 
 
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!message.trim() || !currUserId || !selectedUser?._id) return;
-
         //for sending message
         socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
-
         setMessage("");
         setIsTyping(false)
-
-
     };
 
     //For typing indicator 
@@ -169,13 +141,22 @@ const UserChat = () => {
             </div>
             <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
                 {
-                    receivedData.map((data, i) => (
-                        <div key={data._id + i} className={` px-4 py-1.5 rounded-lg w-fit  ${data.sender._id === currUserId ? "self-end bg-neutral-100" : "self-start bg-blue-200"}`}>
-                            <p className='text-sm'>{data.message}</p>
-                            <span className='text-xs'>{formatLastSeen(data.createdAt)}</span>
+                    receivedData.map((data) => (
+                        <div key={data._id}>
+
+                            <div className={` px-4 py-1.5 rounded-lg w-fit  ${data.sender._id === currUserId ? "self-end bg-neutral-100" : "self-start bg-blue-200"}`}>
+                                <p className='text-sm'>{data.message}</p>
+                                <span className='text-xs'>{formatChatTime(data.createdAt)}</span>
+                            </div>
+                            {
+                                data.seenBy.includes(userId!) && <span>✅</span>
+                            }
                         </div>
                     ))
                 }
+
+
+
                 {
                     isTyping && <div className='bg-neutral-100 px-4 py-1 rounded-lg w-fit italic text-sm' >Typing...</div>
                 }

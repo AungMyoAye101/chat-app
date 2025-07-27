@@ -58,7 +58,7 @@ const GroupChat = () => {
     useEffect(() => {
 
         socket.on("seen", (data) => {
-            console.log("seen")
+            console.log(data._id)
             getGroupMessage()
 
             // setReceivedData(pre => ([...pre, data]))
@@ -100,6 +100,7 @@ const GroupChat = () => {
             }
         })
         socket.on("stopped-typing", (data) => {
+
             if (groupId === data.receiverId) {
                 setIsTyping(false)
             }
