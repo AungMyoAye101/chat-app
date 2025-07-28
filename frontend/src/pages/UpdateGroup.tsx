@@ -65,7 +65,17 @@ const UpdateGroup = () => {
         <section>
             <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-white p-6'>
                 <div className='flex justify-center items-center gap-4'>
-                    <div className='w-32 h-32 rounded-full bg-gray-300'></div>
+                    <div>
+                        <div className='group w-32 h-32 rounded-full bg-gray-300 relative overflow-hidden'>
+                            <img src="./assets/react.svg" alt="group profile " className='w-full h-full object-cover' />
+                            <label htmlFor="file-upload" className='group-hover:flex hidden absolute inset-0 z-10 bg-blue-200  justify-center items-center'>
+                                Upload
+                                <input type="file" id='file-upload' className='hidden' />
+                            </label>
+
+                        </div>
+
+                    </div>
                     <input type="name" placeholder='group name' name="name" value={data.name} onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className="flex-1" />
                 </div>
                 <div>

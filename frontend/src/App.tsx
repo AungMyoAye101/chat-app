@@ -1,5 +1,5 @@
 
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
@@ -13,18 +13,30 @@ import UserChat from './pages/UserChat';
 import GroupChat from './pages/GroupChat';
 
 import DefaultChat from './pages/DefaultChat';
+import { useAuth } from './context/Auth.context';
 
+const ProtectedRoute = ({ userId }: any) => {
+
+  if (!userId) {
+    return <Navigate to={'/login'} replace />
+  }
+  return <Outlet />
+}
 
 
 
 const App = () => {
+  const user = useAuth()
 
   return (
     <Routes>
-      <Route path='/' element={<Home />} >
-        <Route path='/' element={<DefaultChat />} />
-        <Route path='/chat/user/:userId' element={<UserChat />} />
-        <Route path='/chat/group/:groupId' element={<GroupChat />} />
+      <Route element={<ProtectedRoute userId={user?._id!} />}>
+
+        <Route path='/' element={<Home />} >
+          <Route path='/' element={<DefaultChat />} />
+          <Route path='/chat/user/:userId' element={<UserChat />} />
+          <Route path='/chat/group/:groupId' element={<GroupChat />} />
+        </Route>
       </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />

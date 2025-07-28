@@ -2,17 +2,32 @@ import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+interface RegisterType {
+    name: string,
+    email: string,
+    password: string,
+    avater: File
+
+}
+
 const Register = () => {
-    const [data, setData] = useState({
+    const [data, setData] = useState<RegisterType>({
         name: '',
         email: '',
-        password: ''
+        password: '',
+        avater: undefined as unknown as File
     })
     const navigate = useNavigate()
     const handleSubmit = async (e: any) => {
         e.preventDefault()
+
         try {
-            const res = await axiosInstance.post("/api/auth/register", data)
+            const res = await axiosInstance.post("/api/auth/register", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
+            console.log(res.data)
             navigate('/')
         } catch (error) {
             if (error instanceof Error) console.log(error.message)
@@ -20,6 +35,16 @@ const Register = () => {
     }
     return (
         <form onSubmit={handleSubmit} className='bg-white p-4 flex flex-col gap-4 '>
+            <div>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                        const file = e.target.files && e.target.files[0] ? e.target.files[0] : undefined;
+                        setData(pre => ({ ...pre, avater: file as File }));
+                    }}
+                />
+            </div>
             <div>
                 <input type="name" placeholder='name' name="name" onChange={(e) => setData(pre => ({ ...pre, name: e.target.value }))} />
             </div>
