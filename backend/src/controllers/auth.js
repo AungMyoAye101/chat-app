@@ -2,10 +2,15 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import User from "../model/user.model.js"
+import fs from "fs"
+import cloudinary from "../lib/cloundinary.js"
 
 export const createUser = async (req, res) => {
 
     const { email, password } = req.body
+
+    console.log("creating....")
+
     try {
 
         const userExit = await User.findOne({ email })
@@ -14,9 +19,15 @@ export const createUser = async (req, res) => {
         }
 
         const hashed = await bcrypt.hash(password, 10)
+        const imageUploaded = await cloudinary.uploader.upload(req.file.path, { folder: 'chat-app/profile' })
+        if (!imageUploaded) {
+            return res.status(400).json({ message: "Failed to upload image." })
+        }
 
-        const newUser = await User.create({ ...req.body, password: hashed })
+        const newUser = await User.create({ ...req.body, password: hashed, avatar: imageUploaded.secure_url, avatar_public_id: imageUploaded.public_id })
+        fs.unlinkSync(req.file.path)
 
+        console.log("created")
         const token = jwt.sign({
             id: newUser._id
         }, process.env.SECRET_KEY, {
@@ -33,6 +44,9 @@ export const createUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
+
+
+
 }
 
 export const login = async (req, res) => {

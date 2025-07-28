@@ -1,6 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary'
 import multer from "multer"
 import path from "path"
+import dotenv from "dotenv"
+dotenv.config()
 
 cloudinary.config({
     cloud_name: process.env.CLOUNDINARY_NAME,
@@ -14,3 +16,4 @@ const storage = multer.diskStorage({
 })
 
 export const upload = multer({ storage })
+export default cloudinary

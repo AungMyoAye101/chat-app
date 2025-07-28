@@ -27,6 +27,7 @@ const ProtectedRoute = ({ userId }: any) => {
 
 const App = () => {
   const user = useAuth()
+  console.log(user)
 
   return (
     <Routes>
