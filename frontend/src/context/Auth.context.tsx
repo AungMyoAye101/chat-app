@@ -10,6 +10,7 @@ const AuthContext = ({ children }: { children: ReactNode }) => {
         name: "",
         email: "",
         lastSeen: "",
+        avatar: ''
     })
     useEffect(() => {
         const checkAuth = async () => {

@@ -17,10 +17,14 @@ const Register = () => {
         password: '',
         avater: undefined as unknown as File
     })
+    const [status, setStatus] = useState<{ isLoading: boolean, errorMessage: string }>({
+        isLoading: false,
+        errorMessage: ''
+    })
     const navigate = useNavigate()
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-
+        setStatus(pre => ({ ...pre, isLoading: true }))
         try {
             const res = await axiosInstance.post("/api/auth/register", data, {
                 headers: {
@@ -30,11 +34,19 @@ const Register = () => {
             console.log(res.data)
             navigate('/')
         } catch (error) {
-            if (error instanceof Error) console.log(error.message)
+            if (error instanceof Error) {
+                console.log(error.message);
+                setStatus(pre => ({ ...pre, errorMessage: error.message }))
+            }
+        } finally {
+            setStatus(pre => ({ ...pre, isLoading: false }))
         }
     }
     return (
         <form onSubmit={handleSubmit} className='bg-white p-4 flex flex-col gap-4 '>
+            {
+                status.errorMessage && <p>{status.errorMessage}</p>
+            }
             <div>
                 <input
                     type="file"
@@ -54,7 +66,7 @@ const Register = () => {
             <div>
                 <input type="password" placeholder='password' name='password' onChange={(e) => setData(pre => ({ ...pre, password: e.target.value }))} />
             </div>
-            <button type='submit' className='bg-blue-400 px-4 py-2'>Submit</button>
+            <button type='submit' className='bg-blue-400 px-4 py-2'>{status.isLoading ? "submiting..." : "submit"}</button>
         </form>
     )
 }

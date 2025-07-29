@@ -9,6 +9,7 @@ const Navbar = () => {
             <div className="container mx-auto flex justify-between items-center">
 
                 <Link to={'/'}><div>CHAT APP</div> </Link>
+                <img src={user?.avatar} alt="" className='w-10 h-10 ' />
                 <div>{user?.name}</div>
                 <div className='flex gap-4 '>
                     <Link to={'/register'}>register</Link>
