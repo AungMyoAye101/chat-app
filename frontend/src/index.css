@@ -2,6 +2,6 @@
 
 @layer {
     input {
-        @apply bg-neutral-200 px-4 py-2 rounded
+        @apply bg-neutral-200 px-4 py-2 rounded-lg focus:outline-none
     }
 }

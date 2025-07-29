@@ -14,8 +14,12 @@ import GroupChat from './pages/GroupChat';
 
 import DefaultChat from './pages/DefaultChat';
 import { useAuth } from './context/Auth.context';
+interface ProtectedType {
+  userId: string,
 
-const ProtectedRoute = ({ userId }: any) => {
+}
+
+const ProtectedRoute = ({ userId }: ProtectedType) => {
 
   if (!userId) {
     return <Navigate to={'/login'} replace />
@@ -27,7 +31,7 @@ const ProtectedRoute = ({ userId }: any) => {
 
 const App = () => {
   const user = useAuth()
-  console.log(user)
+
 
   return (
     <Routes>
