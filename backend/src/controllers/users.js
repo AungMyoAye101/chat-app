@@ -30,23 +30,24 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     const { userId } = req.params
+    console.log(req.file)
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "Invalid userId" })
     }
     let imageUploaded;
 
-    try {
-        if (req.file) {
-            imageUploaded = await cloudinary.uploader.upload(req.file.path)
-        }
-        if (!imageUploaded) {
-            return res.status(400).json({ message: "Failed to upload image." })
-        }
-        const users = await User.findByIdAndUpdate(userId, { ...req.body, avatar: imageUploaded.secure_url, avatar_public_id: imageUploaded.public_id })
-        res.status(200).json(users)
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).json({ message: "Internal server error" })
-    }
+    // try {
+    //     if (req.file) {
+    //         imageUploaded = await cloudinary.uploader.upload(req.file.path)
+    //     }
+    //     if (!imageUploaded) {
+    //         return res.status(400).json({ message: "Failed to upload image." })
+    //     }
+    //     const users = await User.findByIdAndUpdate(userId, { ...req.body, avatar: imageUploaded.secure_url, avatar_public_id: imageUploaded.public_id })
+    //     res.status(200).json(users)
+    // } catch (error) {
+    //     console.log(error.message)
+    //     res.status(500).json({ message: "Internal server error" })
+    // }
 }

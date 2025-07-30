@@ -2,6 +2,7 @@ import { axiosInstance } from "@/lib/axios.config"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { inputData, type RegisterType } from "./Register"
+import ImageUpload from "@/components/ImageUpload"
 
 
 const UpdateUser = () => {
@@ -19,6 +20,7 @@ const UpdateUser = () => {
   const { userId } = useParams()
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    console.log(data)
     setStatus(pre => ({ ...pre, isLoading: true }))
     try {
       const res = await axiosInstance.put(`/api/user/update/${userId}`, data, {
@@ -45,19 +47,11 @@ const UpdateUser = () => {
 
   return (
     <section className="container flex justify-center mt-4">
+      <ImageUpload userId={userId!} />
       <form onSubmit={handleSubmit} className=' shadow-xl rounded-lg border border-neutral-100 bg-white  px-4 py-6 flex flex-col gap-4 min-w-xs w-full max-w-xl'>
 
         <h1 className='text-2xl font-bold font-serif text-center'>Signup </h1>
 
-        <div className='group relative w-20 h-20 rounded-full   overflow-hidden border-2 border-green-400'>
-
-
-          <img src="./vite.svg" alt="" className='w-20 h-20 bg-neutral-200 rounded-full object-cover' />
-
-          <label htmlFor="avatar" className='group-hover:flex justify-center items-center hidden absolute inset-0 bg-neutral-100 z-10'>
-            <span className='text-gray-600 '>Upload</span>
-          </label>
-        </div>
         <input
           id='avatar'
           type="file"

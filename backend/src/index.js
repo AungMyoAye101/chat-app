@@ -9,6 +9,7 @@ import userRouter from "./routes/user.route.js"
 import { connectToDb } from "./lib/db.js"
 import { app, server } from "./lib/socket.js"
 import cookiePaser from "cookie-parser"
+import imageRouter from "./routes/imageUpload.route.js"
 //to config env file 
 dotenv.config()
 connectToDb()
@@ -22,6 +23,7 @@ app.use("/api/auth", authRouter)
 app.use('/api/user', userRouter)
 app.use("/api/messages", messageRouter);
 app.use("/api/group", groupRouter);
+app.use("/api/image", imageRouter);
 
 //to connect database
 

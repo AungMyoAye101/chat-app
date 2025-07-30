@@ -23,7 +23,7 @@ const UserDeatil = () => {
     return (
         <section>
             <div className='flex items-center gap-2'>
-                <div className='w-16 h-16 rounded-full bg-neutral-200'></div>
+                <img src={user?.avatar} alt='profile image' className='w-16 h-16 rounded-full bg-neutral-200' />
                 <div>
                     <h1>{user?.name}</h1>
                     <p>{user?.email}</p>
