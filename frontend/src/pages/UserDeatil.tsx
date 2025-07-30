@@ -21,7 +21,7 @@ const UserDeatil = () => {
 
 
     return (
-        <section>
+        <section className="container px-4 py-6 bg-white shadow-lg border border-neutral-200">
             <div className='flex items-center gap-2'>
                 <img src={user?.avatar} alt='profile image' className='w-16 h-16 rounded-full bg-neutral-200' />
                 <div>
@@ -30,6 +30,7 @@ const UserDeatil = () => {
                 </div>
                 <div>
                     <Link to={`/user/update/${userId}`}>update</Link>
+                    <Link to={`/image/upload/${userId}`}>Upload Profile</Link>
                 </div>
             </div>
         </section>

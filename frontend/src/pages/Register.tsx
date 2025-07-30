@@ -6,7 +6,6 @@ export interface RegisterType {
     name: string,
     email: string,
     password: string,
-    avater: File
 
 }
 export const inputData = [{
@@ -36,7 +35,6 @@ const Register = () => {
         name: '',
         email: '',
         password: '',
-        avater: undefined as unknown as File
     })
     const [status, setStatus] = useState<{ isLoading: boolean, errorMessage: string }>({
         isLoading: false,
@@ -48,9 +46,6 @@ const Register = () => {
         setStatus(pre => ({ ...pre, isLoading: true }))
         try {
             const res = await axiosInstance.post("/api/auth/register", data, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                }
             })
             console.log(res.data)
             navigate('/')

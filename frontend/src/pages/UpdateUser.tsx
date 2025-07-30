@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios.config"
 import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { inputData, type RegisterType } from "./Register"
-import ImageUpload from "@/components/ImageUpload"
+
 
 
 const UpdateUser = () => {
@@ -10,7 +10,6 @@ const UpdateUser = () => {
     name: '',
     email: '',
     password: '',
-    avater: undefined as unknown as File
   })
   const [status, setStatus] = useState<{ isLoading: boolean, errorMessage: string }>({
     isLoading: false,
@@ -47,21 +46,13 @@ const UpdateUser = () => {
 
   return (
     <section className="container flex justify-center mt-4">
-      <ImageUpload userId={userId!} />
       <form onSubmit={handleSubmit} className=' shadow-xl rounded-lg border border-neutral-100 bg-white  px-4 py-6 flex flex-col gap-4 min-w-xs w-full max-w-xl'>
 
         <h1 className='text-2xl font-bold font-serif text-center'>Signup </h1>
-
-        <input
-          id='avatar'
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files && e.target.files[0] ? e.target.files[0] : undefined;
-            setData(pre => ({ ...pre, avater: file as File }));
-          }}
-          className='hidden'
-        />
+        <div className="flex justify-center gap-4">
+          <img src={'/vite.svg'} alt="profile image" className="w-20 h-20 rounded-full bg-neutral-200 border-2 border-purple-400" />
+          <Link to={`/image/upload/${userId}`}>Upload Profile</Link>
+        </div>
 
 
         {

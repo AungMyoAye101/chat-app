@@ -1,11 +1,12 @@
 import { axiosInstance } from "@/lib/axios.config"
 import { useState } from "react"
+import { useParams } from "react-router-dom"
 
 
-const ImageUpload = ({ userId }: { userId: string }) => {
+const ImageUpload = () => {
     const [image, setImage] = useState<File | undefined>(undefined)
     console.log(image)
-
+    const { userId } = useParams()
     const uploadImage = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
