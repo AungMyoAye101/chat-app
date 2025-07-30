@@ -10,7 +10,7 @@ const ImageUpload = ({ userId }: { userId: string }) => {
         e.preventDefault()
         try {
             const res = await axiosInstance.post(`/api/image/upload/${userId}`, { avatar: image }, { headers: { "Content-Type": "multipart/form-data", } })
-            console.log(res)
+            console.log(res.data)
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message)
