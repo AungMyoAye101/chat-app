@@ -2,14 +2,14 @@ import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-interface RegisterType {
+export interface RegisterType {
     name: string,
     email: string,
     password: string,
     avater: File
 
 }
-const inputData = [{
+export const inputData = [{
     name: "name",
     label: "name",
     placeholder: "John Doe",

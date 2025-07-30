@@ -1,7 +1,7 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const UserDeatil = () => {
     const [user, setUser] = useState<UserType>()
@@ -27,6 +27,9 @@ const UserDeatil = () => {
                 <div>
                     <h1>{user?.name}</h1>
                     <p>{user?.email}</p>
+                </div>
+                <div>
+                    <Link to={`/user/update/${userId}`}>update</Link>
                 </div>
             </div>
         </section>

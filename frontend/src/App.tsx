@@ -14,6 +14,7 @@ import GroupChat from './pages/GroupChat';
 
 import DefaultChat from './pages/DefaultChat';
 import { useAuth } from './context/Auth.context';
+import UpdateUser from './pages/UpdateUser';
 interface ProtectedType {
   userId: string,
 
@@ -46,6 +47,7 @@ const App = () => {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/user/:userId' element={<UserDeatil />} />
+      <Route path='/user/update/:userId' element={<UpdateUser />} />
       <Route path='/create-group' element={<Group />} />
       <Route path='/group/:groupId' element={<GroupDeatil />} />
       <Route path='/group/update/:groupId' element={<UpdateGroup />} />
