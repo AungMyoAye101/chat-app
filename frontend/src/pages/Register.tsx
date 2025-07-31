@@ -71,15 +71,6 @@ const Register = () => {
 
                 <h1 className='text-2xl font-bold font-serif text-center'>Signup </h1>
 
-                <div className='group relative w-20 h-20 rounded-full   overflow-hidden border-2 border-green-400'>
-
-
-                    <img src="./vite.svg" alt="" className='w-20 h-20 bg-neutral-200 rounded-full object-cover' />
-
-                    <label htmlFor="avatar" className='group-hover:flex justify-center items-center hidden absolute inset-0 bg-neutral-100 z-10'>
-                        <span className='text-gray-600 '>Upload</span>
-                    </label>
-                </div>
                 <input
                     id='avatar'
                     type="file"

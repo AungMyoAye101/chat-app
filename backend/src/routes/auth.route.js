@@ -6,7 +6,7 @@ import express from "express"
 
 const authRouter = express.Router()
 
-authRouter.post("/register", upload.single('avater'), createUser)
+authRouter.post("/register", createUser)
 authRouter.post("/login", login)
 authRouter.get("/me", verifyToken, async (req, res) => {
     try {

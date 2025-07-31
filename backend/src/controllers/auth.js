@@ -19,13 +19,9 @@ export const createUser = async (req, res) => {
         }
 
         const hashed = await bcrypt.hash(password, 10)
-        const imageUploaded = await cloudinary.uploader.upload(req.file.path, { folder: 'chat-app/profile' })
-        if (!imageUploaded) {
-            return res.status(400).json({ message: "Failed to upload image." })
-        }
 
-        const newUser = await User.create({ ...req.body, password: hashed, avatar: imageUploaded.secure_url, avatar_public_id: imageUploaded.public_id })
-        fs.unlinkSync(req.file.path)
+        const newUser = await User.create({ ...req.body, password: hashed, })
+
 
         console.log("created")
         const token = jwt.sign({
@@ -42,7 +38,8 @@ export const createUser = async (req, res) => {
         res.status(201).json({ message: "User created", user: newUser })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        console.log(error.message)
+        res.status(500).json("Internal server error.")
     }
 
 
