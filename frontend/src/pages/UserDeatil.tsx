@@ -48,7 +48,7 @@ const UserDeatil = () => {
                 </div>
             </div>
             {
-                isOpenUploadImg && <ImageUpload userId={userId!} onClose={onClose} />
+                isOpenUploadImg && <ImageUpload userId={userId!} onClose={onClose} img={user?.avatar!} />
             }
 
         </section>
