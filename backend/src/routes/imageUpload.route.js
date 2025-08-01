@@ -21,7 +21,7 @@ imageRouter.post('/upload/:id', upload.single('avatar'), async (req, res) => {
 
         const uploaded = await cloudinary.uploader.upload(images.path, { folder: 'chat-app/profile' })
         console.log(uploaded)
-        const user = await User.findByIdAndUpdate(id, { avatar: uploaded.secure_url, avatar_public_id: uploaded.public_id })
+        const user = await User.findByIdAndUpdate(id, { avatar: uploaded.secure_url, avatarPublicId: uploaded.public_id })
         fs.unlinkSync(images.path)
         res.status(201).json(user)
     } catch (error) {
@@ -41,11 +41,21 @@ imageRouter.put('/upload/:id', upload.single('avatar'), async (req, res) => {
         res.status(400).json("Image not found.")
     }
     try {
+        const user = await User.findById(id)
+        if (!user) {
+            res.status(400).json("Invalid userId!")
+        }
+        console.log(user.avatarPublicId)
+        if (user.avatarPublicId) {
+            await cloudinary.uploader.destroy(user.avatarPublicId)
+            console.log("delete old photo from cloudinary.")
+        }
 
-        const removePrevImage = await cloudinary.uploader.destroy(public_id)
-        const updated = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
-        const { secure_url, public_id } = updated
-        const user = await User.findByIdAndUpdate(id, { avatar: secure_url, avatar_public_id: public_id })
+        const uploaded = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
+        console.log("uploaded")
+        user.avatar = uploaded.secure_url;
+        user.avatarPublicId = uploaded.public_id
+        await user.save()
         fs.unlinkSync(images.path)
         res.status(201).json(user)
 

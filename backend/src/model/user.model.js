@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String
     },
-    avatar_public_id: {
+    avatarPublicId: {
         type: String
     },
     lastSeen: {
