@@ -1,7 +1,7 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ImageUpload from './ImageUpload'
 
 const UserDeatil = () => {

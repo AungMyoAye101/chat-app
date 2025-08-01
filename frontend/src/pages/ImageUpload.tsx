@@ -1,10 +1,19 @@
 import { axiosInstance } from "@/lib/axios.config"
-import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+// For Props type 
+
+interface PropsType {
+    userId: string,
+    onClose: () => void
+}
 
 let url: string;
-const ImageUpload = ({ userId }: { userId: string }) => {
+const ImageUpload = ({ userId, onClose }: PropsType) => {
     const [image, setImage] = useState<File | undefined>(undefined)
+
+    const containerRef = useRef<HTMLFormElement | null>(null)
     const navigate = useNavigate()
     if (image) {
 
@@ -15,8 +24,7 @@ const ImageUpload = ({ userId }: { userId: string }) => {
         try {
             const res = await axiosInstance.post(`/api/image/upload/${userId}`, { avatar: image }, { headers: { "Content-Type": "multipart/form-data", } })
             console.log(res.data)
-            alert('Image uploaded.')
-            navigate('/user/' + userId)
+            onClose()
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message)
@@ -25,12 +33,22 @@ const ImageUpload = ({ userId }: { userId: string }) => {
         }
     }
 
+    const handleClickOutside = (e: React.MouseEvent) => {
 
+        if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+
+            onClose()
+        }
+    }
 
     return (
-        <section className="absolute inset-0 flex justify-center items-center ">
+        <section className="absolute inset-0 flex justify-center items-center " style={{ background: "#00000080" }} onClick={handleClickOutside}>
 
-            <form onSubmit={uploadImage} className=" rounded-lg border border-purple-400 flex flex-col py-8 px-6 items-center gap-5 bg-white shadow-lg  h-fit">
+            <form
+                ref={containerRef}
+                onSubmit={uploadImage}
+
+                className=" rounded-lg border border-purple-400 flex flex-col py-8 px-6 items-center gap-5 bg-white shadow-lg  h-fit">
                 <h1 className="font-semibold text-2xl font-serif">Select photo to upload</h1>
                 <div className="flex gap-4">
                     <a href={url} target="_blank">
