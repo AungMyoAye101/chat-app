@@ -10,7 +10,7 @@ type Button = {
 
 const Button: FC<Button> = ({ type = "button", leftIcon, text, rightIcon, className }) => {
     return (
-        <button type={type} className={`text-sm bg-blue-400 px-4 py-2 rounded flex justify-center items-center hover:bg-pink-400 ${className}`}>
+        <button type={type} className={`text-sm bg-blue-400 px-4 py-2 rounded flex justify-center items-center hover:bg-orange-400 ${className}`}>
             {
                 leftIcon && <span>{leftIcon}</span>
             }

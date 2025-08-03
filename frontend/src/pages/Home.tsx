@@ -28,10 +28,10 @@ const Home = () => {
     }, [user?._id])
 
     return (
-        <section className='max-w-6xl mx-auto border border-red-400 min-h-screen w-full'>
+        <section className='max-w-7xl mx-auto border border-red-400 min-h-screen w-full'>
 
             <div className='flex w-full'>
-                <div className='max-w-xs min-w-[120px] bg-white border-r '>
+                <div className='w-xs bg-white border-r '>
 
                     <GroupList />
                     <User />
