@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom"
 // For Props type 
 
 interface PropsType {
-    userId: string,
+    id: string,
     img: string,
+    type: 'user' | "group",
     onClose: () => void
 }
 
 let url: string;
-const ImageUpload = ({ userId, onClose, img }: PropsType) => {
+const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     const [image, setImage] = useState<File | undefined>(undefined)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -23,9 +24,12 @@ const ImageUpload = ({ userId, onClose, img }: PropsType) => {
     }
     const uploadImage = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (!image) {
+            return console.log("No image found.")
+        }
         setIsLoading(true)
         try {
-            const res = await axiosInstance.post(`/api/image/upload/${userId}`, { avatar: image }, { headers: { "Content-Type": "multipart/form-data", } })
+            const res = await axiosInstance.post(`/api/image/upload/${type + '/' + id}`, { avatar: image }, { headers: { "Content-Type": "multipart/form-data", } })
             console.log(res.data)
             onClose()
         } catch (error) {
@@ -54,16 +58,16 @@ const ImageUpload = ({ userId, onClose, img }: PropsType) => {
                 onSubmit={uploadImage}
 
                 className=" rounded-lg border border-purple-400 flex flex-col py-8 px-6 items-center gap-5 bg-white shadow-lg  h-fit">
-                <h1 className="font-semibold text-2xl font-serif">Select photo to upload</h1>
+                <h1 className="font-semibold text-lg font-serif">Select photo to upload</h1>
                 <div className="flex gap-4">
                     <a href={url} target="_blank">
-                        <img src={url || "/vite.svg"} alt="profile image" className=" w-32 h-32 rounded-full border-4 border-purple-400 object-cover " />
+                        <img src={url || "/vite.svg"} alt="profile image" className=" w-24 h-24 rounded-full border-4 border-purple-400 object-cover " />
 
                     </a>
 
                     <label htmlFor="profile">
 
-                        <div title="upload image" className={`rounded-lg border border-purple-400 bg-neutral-200 w-32 h-32 flex justify-center items-center text-4xl text-neutral-400 ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}>+</div>
+                        <div title="upload image" className={`rounded-lg border border-purple-400 bg-neutral-200 w-24 h-24 flex justify-center items-center text-4xl text-neutral-400 ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}>+</div>
                         <input
                             disabled={isLoading}
                             type="file"

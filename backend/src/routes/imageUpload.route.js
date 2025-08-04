@@ -7,7 +7,7 @@ import fs from "fs"
 const imageRouter = express.Router()
 
 
-imageRouter.post('/upload/:id', upload.single('avatar'), async (req, res) => {
+imageRouter.post('/upload/user/:id', upload.single('avatar'), async (req, res) => {
     console.log('uploading...')
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -22,7 +22,6 @@ imageRouter.post('/upload/:id', upload.single('avatar'), async (req, res) => {
         if (!user) {
             res.status(400).json("Invalid userId!")
         }
-        console.log(user.avatarPublicId)
         if (user.avatarPublicId) {
             await cloudinary.uploader.destroy(user.avatarPublicId)
             console.log("delete old photo from cloudinary.")
@@ -42,7 +41,7 @@ imageRouter.post('/upload/:id', upload.single('avatar'), async (req, res) => {
     }
 
 })
-imageRouter.post('/group/upload/:id', upload.single('avatar'), async (req, res) => {
+imageRouter.post('/upload/group/:id', upload.single('avatar'), async (req, res) => {
     console.log('uploading...')
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id)) {

@@ -1,3 +1,4 @@
+import ImageUpload from "@/components/ImageUpload"
 import { axiosInstance } from "@/lib/axios.config"
 import { formatLastSeen } from "@/lib/helper"
 import type { MembersType } from "@/lib/types"
@@ -8,19 +9,22 @@ interface GroupTypes {
     _id: string,
     name: string,
     createdBy: { _id: string, name: string },
-    members: MembersType[]
+    members: MembersType[],
+    avatar: string
 }
 const GroupDeatil = () => {
     const [group, setGroup] = useState<GroupTypes>({
         _id: "",
         name: "",
         createdBy: { _id: '', name: "" },
-        members: []
+        members: [],
+        avatar: ''
     })
 
 
     //toogle edit group modal
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false)
+    const [isImageBoxOpen, setIsImageBoxOpen] = useState(false)
     const { groupId } = useParams()
     const containerRef = useRef<HTMLDivElement>(null)
 
@@ -69,16 +73,26 @@ const GroupDeatil = () => {
     return (
         <section>
             <div className="border-2 border-gray-300 rounded-lg shadow-md max-w-4xl mx-auto ">
-                <div className="flex items-center gap-4 border-b-2 border-gray-200 p-4 relative">
-                    <div className="w-32 h-32 rounded-full bg-gray-300"></div>
-                    <div>
-                        <h1 className="text-xl font-semibold font-serif">{group.name}</h1>
-                        <p>{group.createdBy.name}</p>
+                <div className="flex items-center justify-between gap-4 border-b-2 border-gray-200 p-4 relative">
+                    <div className="flex gap-2 items-center">
+
+                        <img src={group.avatar || "/vite.svg"} alt="Group avatar photo" className="w-32 h-32 rounded-full bg-gray-300 object-cover" />
+                        <div>
+                            <h1 className="text-xl font-semibold font-serif">{group.name}</h1>
+                            <p>Created by <span className="font-medium"> {group.createdBy.name} </span> </p>
+                        </div>
                     </div>
-                    <div ref={containerRef} className="absolute right-4 top-4 flex gap-2">
+                    <div ref={containerRef} className=" flex flex-col gap-2">
                         <button
                             onClick={() => setIsEditGroupModalOpen(pre => !pre)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Edit Group</button>
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            Edit Group
+                        </button>
+                        <button
+                            onClick={() => setIsImageBoxOpen(pre => !pre)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            Set Photo
+                        </button>
 
                         {
                             isEditGroupModalOpen && (
@@ -89,15 +103,19 @@ const GroupDeatil = () => {
                                 </div>
                             )
                         }
+
                     </div>
                 </div>
+                {
+                    isImageBoxOpen && <ImageUpload type="group" id={group._id} img={group.avatar} onClose={() => setIsImageBoxOpen(false)} />
+                }
 
                 <div className="flex flex-col gap-4 p-4">
                     <h2 className="text-xl font-semibold ">Members</h2>
                     {
                         group.members.map(m => (
                             <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2" key={m._id}>
-                                <div className="w-14 h-14 rounded-full bg-gray-300"></div>
+                                <img src={m.avatar || '/user-icon.svg'} alt={m.name + "profile photo"} className="w-14 h-14 rounded-full bg-gray-300 object-cover" />
                                 <div className="font-sans">
                                     <h1 className="text-xl font-semibold ">{m.name}
                                         {

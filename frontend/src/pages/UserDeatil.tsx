@@ -2,7 +2,7 @@ import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import ImageUpload from './ImageUpload'
+import ImageUpload from '../components/ImageUpload'
 
 const UserDeatil = () => {
     const [user, setUser] = useState<UserType>()
@@ -48,7 +48,7 @@ const UserDeatil = () => {
                 </div>
             </div>
             {
-                isOpenUploadImg && <ImageUpload userId={userId!} onClose={onClose} img={user?.avatar!} />
+                isOpenUploadImg && <ImageUpload id={userId!} onClose={onClose} img={user?.avatar!} type='user' />
             }
 
         </section>

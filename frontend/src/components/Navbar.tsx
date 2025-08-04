@@ -11,7 +11,7 @@ const Navbar = () => {
                 <Link to={'/'}><div>CHAT APP</div> </Link>
                 <Link to={`/user/${user?._id}`} className='flex '>
 
-                    <img src={user?.avatar} alt="" className='w-10 h-10 ' />
+                    <img src={user?.avatar || '/vite.svg'} alt="" className='w-10 h-10 ' />
                     <div>{user?.name}</div>
                 </Link>
                 <div className='flex gap-4 '>

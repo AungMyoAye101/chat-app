@@ -15,7 +15,7 @@ import GroupChat from './pages/GroupChat';
 import DefaultChat from './pages/DefaultChat';
 import { useAuth } from './context/Auth.context';
 import UpdateUser from './pages/UpdateUser';
-import ImageUpload from './pages/ImageUpload';
+import ImageUpload from './components/ImageUpload';
 interface ProtectedType {
   userId: string,
 

@@ -4,12 +4,13 @@ import User from "../model/user.model.js"
 
 
 export const createGroup = async (req, res) => {
-    const { name } = req.body
+    const { name, members } = req.body
     const userId = req.id
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "Invaild user id!" })
     }
-    const membersId = [userId]
+    const membersId = [...members, userId]
+
     try {
         const newGroup = await Group.create({ name, members: membersId, createdBy: userId })
         if (!newGroup) {
@@ -59,7 +60,7 @@ export const getGroupById = async (req, res) => {
         return res.status(400).json({ message: "Invalid group Id." })
     }
     try {
-        const group = await Group.findById(groupId).populate('members', 'name lastSeen ').populate('createdBy', '_id name ')
+        const group = await Group.findById(groupId).populate('members', 'name lastSeen avatar').populate('createdBy', '_id name ')
         if (!group) {
             return res.status(404).json({ message: "Group not found." })
         }

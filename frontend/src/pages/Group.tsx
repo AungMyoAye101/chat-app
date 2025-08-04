@@ -1,4 +1,4 @@
-import Button from "@/components/UI/Button"
+
 import { axiosInstance } from "@/lib/axios.config"
 
 import { useEffect, useState } from "react"
@@ -21,6 +21,7 @@ const Group = () => {
         members: []
     })
     const [members, setMembers] = useState<Members[]>([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const navigate = useNavigate()
 
@@ -40,9 +41,12 @@ const Group = () => {
     }, [])
 
 
-    console.log(data)
+
+
+
     const handelSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setIsLoading(true)
         try {
             const res = await axiosInstance.post("/api/group/create-group", data)
             if (res.status === 201) {
@@ -51,6 +55,8 @@ const Group = () => {
             }
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -74,7 +80,11 @@ const Group = () => {
                 <input type="name" placeholder='group name' name="name" onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className='w-full ' />
             </div>
             <div>
-                <h1 className="font-semibold text-lg font-serif mb-2">Add members</h1>
+                <h1 className="font-semibold text-lg font-serif ">Add members</h1>
+                <div className="flex rounded-lg overflow-hidden my-2">
+                    <input type="text" placeholder="Search user name" className="flex-1 !rounded-none" />
+                    <button type="button" className="px-4 py-1.5 bg-orange-400 text-white">Search</button>
+                </div>
                 <div className="rounded-lg overflow-hidden">
                     {
                         members.map(user => (
@@ -91,7 +101,9 @@ const Group = () => {
                     }
                 </div>
             </div>
-            <Button type='submit' text='Submit' />
+            <button type="submit" className={`px-4 py-1.5 bg-orange-400 text-white rounded-lg ${isLoading ? "cursor-wait" : "cursor-pointer"}`}>
+                {isLoading ? "Creating..." : "Create"}
+            </button>
             {/* {
                 errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
             } */}
