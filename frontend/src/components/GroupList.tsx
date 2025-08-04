@@ -20,28 +20,30 @@ const GroupList = () => {
 
 
     return (
-        <section>
+        <section className='py-2' >
+
+            <h1 className='text-lg font-semibold px-4'>Group</h1>
             <div>
-                <h1 className='text-lg font-semibold'>Group</h1>
-                <div>
-                    {
-                        data.map((g) => (
-                            <Link to={`/chat/group/${g._id}`} key={g._id} className='flex px-4 py-2 cursor-pointer hover:bg-gray-200'>
+                {
+                    data.map((g) => (
+                        <Link to={`/chat/group/${g._id}`} key={g._id} className='flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-200 font-serif'>
+
+                            {
+                                g.avatar ? <img src={g.avatar} alt={g.name + "avatar photo"} className='w-12 h-12 rounded-full bg-gray-300 object-cover' /> : <div className='w-12 h-12 rounded-full bg-blue-400 flex justify-center items-center text-lg capitalize text-white' >{g.name[0]}</div>
+                            }
 
 
-                                <div className='w-6 h-6 rounded-full bg-blue-400'></div>
-
-                                <div>
-
-                                    <h2>{g.name}</h2>
 
 
-                                </div>
-                            </Link>
-                        ))
-                    }
-                </div>
+                            <h2 className='text-lg font-medium'>{g.name}</h2>
+
+
+
+                        </Link>
+                    ))
+                }
             </div>
+
         </section>
     )
 }

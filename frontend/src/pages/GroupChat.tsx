@@ -21,7 +21,13 @@ interface GroupMessageType {
 
 
 const GroupChat = () => {
-    const [group, setGroup] = useState<GroupTypes>()
+    const [group, setGroup] = useState<GroupTypes>({
+        _id: '',
+        name: '',
+        createdBy: '',
+        members: [],
+        avatar: '',
+    })
     const [message, setMessage] = useState('')
     const [receivedData, setReceivedData] = useState<GroupMessageType[]>([])
     const [isTyping, setIsTyping] = useState(false)
@@ -143,9 +149,16 @@ const GroupChat = () => {
 
     return (
         <section className=' h-screen w-full flex flex-col '>
-            <Link to={`/group/${groupId}`} className="flex gap-2 px-4 py-1 bg-white">
-                <div className="w-8 h-8 rounded-full bg-green-400"></div>
-                <h1>{group?.name}</h1>
+            <Link to={`/group/${groupId}`} className="flex items-center gap-2 px-4 py-1 bg-white">
+
+                {
+                    group.avatar ? <img src={group.avatar} alt={group.name + "avatar photo"} className='w-12 h-12 rounded-full bg-gray-300 object-cover' /> : <div className='w-12 h-12 rounded-full bg-blue-400 flex justify-center items-center text-lg capitalize text-white' >{group.name[0]}</div>
+                }
+
+
+
+
+                <h2 className='text-lg font-medium'>{group.name}</h2>
             </Link>
 
             <div className="overflow-hidden overflow-y-scroll flex-1 flex flex-col gap-2 p-4">

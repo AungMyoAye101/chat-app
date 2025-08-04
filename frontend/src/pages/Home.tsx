@@ -2,7 +2,7 @@
 import GroupList from '@/components/GroupList'
 
 
-import User from '@/components/User'
+import UserList from '@/components/UserList'
 import { useAuth } from '@/context/Auth.context'
 import { socket } from '@/lib/socket'
 
@@ -34,7 +34,7 @@ const Home = () => {
                 <div className='w-xs bg-white border-r '>
 
                     <GroupList />
-                    <User />
+                    <UserList />
                 </div>
                 <div className='flex-1 h-screen bg-purple-100'>
                     <Outlet />

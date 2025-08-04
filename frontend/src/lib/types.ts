@@ -10,7 +10,8 @@ export interface GroupTypes {
     _id: string,
     name: string,
     createdBy: string,
-    members: string[]
+    members: string[],
+    avatar: string,
 }
 
 export interface MembersType {

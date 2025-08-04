@@ -1,3 +1,4 @@
+import ImageBox from '@/components/ImageBox';
 import { useAuth } from '@/context/Auth.context'
 import { axiosInstance } from '@/lib/axios.config';
 import { formatChatTime, formatLastSeen } from '@/lib/helper';
@@ -135,7 +136,7 @@ const UserChat = () => {
     return (
         <section className='bg-blue-100 h-full flex flex-col '>
             <div className='bg-white flex gap-2 px-4 py-1 items-center'>
-                <div className='w-10 h-10 rounded-full bg-blue-200'></div>
+                <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} />
                 <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
                     <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
             </div>

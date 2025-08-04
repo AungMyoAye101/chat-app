@@ -3,13 +3,14 @@ import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
 import { useEffect, useState } from "react"
 import { formatLastSeen } from "@/lib/helper"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { socket } from "@/lib/socket"
+import ImageBox from "./ImageBox"
 
 
 
 
-const User = () => {
+const UserList = () => {
     const [users, setUsers] = useState<UserType[]>([])
     const [onlineUsers, setOnlineUsers] = useState<string[]>([])
 
@@ -40,15 +41,15 @@ const User = () => {
     return (
         <section className="">
             <div className='flex flex-col'>
+                <h1 className="text-lg font-serif fomt-medium">User</h1>
                 {
                     users.map(user => (
                         <Link to={`/chat/user/${user._id}`} className='flex gap-2 px-4 py-2 cursor-pointer hover:bg-gray-200' key={user._id} >
 
                             <div className="relative ">
 
-                                <img src="/vite.svg" alt="profile image" className="w-12 h-12 rounded-full bg-green-400" />
-
-                                <div className={`absolute -left-1 top-0 w-3 h-3 rounded-full ${onlineUsers.includes(user._id) ? "bg-green-400" : "bg-gray-400"} `}></div>
+                                <ImageBox avatar={user.avatar!} name={user.name} />
+                                <div className={`absolute left-0 top-1 w-3 h-3 rounded-full ${onlineUsers.includes(user._id) ? "bg-green-400" : "bg-gray-400"} `}></div>
                             </div>
                             <div className="flex-1 flex justify-between items-center  ">
 
@@ -65,4 +66,4 @@ const User = () => {
     )
 }
 
-export default User
+export default UserList
