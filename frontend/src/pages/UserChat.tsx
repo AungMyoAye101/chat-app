@@ -183,7 +183,7 @@ const UserChat = () => {
                 />
                 <button className='px-4 py-1 bg-white'>Send</button>
             </form> */}
-            <ChatBox />
+            <ChatBox selectedUser={selectedUser} currUserId={currUserId!} />
 
         </section>
     )
