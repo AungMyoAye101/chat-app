@@ -23,7 +23,13 @@ type MessageType = {
 };
 
 const UserChat = () => {
-    const [selectedUser, setSelectedUser] = useState<UserType>()
+    const [selectedUser, setSelectedUser] = useState<UserType>({
+        _id: '',
+        name: '',
+        email: '',
+        avatar: '',
+        lastSeen: ''
+    })
     const [message, setMessage] = useState('')
     const [receivedData, setReceivedData] = useState<MessageType[]>([])
     const [isTyping, setIsTyping] = useState(false)
@@ -143,15 +149,17 @@ const UserChat = () => {
             <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
                 {
                     receivedData.map((data) => (
-                        <div key={data._id}>
+                        <div key={data._id} className={`${data.sender._id === currUserId ? "self-start " : "self-end"} flex flex-col`}>
 
-                            <div className={` px-4 py-1.5 rounded-lg w-fit  ${data.sender._id === currUserId ? "self-end bg-neutral-100" : "self-start bg-blue-200"}`}>
+
+                            <div className={` px-4 py-1.5 rounded-lg w-fit  bg-neutral-100`}>
                                 <p className='text-sm'>{data.message}</p>
                                 <span className='text-xs'>{formatChatTime(data.createdAt)}</span>
                             </div>
                             {
-                                data.seenBy.includes(userId!) && <span>✅</span>
+                                data.seenBy.includes(userId!) && <span className='self-end'>✅</span>
                             }
+
                         </div>
                     ))
                 }
