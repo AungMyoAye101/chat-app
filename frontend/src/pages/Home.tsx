@@ -28,15 +28,18 @@ const Home = () => {
     }, [user?._id])
 
     return (
-        <section className='max-w-7xl mx-auto border border-red-400 min-h-screen w-full'>
+        <section className='relative '>
 
-            <div className='flex w-full'>
-                <div className='w-xs bg-white border-r '>
+            <div className='flex '>
+                <div className='w-xs bg-white shadow-lg h-screen overflow-hidden  overflow-y-scroll py-4'>
 
                     <GroupList />
                     <UserList />
+                    {
+                        [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => <div key={n} className='w-10 h-10 bg-orange-600'>{n}</div>)
+                    }
                 </div>
-                <div className='flex-1 h-screen bg-purple-100'>
+                <div className='flex-1  '>
                     <Outlet />
                 </div>
             </div>

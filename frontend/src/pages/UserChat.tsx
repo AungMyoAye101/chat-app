@@ -1,3 +1,4 @@
+import ChatBox from '@/components/ChatBox';
 import ImageBox from '@/components/ImageBox';
 import { useAuth } from '@/context/Auth.context'
 import { axiosInstance } from '@/lib/axios.config';
@@ -140,13 +141,13 @@ const UserChat = () => {
 
 
     return (
-        <section className='bg-blue-100 h-full flex flex-col '>
-            <div className='bg-white flex gap-2 px-4 py-1 items-center'>
+        <section className=''>
+            {/* <div className='bg-white flex gap-2 px-4 py-1 items-center sticky top-0 w-full'>
                 <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} />
                 <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
                     <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
-            </div>
-            <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
+            </div> */}
+            {/* <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
                 {
                     receivedData.map((data) => (
                         <div key={data._id} className={`${data.sender._id === currUserId ? "self-start " : "self-end"} flex flex-col`}>
@@ -181,7 +182,8 @@ const UserChat = () => {
                     className='flex-1 py-1 px-4 bg-white'
                 />
                 <button className='px-4 py-1 bg-white'>Send</button>
-            </form>
+            </form> */}
+            <ChatBox />
 
         </section>
     )
