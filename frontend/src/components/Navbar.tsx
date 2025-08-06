@@ -1,9 +1,13 @@
 
 import { useAuth } from '@/context/Auth.context'
+import { logout } from '@/lib/helper'
 import { Link } from 'react-router-dom'
+
+
 
 const Navbar = () => {
     const user = useAuth()
+
     return (
         <nav className="bg-gray-200 p-4 sticky top-0 left-0 right-0 z-40 opacity-15">
             <div className="container mx-auto flex justify-between items-center">
@@ -18,6 +22,7 @@ const Navbar = () => {
                     <Link to={'/register'}>register</Link>
                     <Link to={'/login'}>Login</Link>
                     <Link to={"/create-group"}>Create Group</Link>
+                    <button onClick={logout}>Logout</button>
                 </div>
             </div>
         </nav>

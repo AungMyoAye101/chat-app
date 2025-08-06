@@ -1,3 +1,5 @@
+import axios from "axios";
+import { axiosInstance } from "./axios.config";
 
 
 export const formatLastSeen = (dateString: string) => {
@@ -12,13 +14,14 @@ export function formatChatTime(dateString: string) {
 
     if (diff < 60 * 1000) {
         return "just now";
-    } else if (diff < 60 * 60 * 1000) {
-        const mins = Math.floor(diff / (60 * 1000));
-        return mins === 1 ? "1 min ago" : `${mins} mins ago`;
     } else {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 }
+// else if (diff < 60 * 60 * 1000) {
+//     const mins = Math.floor(diff / (60 * 1000));
+//     return mins === 1 ? "1 min ago" : `${mins} mins ago`;
+// }
 
 // if (now.toDateString() === date.toDateString()) {
 //         // Show as 11:22 pm
@@ -36,3 +39,11 @@ export function formatChatTime(dateString: string) {
 //         hours = hours % 12 || 12;
 //         return `${months[date.getMonth()]} ${date.getDate()}, ${hours}:${minutes} ${ampm}`;
 //     }
+
+export const logout = async () => {
+    try {
+        await axiosInstance.post('/api/auth/logout')
+    } catch (error) {
+        console.log(error)
+    }
+}

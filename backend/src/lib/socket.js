@@ -36,7 +36,9 @@ io.on("connection", (socket) => {
     //seen message 
     socket.on("seen-message", async ({ messageId, userId, chatId }) => {
 
+
         const updatedMessage = await Message.findByIdAndUpdate(messageId, { $addToSet: { seenBy: userId } }, { new: true })
+        console.log('send message.')
         io.to(chatId).emit("seen", updatedMessage)
     })
 
