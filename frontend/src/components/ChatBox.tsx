@@ -32,7 +32,6 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Sending...", message, currUserId, selectedUser._id)
         if (!message.trim() || !currUserId || !selectedUser?._id) return;
         //for sending message
         socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
@@ -59,6 +58,16 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
         }
     }, [receivedData, isTyping])
 
+    //Check seen or unseen message
+
+    useEffect(() => {
+        if (!selectedUser._id) return;
+
+        const unseenMessage = receivedData.filter(m => !m.seenBy.includes(currUserId))
+        if (unseenMessage.length === 0) return;
+        unseenMessage.forEach(m => socket.emit("seen-message", ({ messageId: m._id, userId: currUserId, chatId: selectedUser._id })))
+
+    }, [receivedData])
 
     //socket 
 
@@ -66,7 +75,6 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
         if (!selectedUser._id) return;
 
         socket.on("received-message", (data) => {
-            console.log(data)
             setReceivedData(pre => [...pre, data])
         })
 

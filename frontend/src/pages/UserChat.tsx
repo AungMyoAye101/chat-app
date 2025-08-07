@@ -60,15 +60,15 @@ const UserChat = () => {
 
     //seen or unseen message 
 
-    useEffect(() => {
-        if (!user?._id || !receivedData) return
-        const unSeenMessage = receivedData.filter(m => (
-            !m.seenBy.includes(currUserId!)
-        ))
-        if (unSeenMessage.length === 0) return
-        unSeenMessage.forEach(m => (socket.emit("seen-message", ({ messageId: m._id, userId: currUserId, chatId: userId }))))
+    // useEffect(() => {
+    //     if (!user?._id || !receivedData) return
+    //     const unSeenMessage = receivedData.filter(m => (
+    //         !m.seenBy.includes(currUserId!)
+    //     ))
+    //     if (unSeenMessage.length === 0) return
+    //     unSeenMessage.forEach(m => (socket.emit("seen-message", ({ messageId: m._id, userId: currUserId, chatId: userId }))))
 
-    }, [receivedData])
+    // }, [receivedData])
 
 
 
