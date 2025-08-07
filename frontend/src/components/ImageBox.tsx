@@ -11,7 +11,7 @@ const ImageBox: FC<ImageBoxPropsType> = ({ avatar, name, className }) => {
 
     const style = cn(`w-12 h-12 rounded-full object-cover ${avatar ? "bg-gray-300 " : 'bg-blue-400 flex justify-center items-center text-lg capitalize text-white'} ${className}`)
     return (
-        <div>
+        <div title={name}>
             {
                 avatar ? <img src={avatar} alt={name + "avatar photo"} className={style} /> : <div className={style}>{name[0]}</div>
             }
