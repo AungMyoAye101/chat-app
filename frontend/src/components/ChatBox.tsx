@@ -41,9 +41,8 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
     };
 
     const getMessage = async () => {
-        if (currUserId) {
+        if (selectedUser._id) {
             const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
-            console.log(res.data)
             setReceivedData(res.data)
         }
     }
@@ -52,7 +51,25 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
         getMessage()
     }, [selectedUser._id])
 
-    console.log(selectedUser)
+
+
+    //socket 
+
+    useEffect(() => {
+        if (!selectedUser._id) return;
+
+        socket.on("received-message", (data) => {
+            console.log(data)
+            setReceivedData(pre => [...pre, data])
+        })
+
+
+        return () => {
+            socket.off("received-message")
+        }
+    }, [selectedUser._id])
+
+
     return (
         <section className='flex flex-col gap-4 bg-blue-100 h-screen overflow-hidden  overflow-y-scroll  relative '>
             <div className='bg-white flex gap-2 px-4 py-1 items-center sticky top-0 w-full'>
@@ -65,12 +82,12 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
                     receivedData.map(m =>
                         <div key={m._id} className="self-end "  >
 
-                            <div className="bg-white  px-4 py-2 rounded-lg">
+                            <div className="bg-white  px-4 py-2 rounded-lg mb-1">
                                 <p className="font-serif">{m.message}</p>
                                 <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
                             </div>
                             {m.seenBy.includes(selectedUser._id) &&
-                                <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} className={"w-6 h-6"} />
+                                <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} className={"w-6 h-6 text-sm"} />
                             }
 
                         </div>)
@@ -78,7 +95,7 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
 
             </div>
             <form onSubmit={handleSendMessage} className='flex bg-white'>
-                <input type="text" className='flex-1' onChange={(e) => setMessage(e.target.value)} />
+                <input type="text" value={message} className='flex-1' onChange={(e) => setMessage(e.target.value)} />
                 <button className='px-4 py-1 bg-blue-400 text-white'>Send</button>
             </form>
         </section >
