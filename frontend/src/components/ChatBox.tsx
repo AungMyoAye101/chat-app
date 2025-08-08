@@ -110,36 +110,40 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
 
 
     return (
-        <section className='flex flex-col gap-4 bg-blue-200 rounded-lg shadow-md   relative min-h[80vh] h-full  overflow-hidden  overflow-y-scroll no-scrollbar'>
-            <div className='bg-white flex gap-2 px-4 py-1 items-center sticky top-0 left-0 right-0'>
+        <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
+            <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
                 <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
                 <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
                     <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
             </div>
-            {/* 
-            {
-                receivedData.map(m =>
-                    <div key={m._id} className={`${currUserId === m.sender._id ? "self-end" : "self-start"} mx-2 max-w-[70%]`}  >
 
-                        <div className="bg-white  px-4 py-2 rounded-lg mb-1">
-                            <p className="font-serif">{m.message}</p>
-                            <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
-                        </div>
-                        {m.seenBy.includes(selectedUser._id) &&
-                            <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
-                        }
+            <div className="h-[75%] overflow-hidden  overflow-y-scroll no-scrollbar bg-green-100 p-4 flex flex-col gap-4">
+                {
+                    receivedData.map(m =>
+                        <div key={m._id} className={`${currUserId === m.sender._id ? "self-end" : "self-start"}  max-w-[70%] w-fit`}  >
 
-                    </div>)
-            }
+                            <div className="bg-white  px-4 py-2 rounded-lg mb-1">
+                                <p className="font-serif">{m.message}</p>
+                                <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
+                            </div>
+                            {m.seenBy.includes(selectedUser._id) &&
+                                <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
+                            }
 
-            {
-                isTyping && <div className="italic font-serif text-sm">Typing...</div>
-            } */}
-            {/* For scrol in to view  */}
+                        </div>)
+                }
 
-            <div ref={containerRef} />
+                {
+                    isTyping && <div className="italic font-serif text-sm">Typing...</div>
+                }
+                {/* For scrol in to view  */}
 
-            <form onSubmit={handleSendMessage} className='flex bg-white sticky bottom-0 z-10 w-full'>
+                <div ref={containerRef} />
+            </div>
+
+
+
+            <form onSubmit={handleSendMessage} className='flex bg-white h-[10%] w-full border-t border-neutral-200'>
                 <input
                     type="text"
                     value={message}
