@@ -105,87 +105,45 @@ const UserChat = () => {
 
 
     //Send message to server
-    const handleSendMessage = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!message.trim() || !currUserId || !selectedUser?._id) return;
-        //for sending message
-        socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
-        setMessage("");
-        setIsTyping(false)
-    };
+    // const handleSendMessage = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     if (!message.trim() || !currUserId || !selectedUser?._id) return;
+    //     //for sending message
+    //     socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
+    //     setMessage("");
+    //     setIsTyping(false)
+    // };
 
     //For typing indicator 
-    const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!currUserId) return
-        setMessage(e.target.value)
-        if (!isTyping) {
-            socket.emit("typing", { senderId: user._id, receiverId: userId })
-        }
-        if (typingTimeOutRef.current) {
-            clearTimeout(typingTimeOutRef.current)
-        }
-        typingTimeOutRef.current = setTimeout(() => {
-            socket.emit("stop-typing", { senderId: user._id, receiverId: userId })
-        }, 3000)
-    }
+    // const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (!currUserId) return
+    //     setMessage(e.target.value)
+    //     if (!isTyping) {
+    //         socket.emit("typing", { senderId: user._id, receiverId: userId })
+    //     }
+    //     if (typingTimeOutRef.current) {
+    //         clearTimeout(typingTimeOutRef.current)
+    //     }
+    //     typingTimeOutRef.current = setTimeout(() => {
+    //         socket.emit("stop-typing", { senderId: user._id, receiverId: userId })
+    //     }, 3000)
+    // }
 
     //scroll into bottom 
-    useEffect(() => {
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: "smooth" })
-        }
+    // useEffect(() => {
+    //     if (bottomRef.current) {
+    //         bottomRef.current.scrollIntoView({ behavior: "smooth" })
+    //     }
 
-    }, [receivedData, isTyping])
+    // }, [receivedData, isTyping])
 
 
 
 
     return (
-        <section className=''>
-            {/* <div className='bg-white flex gap-2 px-4 py-1 items-center sticky top-0 w-full'>
-                <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} />
-                <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
-                    <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
-            </div> */}
-            {/* <div className='flex-1 flex flex-col gap-2 p-2 overflow-hidden overflow-y-scroll'>
-                {
-                    receivedData.map((data) => (
-                        <div key={data._id} className={`${data.sender._id === currUserId ? "self-start " : "self-end"} flex flex-col`}>
 
+        <ChatBox selectedUser={selectedUser} currUserId={currUserId!} />
 
-                            <div className={` px-4 py-1.5 rounded-lg w-fit  bg-neutral-100`}>
-                                <p className='text-sm'>{data.message}</p>
-                                <span className='text-xs'>{formatChatTime(data.createdAt)}</span>
-                            </div>
-                            {
-                                data.seenBy.includes(userId!) && <span className='self-end'>✅</span>
-                            }
-
-                        </div>
-                    ))
-                }
-
-
-
-                {
-                    isTyping && <div className='bg-neutral-100 px-4 py-1 rounded-lg w-fit italic text-sm' >Typing...</div>
-                }
-
-                <div ref={bottomRef} />
-
-            </div>
-            <form onSubmit={handleSendMessage} className='flex '>
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => handleTyping(e)}
-                    className='flex-1 py-1 px-4 bg-white'
-                />
-                <button className='px-4 py-1 bg-white'>Send</button>
-            </form> */}
-            <ChatBox selectedUser={selectedUser} currUserId={currUserId!} />
-
-        </section>
     )
 }
 

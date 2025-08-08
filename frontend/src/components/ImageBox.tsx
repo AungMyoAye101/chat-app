@@ -4,12 +4,15 @@ import type { FC } from "react"
 interface ImageBoxPropsType {
     avatar: string,
     className?: string,
-    name: string
+    name: string,
+    size: "sm" | "md" | 'lg'
 }
 
-const ImageBox: FC<ImageBoxPropsType> = ({ avatar, name, className }) => {
+const ImageBox: FC<ImageBoxPropsType> = ({ avatar, name, className, size = "md" }) => {
 
-    const style = cn(`w-12 h-12 rounded-full object-cover ${avatar ? "bg-gray-300 " : 'bg-blue-400 flex justify-center items-center text-lg capitalize text-white'} ${className}`)
+    const imageSize = size === "sm" ? "w-6 h-6 text-sm" : size === "lg" ? "w-14 h-14 text-xl" : "w-12 h-12 text-lg"
+
+    const style = cn(`rounded-full object-cover ${avatar ? "bg-gray-300 " : 'bg-blue-400 flex justify-center items-center  capitalize text-white'} ${className} ${imageSize}`)
     return (
         <div title={name}>
             {

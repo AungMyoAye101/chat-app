@@ -110,23 +110,23 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
 
 
     return (
-        <section className='flex flex-col gap-4 bg-blue-100   relative h-[90vh] overflow-hidden  overflow-y-scroll '>
-            <div className='bg-white flex gap-2 px-4 py-1 items-center sticky top-0 w-full'>
-                <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} />
+        <section className='flex flex-col gap-4 bg-blue-200 rounded-lg shadow-md   relative min-h[80vh] h-full  overflow-hidden  overflow-y-scroll no-scrollbar'>
+            <div className='bg-white flex gap-2 px-4 py-1 items-center sticky top-0 left-0 right-0'>
+                <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
                 <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
                     <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
             </div>
-
+            {/* 
             {
                 receivedData.map(m =>
-                    <div key={m._id} className={currUserId === m.sender._id ? "self-end" : "self-start"}  >
+                    <div key={m._id} className={`${currUserId === m.sender._id ? "self-end" : "self-start"} mx-2 max-w-[70%]`}  >
 
                         <div className="bg-white  px-4 py-2 rounded-lg mb-1">
                             <p className="font-serif">{m.message}</p>
                             <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
                         </div>
                         {m.seenBy.includes(selectedUser._id) &&
-                            <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} className={"w-6 h-6 text-sm"} />
+                            <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
                         }
 
                     </div>)
@@ -134,13 +134,20 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
 
             {
                 isTyping && <div className="italic font-serif text-sm">Typing...</div>
-            }
+            } */}
             {/* For scrol in to view  */}
 
             <div ref={containerRef} />
 
             <form onSubmit={handleSendMessage} className='flex bg-white sticky bottom-0 z-10 w-full'>
-                <input type="text" value={message} className='flex-1' onChange={(e) => handleChange(e)} />
+                <input
+                    type="text"
+                    value={message}
+
+                    onChange={(e) => handleChange(e)}
+                    placeholder="Aa"
+                    className='flex-1 bg-white px-4 py-3'
+                />
                 <button className='px-4 py-1 bg-blue-400 text-white'>Send</button>
             </form>
         </section >

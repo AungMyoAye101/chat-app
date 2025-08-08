@@ -31,7 +31,7 @@ const Login = () => {
             <div>
                 <input type="password" placeholder='password' name='password' onChange={(e) => setData(pre => ({ ...pre, [e.target.name]: e.target.value }))} className='w-full ' />
             </div>
-            <Button type='submit' text='Submit' />
+            <Button type='submit'  >Login</Button>
             {
                 errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
             }

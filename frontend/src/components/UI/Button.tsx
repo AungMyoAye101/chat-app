@@ -1,24 +1,17 @@
+import cn from '@/lib/cn'
 import React, { type FC } from 'react'
 
 type Button = {
     type: "button" | "submit",
-    leftIcon?: string,
-    text: string,
-    rightIcon?: string,
-    className?: string
+    className?: string,
+    children: React.ReactNode,
+    func?: () => void
 }
 
-const Button: FC<Button> = ({ type = "button", leftIcon, text, rightIcon, className }) => {
+const Button: FC<Button> = ({ type = "button", className, children, func }) => {
     return (
-        <button type={type} className={`text-sm bg-blue-400 px-4 py-2 rounded flex justify-center items-center hover:bg-orange-400 ${className}`}>
-            {
-                leftIcon && <span>{leftIcon}</span>
-            }
-            <span> {text}</span>
-            {
-                rightIcon && <span>{rightIcon}</span>
-            }
-
+        <button type={type} onClick={func} className={cn(`text-sm bg-orange-400 px-4 py-1.5 text-white rounded flex justify-center items-center hover:bg-orange-300 cursor-pointer ${className}`)}>
+            {children}
         </button>
     )
 }
