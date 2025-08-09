@@ -19,12 +19,19 @@ const Navbar = () => {
             </Link>
 
             <div className='flex gap-1 justify-center items-center'>
-                <Link to={'/register'} className='link-btn'>register</Link>
-                <Link to={'/login'} className='link-btn'>Login</Link>
-                <Link to={"/create-group"} className='link-btn'>Create Group</Link>
+                {
+                    user?._id ? <>
+                        <Link to={"/create-group"} className='link-btn'>Create Group</Link>
+                        <Button type='button' func={logout}>Logout</Button>
+                        <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' /></> :
+                        <>
+                            <Link to={'/register'} className='link-btn'>register</Link>
+                            <Link to={'/login'} className='link-btn'>Login</Link>
 
-                <Button type='button' func={logout}>Logout</Button>
-                <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' />
+                        </>
+                }
+
+
             </div>
 
         </nav>
