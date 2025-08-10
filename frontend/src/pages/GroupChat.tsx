@@ -5,6 +5,7 @@ import { socket } from "@/lib/socket"
 import type { GroupTypes } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
 import { Link, useParams, } from "react-router-dom"
+import ChatBox from "@/components/ChatBox"
 
 interface SeenUserType {
     _id: string,
@@ -28,25 +29,17 @@ const GroupChat = () => {
         members: [],
         avatar: '',
     })
-    const [message, setMessage] = useState('')
-    const [receivedData, setReceivedData] = useState<GroupMessageType[]>([])
-    const [isTyping, setIsTyping] = useState(false)
+
     const { groupId } = useParams()
     const user = useAuth()
-    const typingTimeOutRef = useRef<NodeJS.Timeout | null>(null)
-    const scrollRef = useRef<HTMLDivElement | null>(null)
 
-    //Scroll to the bottom 
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: "smooth" })
-        }
-    }, [receivedData, isTyping])
+
+
 
     //Get group or user 
     const getGroupMessage = async () => {
         const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
-        setReceivedData(res.data)
+
     }
     useEffect(() => {
         const getGroup = async () => {
@@ -59,137 +52,10 @@ const GroupChat = () => {
 
     }, [groupId])
 
-    //For message seen functionally
-
-    useEffect(() => {
-
-        socket.on("seen", (data) => {
-            console.log(data._id)
-            getGroupMessage()
-
-            // setReceivedData(pre => ([...pre, data]))
-        })
-
-        return () => { socket.off("seen") }
-    }, [])
-
-    useEffect(() => {
-
-        if (!user?._id || !receivedData) return
-        const unSeenMessage = receivedData.filter((message) => {
-            if (Array.isArray(message.seenBy)) {
-
-                return !message.seenBy.some(msg => msg._id === user?._id)
-            }
-        }
-        )
-        if (unSeenMessage.length === 0) return
-        unSeenMessage.forEach(m => {
-            socket.emit("seen-message", { messageId: m._id, userId: user?._id, chatId: groupId })
-        })
-
-    }, [receivedData])
-
-
-
-    useEffect(() => {
-        if (!groupId || !user?._id) return;
-        socket.emit("join-group", { groupId, userId: user._id });
-
-        socket.on("received-group-message", (data) => {
-            setReceivedData(prev => [...prev, data]);
-        });
-
-        socket.on("isTyping", (data) => {
-            if (groupId === data.receiverId) {
-                setIsTyping(true)
-            }
-        })
-        socket.on("stopped-typing", (data) => {
-
-            if (groupId === data.receiverId) {
-                setIsTyping(false)
-            }
-        })
-
-        return () => {
-            socket.off("received-group-message");
-            socket.off("isTying");
-            socket.off("stopped-tying");
-        };
-    }, [groupId, user?._id]);
-
-
-    const handleSend = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!message.trim() || !groupId || !user?._id) return console.log('group ,userid is required');
-
-        socket.emit("send-message-group", { groupId, senderId: user._id, message });
-
-        setMessage("");
-    };
-
-
-    //For typing indicator 
-    const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-        setMessage(e.target.value)
-        if (!isTyping) {
-            socket.emit("typing", ({ senderId: user?._id, receiverId: groupId }))
-            if (typingTimeOutRef.current) {
-                clearTimeout(typingTimeOutRef.current)
-            }
-            typingTimeOutRef.current = setTimeout(() => {
-                socket.emit("stop-typing", ({ senderId: user?._id, receiverId: groupId }))
-            }, 3000)
-        }
-    }
-
 
 
     return (
-        <section className=' h-screen w-full flex flex-col '>
-            <Link to={`/group/${groupId}`} className="flex items-center gap-2 px-4 py-1 bg-white">
-
-                {
-                    group.avatar ? <img src={group.avatar} alt={group.name + "avatar photo"} className='w-12 h-12 rounded-full bg-gray-300 object-cover' /> : <div className='w-12 h-12 rounded-full bg-blue-400 flex justify-center items-center text-lg capitalize text-white' >{group.name[0]}</div>
-                }
-
-
-
-
-                <h2 className='text-lg font-medium'>{group.name}</h2>
-            </Link>
-
-            <div className="overflow-hidden overflow-y-scroll flex-1 flex flex-col gap-2 p-4">
-                {receivedData.map((m) => (
-                    <div key={m._id} className={`w-fit max-w-[60%]  ${m.sender?._id && user?._id === m.sender._id ? "self-end " : "self-start "}`}>
-                        <div className={`mb-2 px-4 py-1.5  rounded-lg flex flex-col  shadow ${m.sender?._id && user?._id === m.sender._id ? " bg-white" : " bg-blue-50"}`}>
-                            {m.sender?.name && m.sender._id !== user?._id && (
-                                <p className="text-sm font-medium text-blue-400">{m.sender.name}</p>
-                            )}
-                            <div className="text-sm">{m.message}</div>
-                            <span className="text-sm self-end text-neutral-600 opacity-80 ">{formatChatTime(m.createdAt)}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                            {Array.isArray(m.seenBy) && m.seenBy.filter((u) => u._id !== user?._id).map((u, i) =>
-                                <div key={i} className="w-6 h-6 flex justify-center items-center bg-green-400 rounded-full text-sm">{u.name[0]}</div>
-                            )}
-                        </div>
-                    </div>
-                ))}
-
-                {
-                    isTyping && <p className="px-4 py-1 bg-white text-sm w-fit rounded-lg">Typing...</p>
-                }
-                <div ref={scrollRef} />
-            </div>
-            <form onSubmit={handleSend} className="flex">
-                <input type="text" value={message} className="flex-1" onChange={e => handleTyping(e)} />
-                <button type="submit" className="px-4 py-1 bg-white">send</button>
-            </form>
-
-        </section>
+        <ChatBox selectedUser={group} currUserId={user?._id!} />
     )
 }
 
