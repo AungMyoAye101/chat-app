@@ -10,17 +10,14 @@ interface LoginType {
 }
 
 const Login = () => {
-    // const [data, setData] = useState({
-    //     email: '',
-    //     password: ''
-    // })
+    const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
     const { register, handleSubmit, formState: { errors } } = useForm<LoginType>()
 
     const onSubmit = handleSubmit(async (data: LoginType) => {
-        console.log(data)
+        setIsLoading(true)
         try {
             const res = await axiosInstance.post("/api/auth/login", data)
             console.log(res.data.user)
@@ -29,6 +26,8 @@ const Login = () => {
             console.log(error)
             setErrorMessage(error.response.data.message)
 
+        } finally {
+            setIsLoading(false)
         }
     })
     return (
@@ -61,7 +60,7 @@ const Login = () => {
                 }
             </div>
             <Link to='/register' className='text-sm font-medium opacity-60 hover:text-purple-600'>Create new account?</Link>
-            <Button type='submit'>Submit</Button>
+            <Button type='submit' isLoading={isLoading}>Submit</Button>
             {
                 errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
             }

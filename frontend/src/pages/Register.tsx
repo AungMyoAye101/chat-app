@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 export interface RegisterType {
@@ -12,38 +13,42 @@ export const inputData = [{
     name: "name",
     label: "name",
     placeholder: "John Doe",
-    type: "text"
+    type: "text",
+    validation: { required: "Name is required.", minLength: { value: 3, message: "Name at least 3 characters long." } }
 
 }, {
     name: "email",
     label: "email",
     placeholder: "example@gmail.com",
-    type: "email"
+    type: "email",
+    validation: { required: "Email is required.", }
 
 }, {
     name: "password",
     label: "password",
     placeholder: "Enter your password.",
-    type: "password"
+    type: "password",
+    validation: { required: "Password is required.", minLength: { value: 6, message: "Password at least 3 characters long." } }
 
 },
 
 ]
 
+
+
 const Register = () => {
-    const [data, setData] = useState<RegisterType>({
-        name: '',
-        email: '',
-        password: '',
-    })
+
     const [status, setStatus] = useState<{ isLoading: boolean, errorMessage: string }>({
         isLoading: false,
         errorMessage: ''
     })
     const navigate = useNavigate()
-    const handleSubmit = async (e: any) => {
-        e.preventDefault()
+
+    const { register, handleSubmit, formState: { errors } } = useForm<RegisterType>()
+    const onSubmit = handleSubmit(async (data) => {
+
         setStatus(pre => ({ ...pre, isLoading: true }))
+
         try {
             const res = await axiosInstance.post("/api/auth/register", data, {
             })
@@ -57,46 +62,35 @@ const Register = () => {
         } finally {
             setStatus(pre => ({ ...pre, isLoading: false }))
         }
-    }
+    })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        setData(pre => ({ ...pre, [name]: value }))
-    }
 
     return (
         <section className='container flex justify-center mt-4'>
 
-            <form onSubmit={handleSubmit} className=' shadow-xl rounded-lg border border-neutral-100 bg-white  px-4 py-6 flex flex-col gap-4 min-w-xs w-full max-w-xl'>
+            <form onSubmit={onSubmit} className=' shadow-xl rounded-lg border border-neutral-100 bg-white  px-4 py-6 flex flex-col gap-4 min-w-xs w-full max-w-xl'>
 
                 <h1 className='text-2xl font-bold font-serif text-center'>Signup </h1>
-
-                <input
-                    id='avatar'
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                        const file = e.target.files && e.target.files[0] ? e.target.files[0] : undefined;
-                        setData(pre => ({ ...pre, avater: file as File }));
-                    }}
-                    className='hidden'
-                />
-
-
                 {
                     inputData.map((field, i) => (
-                        <label htmlFor={field.label} key={i}>
-                            <span className='capitalize font-medium font-serif'>{field.label}</span>
+                        <div key={i} className='flex flex-col gap-1'>
+                            <label htmlFor={field.name} className='capitalize font-medium text-neutral-600 '> {field.label}</label>
                             <input
                                 type={field.type}
+                                id={field.name}
                                 placeholder={field.placeholder}
-                                name={field.name}
-                                onChange={(e) => handleChange(e)}
-                                className='block w-full mt-1'
-                            />
-                        </label>
+                                className='shadow border border-neutral-200 px-4 py-1.5 rounded-lg'
+                                {...register(field.name as keyof RegisterType, { required: "Name is required.", minLength: { value: 3, message: "Name at least 3 characters long." } })} />
+
+                            {
+                                errors?.[field.name as keyof RegisterType] && <p className='text-red-400 text-sm'>{errors[field.name as keyof RegisterType]?.message}</p>
+                            }
+                        </div>
                     ))
                 }
+
+
+
 
 
                 <button type='submit' className='bg-blue-400 text-white  px-4 py-2 rounded-lg'>{status.isLoading ? "Submiting..." : "Submit"}</button>
