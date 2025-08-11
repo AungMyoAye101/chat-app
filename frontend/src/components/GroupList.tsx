@@ -18,7 +18,7 @@ const GroupList = () => {
         fetchGroup()
     }, [])
 
-
+    if (data.length === 0) return
     return (
         <section className='py-2' >
 

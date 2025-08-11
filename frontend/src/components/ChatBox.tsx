@@ -1,29 +1,23 @@
 import { formatChatTime, formatLastSeen } from "@/lib/helper"
 import ImageBox from "./ImageBox"
-import type { UserType } from "@/lib/types"
-import { useEffect, useRef, useState, type FC } from "react"
+import type { MessageType, UserType } from "@/lib/types"
+import { useEffect, useRef, useState, type FC, type SetStateAction } from "react"
 import { socket } from "@/lib/socket"
 import { axiosInstance } from "@/lib/axios.config"
 
 interface ChatBoxPropsTypes {
-    selectedUser: UserType,
-    currUserId: string
+    selectedChatId: string,
+    currUserId: string,
+    receivedData: MessageType[],
+    setReceivedData: React.Dispatch<SetStateAction<MessageType[]>>
 }
 
-type MessageType = {
-    _id: string,
-    sender: { _id: string, name: string, };
-    receiver: { _id: string, name: string, };
-    message: string,
-    createdAt: string,
-    seenBy: string[]
-    // add other fields if needed
-};
 
-const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
+
+const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedChatId, currUserId, receivedData, setReceivedData }) => {
     const [message, setMessage] = useState('')
     const [isTyping, setIsTyping] = useState(false)
-    const [receivedData, setReceivedData] = useState<MessageType[]>([])
+    // const [receivedData, setReceivedData] = useState<MessageType[]>([])
 
     const containerRef = useRef<HTMLDivElement>(null) //for autoscrolling to bottom 
 
@@ -32,23 +26,23 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!message.trim() || !currUserId || !selectedUser?._id) return;
+        if (!message.trim() || !currUserId || !selectedChatId) return;
         //for sending message
-        socket.emit("send-message", { senderId: currUserId, receiverId: selectedUser._id, message });
+        socket.emit("send-message", { senderId: currUserId, receiverId: selectedChatId, message });
         setMessage("");
         setIsTyping(false)
     };
 
-    const getMessage = async () => {
-        if (selectedUser._id) {
-            const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
-            setReceivedData(res.data)
-        }
-    }
+    // const getMessage = async () => {
+    //     if (selectedUser._id) {
+    //         const res = await axiosInstance.get("/api/messages/" + selectedUser._id)
+    //         setReceivedData(res.data)
+    //     }
+    // }
 
-    useEffect(() => {
-        getMessage()
-    }, [selectedUser._id])
+    // useEffect(() => {
+    //     getMessage()
+    // }, [selectedUser._id])
 
 
     // Scroll to bottom 
@@ -61,18 +55,18 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
     //Check seen or unseen message
 
     useEffect(() => {
-        if (!selectedUser._id) return;
+        if (!selectedChatId) return;
 
         const unseenMessage = receivedData.filter(m => !m.seenBy.includes(currUserId))
         if (unseenMessage.length === 0) return;
-        unseenMessage.forEach(m => socket.emit("seen-message", ({ messageId: m._id, userId: currUserId, chatId: selectedUser._id })))
+        unseenMessage.forEach(m => socket.emit("seen-message", ({ messageId: m._id, userId: currUserId, chatId: selectedChatId })))
 
     }, [receivedData])
 
     //socket 
 
     useEffect(() => {
-        if (!selectedUser._id) return;
+        if (!selectedChatId) return;
 
         socket.on("received-message", (data) => {
             setReceivedData(pre => [...pre, data])
@@ -91,32 +85,32 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
             socket.off("isTyping")
             socket.off("stopped-typing")
         }
-    }, [selectedUser._id])
+    }, [selectedChatId])
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!currUserId) return;
         setMessage(e.target.value)
         if (!isTyping) {
-            socket.emit('typing', ({ senderId: currUserId, receiverId: selectedUser._id }))
+            socket.emit('typing', ({ senderId: currUserId, receiverId: selectedChatId }))
         }
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current)
         }
         timeoutRef.current = setTimeout(() => {
-            socket.emit('stop-typing', ({ senderId: currUserId, receiverId: selectedUser._id }))
+            socket.emit('stop-typing', ({ senderId: currUserId, receiverId: selectedChatId }))
         }, 2000)
     }
 
 
     return (
-        <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
-            <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
-                <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
-                <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
-                    <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
-            </div>
-
+        // <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
+        //     <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
+        //         <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
+        //         <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
+        //             <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
+        //     </div>
+        <>
             <div className="h-[75%] overflow-hidden  overflow-y-scroll no-scrollbar bg-green-100 p-4 flex flex-col gap-4">
                 {
                     receivedData.map(m =>
@@ -126,9 +120,9 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
                                 <p className="font-serif">{m.message}</p>
                                 <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
                             </div>
-                            {(m.seenBy.includes(selectedUser._id) && selectedUser._id !== m.sender._id) &&
+                            {/* {(m.seenBy.includes(selectedUser._id) && selectedUser._id !== m.sender._id) &&
                                 <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
-                            }
+                            } */}
 
                         </div>)
                 }
@@ -154,7 +148,7 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedUser, currUserId }) => {
                 />
                 <button className='px-4 py-1 bg-blue-400 text-white'>Send</button>
             </form>
-        </section >
+        </ >
     )
 }
 

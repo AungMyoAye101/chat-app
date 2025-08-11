@@ -41,14 +41,14 @@ const UserList = () => {
     return (
         <section className="">
             <div className='flex flex-col'>
-                <h1 className="text-lg font-serif fomt-medium">User</h1>
+                <h1 className="text-xl font-serif font-medium px-4">User</h1>
                 {
                     users.map(user => (
                         <Link to={`/chat/user/${user._id}`} className='flex gap-2 px-4 py-2 cursor-pointer hover:bg-gray-200' key={user._id} >
 
                             <div className="relative ">
 
-                                <ImageBox avatar={user.avatar!} name={user.name} />
+                                <ImageBox avatar={user.avatar!} name={user.name} size="md" />
                                 <div className={`absolute left-0 top-1 w-3 h-3 rounded-full ${onlineUsers.includes(user._id) ? "bg-green-400" : "bg-gray-400"} `}></div>
                             </div>
                             <div className="flex-1 flex justify-between items-center  ">

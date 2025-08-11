@@ -23,3 +23,13 @@ export interface MembersType {
 export interface GroupWithMembers extends Omit<GroupTypes, "members"> {
     members: MembersType[]
 }
+
+export interface MessageType {
+    _id: string,
+    sender: { _id: string, name: string, };
+    receiver: { _id: string, name: string, };
+    message: string,
+    createdAt: string,
+    seenBy: string[]
+    // add other fields if needed
+};

@@ -1,4 +1,5 @@
 
+import ImageBox from "@/components/ImageBox"
 import { axiosInstance } from "@/lib/axios.config"
 
 import { useEffect, useState } from "react"
@@ -91,8 +92,9 @@ const Group = () => {
                             <div key={user._id} className={`flex justify-between gap-4 px-4 py-1 hover:bg-blue-200 ${data.members.includes(user._id) && "bg-green-100"}`} onClick={() => handleAddMember(user._id)}>
                                 <div className="flex items-center gap-4 ">
 
-                                    <img src={user.avatar} alt={user.name + " profile photo"} className="w-12 h-12 rounded-full object-cover bg-gray-200 border border-purple-400" />
+                                    <ImageBox avatar={user.avatar} name={user.name} size="md" />
                                     <h1 className="font-medium text-lg font-serif">{user.name}</h1>
+
                                 </div>
                                 <button type="button" className="font-serif text-green-500  "
                                 >{data.members.includes(user._id) ? "Added" : "Add"}</button>
