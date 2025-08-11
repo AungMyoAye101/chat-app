@@ -3,6 +3,7 @@ import express from "express"
 import { Server } from "socket.io"
 import Message from "../model/message.model.js"
 import User from "../model/user.model.js"
+import Group from "../model/group.model.js"
 
 const app = express();
 const server = http.createServer(app);
@@ -23,12 +24,20 @@ io.on("connection", (socket) => {
         io.emit("online-users", Array.from(onlineUsers.keys()))
     })
 
-    socket.on("send-message", async ({ senderId, receiverId, message }) => {
-        const createMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        const newMessage = await Message.findById(createMessage._id).populate([
+    socket.on("send-message", async ({ senderId, receiverId, message, isGroup = false }) => {
+        console.log(senderId, receiverId, message, isGroup)
+        let createdMessage;
+        if (isGroup) {
+            console.log("group")
+        } else {
+            createdMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
+        }
+
+        const newMessage = await Message.findById(createdMessage._id).populate([
             { path: "sender", select: "id name" },
             { path: "receiver", select: "id name" }
         ])
+        console.log(newMessage)
         io.to(receiverId).to(senderId).emit("received-message", newMessage)
 
     })

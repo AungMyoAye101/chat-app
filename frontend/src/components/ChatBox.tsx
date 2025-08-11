@@ -28,7 +28,7 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedChatId, currUserId, receivedDa
         e.preventDefault();
         if (!message.trim() || !currUserId || !selectedChatId) return;
         //for sending message
-        socket.emit("send-message", { senderId: currUserId, receiverId: selectedChatId, message });
+        socket.emit("send-message", { senderId: currUserId, receiverId: selectedChatId, message, });
         setMessage("");
         setIsTyping(false)
     };
