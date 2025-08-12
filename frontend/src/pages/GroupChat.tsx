@@ -30,36 +30,96 @@ const GroupChat = () => {
         members: [],
         avatar: '',
     })
-    const [receivedData, setReceivedData] = useState<MessageType[]>([])
+    const [receivedData, setReceivedData] = useState<GroupMessageType[]>([])
+
+    const [message, setMessage] = useState('')
+    const [isTyping, setIsTyping] = useState(false)
+    const containerRef = useRef<HTMLDivElement>(null) //for autoscrolling to bottom 
+
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const { groupId } = useParams()
-    console.log(groupId)
+
     const user = useAuth()
 
 
 
+    //Get group or user 
+    const getGroupMessage = async () => {
+        const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
 
+        setReceivedData(res.data)
+
+    }
 
     useEffect(() => {
         const getGroup = async () => {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
             setGroup(res.data.group)
         }
-        //Get group or user 
-        const getGroupMessage = async () => {
-            const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
-            console.log(res.data, "data")
-            setReceivedData(res.data)
-            console.log(receivedData)
-        }
+
 
         getGroup()
-        getGroupMessage()
+
+
 
     }, [groupId])
 
+    useEffect(() => {
+        console.log("listening")
+        if (!groupId) return console.log("no groupid");
+        getGroupMessage()
+        //join group
+        socket.emit("join-group", { groupId, userId: user?._id })
+
+        socket.on("received-group-message", (data) => {
+            if (!receivedData.includes(data._id))
+                setReceivedData(pre => [...pre, data])
+        })
+
+        // For typing indicator
+        socket.on("isTyping", () => {
+            setIsTyping(true)
+        })
+        socket.on("stopped-typing", () => {
+            setIsTyping(false)
+        })
+
+        return () => {
+            socket.off("received-message")
+            socket.off("isTyping")
+            socket.off("stopped-typing")
+        }
+    }, [groupId])
 
 
-
+    //Send message to server
+    const handleSendMessage = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!message.trim() || !user?._id || !groupId) return;
+        //for sending message
+        socket.emit("send-message-group", { groupId: groupId, senderId: user._id, message, });
+        setMessage("");
+        // setIsTyping(false)
+    };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!user?._id) return;
+        setMessage(e.target.value)
+        if (!isTyping) {
+            socket.emit('typing', ({ senderId: user._id, receiverId: groupId }))
+        }
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+        }
+        timeoutRef.current = setTimeout(() => {
+            socket.emit('stop-typing', ({ senderId: user._id, receiverId: groupId }))
+        }, 2000)
+    }
+    // Scroll to bottom 
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [receivedData, isTyping])
     return (
         <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
             <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
@@ -69,7 +129,43 @@ const GroupChat = () => {
                     <p className="text-sm">{group.members.length} memebers</p>
                 </div>
             </div>
-            <ChatBox selectedChatId={group._id} receivedData={receivedData} setReceivedData={setReceivedData} currUserId={user?._id!} />
+            <div className="h-[75%] overflow-hidden  overflow-y-scroll no-scrollbar bg-green-100 p-4 flex flex-col gap-4">
+                {
+                    receivedData.map((m) =>
+                        <div key={m._id} className={`${user?._id === m.sender._id ? "self-end" : "self-start"}  max-w-[70%] w-fit`}  >
+
+                            <div className="bg-white  px-4 py-2 rounded-lg mb-1">
+                                <p className="font-serif">{m.message}</p>
+                                <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
+                            </div>
+                            {/* {(m.seenBy.includes(selectedUser._id) && selectedUser._id !== m.sender._id) &&
+                                <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
+                            } */}
+
+                        </div>)
+                }
+
+                {
+                    isTyping && <div className="italic font-serif text-sm">Typing...</div>
+                }
+                {/* For scrol in to view  */}
+
+                <div ref={containerRef} />
+            </div>
+
+
+
+            <form onSubmit={handleSendMessage} className='flex bg-white h-[10%] w-full border-t border-neutral-200'>
+                <input
+                    type="text"
+                    value={message}
+
+                    onChange={(e) => handleChange(e)}
+                    placeholder="Aa"
+                    className='flex-1 bg-white px-4 py-3'
+                />
+                <button className='px-4 py-1 bg-blue-400 text-white'>Send</button>
+            </form>
         </section>
     )
 }

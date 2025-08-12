@@ -24,14 +24,12 @@ io.on("connection", (socket) => {
         io.emit("online-users", Array.from(onlineUsers.keys()))
     })
 
-    socket.on("send-message", async ({ senderId, receiverId, message, isGroup = false }) => {
-        console.log(senderId, receiverId, message, isGroup)
-        let createdMessage;
-        if (isGroup) {
-            console.log("group")
-        } else {
-            createdMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-        }
+    socket.on("send-message", async ({ senderId, receiverId, message, }) => {
+        console.log(senderId, receiverId, message)
+
+
+        const createdMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
+
 
         const newMessage = await Message.findById(createdMessage._id).populate([
             { path: "sender", select: "id name" },
@@ -84,7 +82,7 @@ io.on("connection", (socket) => {
                 message,
             })
             const newMessage = await Message.findById(groupMessage._id).populate([{ path: "sender", select: "_id name" }])
-
+            console.log("send message to group", newMessage)
             io.to(groupId).emit("received-group-message", newMessage)
         } catch (error) {
             console.log(error)
