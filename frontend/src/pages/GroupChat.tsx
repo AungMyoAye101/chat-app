@@ -5,7 +5,7 @@ import { socket } from "@/lib/socket"
 import type { GroupTypes, MessageType } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
 import { Link, useParams, } from "react-router-dom"
-import ChatBox from "@/components/ChatBox"
+
 import ImageBox from "@/components/ImageBox"
 
 interface SeenUserType {

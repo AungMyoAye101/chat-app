@@ -7,15 +7,17 @@ import { useAuth } from '@/context/Auth.context'
 import { socket } from '@/lib/socket'
 
 
-import { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 
 
 
 const Home = () => {
 
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768)
 
+    const path = useLocation()
     const user = useAuth()
 
     useEffect(() => {
@@ -23,25 +25,46 @@ const Home = () => {
 
             socket.emit("setup", user?._id)
         } else {
-            socket.emit("dissconnect")
+            socket.emit("disconnect")
         }
     }, [user?._id])
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768)
+        window.addEventListener("resize", handleResize)
+
+        return () => {
+            window.removeEventListener("resize", handleResize)
+        }
+    }, [])
+
+    const isChatRoute = path.pathname.startsWith('/chat')
+
+    const navigate = useNavigate()
+
 
     return (
         <section className='relative bg-neutral-100'>
 
             <div className='flex h-[calc(100vh-80px)]'>
-                <div className='w-xs bg-white shadow-lg h-full overflow-hidden  overflow-y-scroll py-4'>
+                {
+                    (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white shadow-lg h-full overflow-hidden  overflow-y-scroll py-4'>
 
-                    <GroupList />
-                    <UserList />
-                    {
-                        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(n => <div key={n} className='w-10 h-10 bg-orange-600 rounded-full'>{n}</div>)
-                    }
-                </div>
-                <div className='flex-1 p-4 rounded-lg overflow-hidden'>
-                    <Outlet />
-                </div>
+                        <GroupList />
+                        <UserList />
+
+                    </div>
+                }
+                {
+                    (isMobile && isChatRoute) && <button onClick={() => navigate(-1)}>Back</button>
+                }
+
+                {
+                    (!isMobile || isChatRoute) && <div className='flex-1 p-4 rounded-lg overflow-hidden'>
+                        <Outlet />
+                    </div>
+                }
+
             </div>
         </section>
     )
