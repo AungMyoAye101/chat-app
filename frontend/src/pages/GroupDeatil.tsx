@@ -111,7 +111,11 @@ const GroupDeatil = () => {
                 }
 
                 <div className="flex flex-col gap-4 p-4">
-                    <h2 className="text-xl font-semibold ">Members</h2>
+                    <div className="flex justify-between items-center font-serif font-medium text-lg">
+
+                        <h2 className="text-xl font-semibold ">Members</h2>
+                        <Link to={`/group/update/${groupId}/add-members`}>Add members</Link>
+                    </div>
                     {
                         group.members.map(m => (
                             <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2" key={m._id}>

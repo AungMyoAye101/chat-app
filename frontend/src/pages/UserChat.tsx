@@ -6,7 +6,7 @@ import { axiosInstance } from '@/lib/axios.config';
 import { formatLastSeen } from '@/lib/helper';
 import type { MessageType, UserType } from '@/lib/types';
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 
 const UserChat = () => {
@@ -63,10 +63,16 @@ const UserChat = () => {
                 {
                     isMobile && <button onClick={() => navigate(-1)}>back</button>
                 }
-                <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
-                <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
-                    <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
+                <Link to={`/user/${userId}`} className="flex items-center gap-2">
+
+                    <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
+                    <div className='flex flex-col '>
+                        <h2>{selectedUser?.name}</h2>
+                        <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p>
+                    </div>
+                </Link>
             </div>
+
             <ChatBox selectedChatId={selectedUser._id} currUserId={currUserId!} receivedData={receivedData} setReceivedData={setReceivedData} />
         </section>
     )

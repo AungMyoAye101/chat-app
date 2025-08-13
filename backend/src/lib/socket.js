@@ -82,7 +82,7 @@ io.on("connection", (socket) => {
                 message,
             })
             const newMessage = await Message.findById(groupMessage._id).populate([{ path: "sender", select: "_id name" }])
-            console.log("send message to group", newMessage)
+
             io.to(groupId).emit("received-group-message", newMessage)
         } catch (error) {
             console.log(error)

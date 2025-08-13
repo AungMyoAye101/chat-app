@@ -57,24 +57,21 @@ const GroupChat = () => {
             const res = await axiosInstance.get(`/api/group/${groupId}`)
             setGroup(res.data.group)
         }
-
-
         getGroup()
-
-
-
+        getGroupMessage()
     }, [groupId])
 
     useEffect(() => {
-        console.log("listening")
+
         if (!groupId) return console.log("no groupid");
-        getGroupMessage()
+
         //join group
         socket.emit("join-group", { groupId, userId: user?._id })
 
         socket.on("received-group-message", (data) => {
-            if (!receivedData.includes(data._id))
+            if (!receivedData.includes(data._id)) {
                 setReceivedData(pre => [...pre, data])
+            }
         })
 
         // For typing indicator
@@ -86,7 +83,7 @@ const GroupChat = () => {
         })
 
         return () => {
-            socket.off("received-message")
+            socket.off("received-group-message")
             socket.off("isTyping")
             socket.off("stopped-typing")
         }
@@ -127,11 +124,13 @@ const GroupChat = () => {
                 {
                     isMobile && <button onClick={() => navigate(-1)}>back</button>
                 }
-                <ImageBox avatar={group.avatar!} name={group.name!} size="lg" />
-                <div className='flex flex-col '>
-                    <h2 className="font-semibold text-lg">{group.name}</h2>
-                    <p className="text-sm">{group.members.length} memebers</p>
-                </div>
+                <Link to={`/group/${groupId}`} className="flex items-center">
+                    <ImageBox avatar={group.avatar!} name={group.name!} size="lg" />
+                    <div className='flex flex-col '>
+                        <h2 className="font-semibold text-lg">{group.name}</h2>
+                        <p className="text-sm">{group.members.length} memebers</p>
+                    </div>
+                </Link>
             </div>
             <div className="h-[75%] overflow-hidden  overflow-y-scroll no-scrollbar bg-green-100 p-4 flex flex-col gap-4">
                 {
