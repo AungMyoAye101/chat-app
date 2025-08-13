@@ -42,7 +42,9 @@ io.on("connection", (socket) => {
 
     //seen message 
     socket.on("seen-message", async ({ messageId, userId, chatId }) => {
+        console.log(messageId, userId, chatId)
         const updatedMessage = await Message.findByIdAndUpdate(messageId, { $addToSet: { seenBy: userId } }, { new: true })
+        console.log("updatedMessage")
         io.to(chatId).emit("seen", updatedMessage)
     })
 
@@ -81,7 +83,7 @@ io.on("connection", (socket) => {
                 group: groupId,
                 message,
             })
-            const newMessage = await Message.findById(groupMessage._id).populate([{ path: "sender", select: "_id name" }])
+            const newMessage = await Message.findById(groupMessage._id).populate([{ path: "sender", select: "_id name" }, { path: "seenBy", select: "_id name avatar" }])
 
             io.to(groupId).emit("received-group-message", newMessage)
         } catch (error) {

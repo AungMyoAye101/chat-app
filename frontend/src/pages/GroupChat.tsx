@@ -11,7 +11,8 @@ import { useLayout } from "@/context/Layout.contex"
 
 interface SeenUserType {
     _id: string,
-    name: string
+    name: string,
+    avatar: string,
 }
 interface GroupMessageType {
     sender: { name: string, _id: string },
@@ -32,6 +33,7 @@ const GroupChat = () => {
         avatar: '',
     })
     const [receivedData, setReceivedData] = useState<GroupMessageType[]>([])
+
 
     const [message, setMessage] = useState('')
     const [isTyping, setIsTyping] = useState(false)
@@ -89,7 +91,25 @@ const GroupChat = () => {
         }
     }, [groupId])
 
+    //seen or unseen message 
+    useEffect(() => {
+        if (!groupId || !user?._id) return;
+        const unseenMessage = receivedData.filter(m => {
+            !m.seenBy.includes(user._id)
+        }
+        )
 
+        console.log(unseenMessage.length)
+        unseenMessage.forEach((msg) => socket.emit("seen-message", ({
+            messageId: msg._id, userId: user?._id, chatId: groupId
+        })))
+
+        // console.log("seen....")
+
+    }, [receivedData])
+
+    // socket.emit('seen-message', { messageId: 1, userId: user?._id, chatId: 2 })
+    console.log(receivedData)
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
