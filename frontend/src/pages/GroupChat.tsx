@@ -95,7 +95,8 @@ const GroupChat = () => {
     useEffect(() => {
         if (!groupId || !user?._id) return;
         const unseenMessage = receivedData.filter(m => {
-            !m.seenBy.includes(user._id)
+            const seenByIds = m.seenBy.map(u => u._id)
+            return !seenByIds.includes(user._id)
         }
         )
 
@@ -109,7 +110,7 @@ const GroupChat = () => {
     }, [receivedData])
 
     // socket.emit('seen-message', { messageId: 1, userId: user?._id, chatId: 2 })
-    console.log(receivedData)
+
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -138,6 +139,9 @@ const GroupChat = () => {
             containerRef.current.scrollIntoView({ behavior: "smooth" })
         }
     }, [receivedData, isTyping])
+
+
+
     return (
         <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
             <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
@@ -161,11 +165,13 @@ const GroupChat = () => {
                                 <p className="font-serif">{m.message}</p>
                                 <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
                             </div>
-                            {/* {(m.seenBy.includes(selectedUser._id) && selectedUser._id !== m.sender._id) &&
-                                <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
-                            } */}
 
-                        </div>)
+                            {
+                                m.seenBy && m.seenBy.map(u => u._id !== user?._id && <ImageBox avatar={u.avatar} name={u.name} size="sm" key={u._id} />)
+                            }
+
+                        </div>
+                    )
                 }
 
                 {
