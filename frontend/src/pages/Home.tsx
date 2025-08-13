@@ -4,22 +4,24 @@ import GroupList from '@/components/GroupList'
 
 import UserList from '@/components/UserList'
 import { useAuth } from '@/context/Auth.context'
+import { useLayout } from '@/context/Layout.contex'
 import { socket } from '@/lib/socket'
 
 
 import { useEffect, useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 
 
 
 const Home = () => {
 
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768)
+
+
 
     const path = useLocation()
     const user = useAuth()
-
+    const { isMobile } = useLayout()
     useEffect(() => {
         if (user?._id) {
 
@@ -29,14 +31,7 @@ const Home = () => {
         }
     }, [user?._id])
 
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 768)
-        window.addEventListener("resize", handleResize)
 
-        return () => {
-            window.removeEventListener("resize", handleResize)
-        }
-    }, [])
 
     const isChatRoute = path.pathname.startsWith('/chat')
 
@@ -55,9 +50,7 @@ const Home = () => {
 
                     </div>
                 }
-                {
-                    (isMobile && isChatRoute) && <button onClick={() => navigate(-1)}>Back</button>
-                }
+
 
                 {
                     (!isMobile || isChatRoute) && <div className='flex-1 p-4 rounded-lg overflow-hidden'>

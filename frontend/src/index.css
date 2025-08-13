@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+    background-color: #f7f7f7;
+}
+
 @layer {
     input {
         @apply focus:outline-none

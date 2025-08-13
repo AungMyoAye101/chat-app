@@ -40,7 +40,7 @@ const App = () => {
       <Route element={<ProtectedRoute userId={user?._id!} />}>
 
         <Route path='/' element={<Home />} >
-          <Route path='/' element={<DefaultChat />} />
+          <Route index element={<DefaultChat />} />
           <Route path='/chat/user/:userId' element={<UserChat />} />
           <Route path='/chat/group/:groupId' element={<GroupChat />} />
         </Route>

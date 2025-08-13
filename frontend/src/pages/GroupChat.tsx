@@ -4,9 +4,10 @@ import { formatChatTime } from "@/lib/helper"
 import { socket } from "@/lib/socket"
 import type { GroupTypes, MessageType } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
-import { Link, useParams, } from "react-router-dom"
+import { Link, useNavigate, useParams, } from "react-router-dom"
 
 import ImageBox from "@/components/ImageBox"
+import { useLayout } from "@/context/Layout.contex"
 
 interface SeenUserType {
     _id: string,
@@ -40,9 +41,9 @@ const GroupChat = () => {
     const { groupId } = useParams()
 
     const user = useAuth()
+    const { isMobile } = useLayout()
 
-
-
+    const navigate = useNavigate()
     //Get group or user 
     const getGroupMessage = async () => {
         const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
@@ -123,6 +124,9 @@ const GroupChat = () => {
     return (
         <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
             <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
+                {
+                    isMobile && <button onClick={() => navigate(-1)}>back</button>
+                }
                 <ImageBox avatar={group.avatar!} name={group.name!} size="lg" />
                 <div className='flex flex-col '>
                     <h2 className="font-semibold text-lg">{group.name}</h2>

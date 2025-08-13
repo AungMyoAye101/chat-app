@@ -1,11 +1,12 @@
 import ChatBox from '@/components/ChatBox';
 import ImageBox from '@/components/ImageBox';
 import { useAuth } from '@/context/Auth.context'
+import { useLayout } from '@/context/Layout.contex';
 import { axiosInstance } from '@/lib/axios.config';
 import { formatLastSeen } from '@/lib/helper';
 import type { MessageType, UserType } from '@/lib/types';
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 
 const UserChat = () => {
@@ -20,6 +21,9 @@ const UserChat = () => {
     const [receivedData, setReceivedData] = useState<MessageType[]>([])
     const { userId } = useParams()
     const user = useAuth()
+    const { isMobile } = useLayout()
+
+    const navigate = useNavigate()
     const currUserId = user?._id
 
 
@@ -56,6 +60,9 @@ const UserChat = () => {
     return (
         <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
             <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
+                {
+                    isMobile && <button onClick={() => navigate(-1)}>back</button>
+                }
                 <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
                 <div className='flex flex-col '><h2>{selectedUser?.name}</h2>
                     <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p></div>
