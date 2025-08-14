@@ -99,13 +99,15 @@ const GroupChat = () => {
             return !seenByIds.includes(user._id)
         }
         )
+        if (unseenMessage.length === 0) return;
 
-        console.log(unseenMessage.length)
         unseenMessage.forEach((msg) => socket.emit("seen-message", ({
             messageId: msg._id, userId: user?._id, chatId: groupId
         })))
 
-        // console.log("seen....")
+        getGroupMessage()
+
+
 
     }, [receivedData])
 
@@ -148,7 +150,7 @@ const GroupChat = () => {
                 {
                     isMobile && <button onClick={() => navigate(-1)}>back</button>
                 }
-                <Link to={`/group/${groupId}`} className="flex items-center">
+                <Link to={`/group/${groupId}`} className="flex gap-2 items-center">
                     <ImageBox avatar={group.avatar!} name={group.name!} size="lg" />
                     <div className='flex flex-col '>
                         <h2 className="font-semibold text-lg">{group.name}</h2>
@@ -159,18 +161,29 @@ const GroupChat = () => {
             <div className="h-[75%] overflow-hidden  overflow-y-scroll no-scrollbar bg-green-100 p-4 flex flex-col gap-4">
                 {
                     receivedData.map((m) =>
-                        <div key={m._id} className={`${user?._id === m.sender._id ? "self-end" : "self-start"}  max-w-[70%] w-fit`}  >
+                        <div key={m._id} className={`w-[90%] relative  gap-1 flex flex-col `}  >
 
-                            <div className="bg-white  px-4 py-2 rounded-lg mb-1">
+
+
+                            <div className={`bg-white px-4 py-2 w-fit rounded-lg flex flex-col  ${user?._id === m.sender._id ? "self-end" : "self-start"}`}>
                                 <p className="font-serif">{m.message}</p>
                                 <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
+
                             </div>
+                            <div className={`flex gap-1 ${user?._id === m.sender._id ? "self-start" : "self-end"}`} >
 
-                            {
-                                m.seenBy && m.seenBy.map(u => u._id !== user?._id && <ImageBox avatar={u.avatar} name={u.name} size="sm" key={u._id} />)
-                            }
+                                {
+                                    m.seenBy && m.seenBy.map((u, i) => u._id !== user?._id && <ImageBox avatar={u.avatar} name={u.name} size="sm" key={u._id} />)
+                                }
 
+
+
+                            </div>
                         </div>
+
+
+
+
                     )
                 }
 
