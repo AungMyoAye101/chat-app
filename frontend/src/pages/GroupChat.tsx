@@ -161,24 +161,35 @@ const GroupChat = () => {
             <div className="h-[75%] overflow-hidden  overflow-y-scroll no-scrollbar bg-green-100 p-4 flex flex-col gap-4">
                 {
                     receivedData.map((m) =>
-                        <div key={m._id} className={`w-[90%] relative  gap-1 flex flex-col `}  >
+                        <div key={m._id} className={`w-full relative gap-1 flex flex-col  `}  >
+
+
+                            <div className={` w-fit relative ${user?._id === m.sender._id ? "self-end" : "self-start"} `}>
+                                <div className={`bg-white px-4 py-2 w-fit rounded-lg flex flex-col  `}>
+                                    <p className="font-serif">{m.message}</p>
+                                    <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
+
+                                </div>
+                                <div className={`flex mx-1.5   absolute -bottom-1 ${user?._id === m.sender._id ? " right-[100%] flex-row-reverse" : " left-[100%]"} `} >
+
+                                    {
+                                        m.seenBy && m.seenBy.map((u) => u._id !== user?._id && <ImageBox avatar={u.avatar} name={u.name} size="sm" key={u._id} className="-ml-1 border border-white" />)
+                                    }
+                                    {
+                                        m.seenBy.length > 3 && <div className="flex items-center justify-center bg-white w-6 h-6 text-sm rounded-xl px-4 text-neutral-700 mx-0.5">
+                                            +{
+                                                m.seenBy.length - 3
+                                            }
+
+                                        </div>
+                                    }
 
 
 
-                            <div className={`bg-white px-4 py-2 w-fit rounded-lg flex flex-col  ${user?._id === m.sender._id ? "self-end" : "self-start"}`}>
-                                <p className="font-serif">{m.message}</p>
-                                <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
 
+                                </div>
                             </div>
-                            <div className={`flex gap-1 ${user?._id === m.sender._id ? "self-start" : "self-end"}`} >
 
-                                {
-                                    m.seenBy && m.seenBy.map((u, i) => u._id !== user?._id && <ImageBox avatar={u.avatar} name={u.name} size="sm" key={u._id} />)
-                                }
-
-
-
-                            </div>
                         </div>
 
 
