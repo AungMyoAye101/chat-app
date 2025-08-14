@@ -148,7 +148,7 @@ const GroupChat = () => {
         <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
             <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
                 {
-                    isMobile && <button onClick={() => navigate(-1)}>back</button>
+                    isMobile && <button onClick={() => navigate(-1)}> <img src="/icons/back.svg" alt=" back icon" className="w-8 cursor-pointer" /> </button>
                 }
                 <Link to={`/group/${groupId}`} className="flex gap-2 items-center">
                     <ImageBox avatar={group.avatar!} name={group.name!} size="lg" />
@@ -217,7 +217,7 @@ const GroupChat = () => {
                     placeholder="Aa"
                     className='flex-1 bg-white px-4 py-3'
                 />
-                <button className='px-4 py-1 bg-blue-400 text-white'>Send</button>
+                <button className='px-4 py-1 bg-blue-300 cursor-pointer '><img src="/icons/send.svg" alt="send icon" className="w-8 " /></button>
             </form>
         </section>
     )

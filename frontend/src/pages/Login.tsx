@@ -62,7 +62,7 @@ const Login = () => {
             <Link to='/register' className='text-sm font-medium opacity-60 hover:text-purple-600'>Create new account?</Link>
             <Button type='submit' isLoading={isLoading}>Submit</Button>
             {
-                errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
+                errorMessage && <p className='text-center text-red-400'>{errorMessage}</p>
             }
         </form>
     )

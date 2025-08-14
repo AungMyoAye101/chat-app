@@ -146,7 +146,7 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedChatId, currUserId, receivedDa
                     placeholder="Aa"
                     className='flex-1 bg-white px-4 py-3'
                 />
-                <button className='px-4 py-1 bg-blue-400 text-white'>Send</button>
+                <button className='px-4 py-1 bg-blue-300 cursor-pointer '><img src="/icons/send.svg" alt="send icon" className="w-8 " /></button>
             </form>
         </ >
     )

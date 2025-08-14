@@ -1,3 +1,4 @@
+import Button from '@/components/UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -91,11 +92,11 @@ const Register = () => {
 
 
 
+                <Button type='submit' isLoading={status.isLoading}>{status.isLoading ? "Creating" : "Create"}</Button>
 
 
-                <button type='submit' className='bg-blue-400 text-white  px-4 py-2 rounded-lg'>{status.isLoading ? "Submiting..." : "Submit"}</button>
                 {
-                    status.errorMessage && <p className='text-red-400 text-sm '>{status.errorMessage}</p>
+                    status.errorMessage && <p className='text-red-400  text-center '>{status.errorMessage}</p>
                 }
             </form>
         </section >

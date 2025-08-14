@@ -61,7 +61,7 @@ const UserChat = () => {
         <section className='flex flex-col  rounded-lg shadow-md overflow-hidden  h-full border border-neutral-200'>
             <div className='bg-white flex gap-2 px-4 py-1 items-center h-[15%] border-b border-neutral-200'>
                 {
-                    isMobile && <button onClick={() => navigate(-1)}>back</button>
+                    isMobile && <button onClick={() => navigate(-1)}> <img src="/icons/back.svg" alt=" back icon" className="w-8 cursor-pointer" /> </button>
                 }
                 <Link to={`/user/${userId}`} className="flex items-center gap-2">
 
