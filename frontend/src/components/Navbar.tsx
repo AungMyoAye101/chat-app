@@ -4,7 +4,7 @@ import { logout } from '@/lib/helper'
 import { Link } from 'react-router-dom'
 import ImageBox from './ImageBox'
 import Button from './UI/Button'
-import { useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 
 
@@ -12,16 +12,30 @@ const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const user = useAuth()
 
+    const dropDownRef = useRef<HTMLDivElement | null>(null)
+    const handleClickOutside = (e: MouseEvent) => {
+        if (dropDownRef.current && !dropDownRef.current.contains(e.target as Node)) {
+            setIsMenuOpen(false)
+        }
+    }
+
+    useEffect(() => {
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
 
     return (
-        <nav className="bg-white shadow border border-neutral-100 p-4 sticky top-0 left-0 right-0 z-40 h-16 flex justify-between items-center">
+        <nav className="bg-white shadow border border-neutral-100 p-4 sticky top-0 left-0 right-0 z-40 h-16 flex justify-between items-center" >
 
 
             <Link to={'/'}>
                 <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat app</h1>
             </Link>
 
-            <div className='relative'>
+            <div className='relative' ref={dropDownRef}>
 
 
                 <button

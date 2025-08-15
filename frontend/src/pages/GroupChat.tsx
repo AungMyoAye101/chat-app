@@ -8,6 +8,7 @@ import { Link, useNavigate, useParams, } from "react-router-dom"
 
 import ImageBox from "@/components/ImageBox"
 import { useLayout } from "@/context/Layout.contex"
+import TypingIndicator from "@/components/UI/TypingIndicator"
 
 interface SeenUserType {
     _id: string,
@@ -199,7 +200,7 @@ const GroupChat = () => {
                 }
 
                 {
-                    isTyping && <div className="italic font-serif text-sm">Typing...</div>
+                    isTyping && <TypingIndicator />
                 }
                 {/* For scrol in to view  */}
 

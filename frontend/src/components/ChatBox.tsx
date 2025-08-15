@@ -4,6 +4,7 @@ import type { MessageType, UserType } from "@/lib/types"
 import { useEffect, useRef, useState, type FC, type SetStateAction } from "react"
 import { socket } from "@/lib/socket"
 import { axiosInstance } from "@/lib/axios.config"
+import TypingIndicator from "./UI/TypingIndicator"
 
 interface ChatBoxPropsTypes {
     selectedChatId: string,
@@ -128,7 +129,7 @@ const ChatBox: FC<ChatBoxPropsTypes> = ({ selectedChatId, currUserId, receivedDa
                 }
 
                 {
-                    isTyping && <div className="italic font-serif text-sm">Typing...</div>
+                    isTyping && <TypingIndicator />
                 }
                 {/* For scrol in to view  */}
 

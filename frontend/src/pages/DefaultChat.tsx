@@ -1,3 +1,4 @@
+import TypingIndicator from "@/components/UI/TypingIndicator"
 
 const DefaultChat = () => {
     return (
@@ -9,6 +10,7 @@ const DefaultChat = () => {
                 {
                     Array(3).fill(null).map((_, n) => <div key={n} className='w-10 h-10 bg-orange-600'>{n}</div>)
                 }
+                <TypingIndicator />
             </div>
             <form className='flex  bg-yellow-400 h-[10%]'>
                 <input type="text" className='flex-1' />
