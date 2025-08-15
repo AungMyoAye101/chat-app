@@ -10,7 +10,7 @@ interface ImageBoxPropsType {
 
 const ImageBox: FC<ImageBoxPropsType> = ({ avatar, name, className, size = "md" }) => {
 
-    const imageSize = size === "sm" ? "w-6 h-6 text-sm" : size === "lg" ? "w-14 h-14 text-xl" : "w-12 h-12 text-lg"
+    const imageSize = size === "sm" ? "w-6 h-6 text-sm" : size === "lg" ? "w-14 h-14 text-xl" : "w-10 h-10 text-lg"
 
     const style = cn(`rounded-full object-cover ${avatar ? "bg-gray-300 " : 'bg-blue-400 flex justify-center items-center  capitalize text-white'} ${className} ${imageSize}`)
     return (

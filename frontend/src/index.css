@@ -1,23 +1,27 @@
-@import "tailwindcss";
+ @import "tailwindcss";
 
-body {
-    background-color: #f7f7f7;
-}
+ body {
+     background-color: #f7f7f7;
+ }
 
-@layer {
-    input {
-        @apply focus:outline-none
-    }
 
-    .btn {
-        @apply px-4 py-1.5 rounded-lg text-white bg-orange-400 w-fit font-serif
-    }
 
-    .link-btn {
-        @apply bg-orange-400 px-4 py-1.5 text-sm text-white rounded-lg flex justify-center items-center hover:bg-orange-300 hover:shadow cursor-pointer
-    }
-}
+ @layer {
+     input {
+         @apply focus:outline-none
+     }
 
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
+     .btn {
+         @apply px-4 py-1.5 rounded-lg text-white bg-orange-400 w-fit font-serif
+     }
+
+
+     .link-btn {
+         @apply bg-orange-400 px-4 py-1.5 text-sm text-white rounded-lg flex justify-center items-center hover:bg-orange-300 hover:shadow cursor-pointer
+     }
+ }
+
+
+ .no-scrollbar::-webkit-scrollbar {
+     display: none;
+ }
