@@ -63,3 +63,20 @@ export const messageSeenBy = async (req, res) => {
     }
 
 }
+
+export const getMessageById = async (req, res) => {
+    const { messageId } = req.messageId
+    if (!mongoose.Types.ObjectId.isValid(messageId)) {
+        return res.status(400).json({ message: "Invalid message Id!" })
+    }
+    try {
+        const message = await Message.findById(messageId).populate([{ path: "sender", select: "id name" }, { path: "seenBy", select: "id name" }])
+
+        res.status(200).json(message)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal error." })
+    }
+}
+
+

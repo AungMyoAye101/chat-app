@@ -3,7 +3,8 @@ import express from "express"
 import { Server } from "socket.io"
 import Message from "../model/message.model.js"
 import User from "../model/user.model.js"
-import Group from "../model/group.model.js"
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -42,9 +43,8 @@ io.on("connection", (socket) => {
 
     //seen message 
     socket.on("seen-message", async ({ messageId, userId, chatId }) => {
-        console.log(messageId, userId, chatId)
+
         const updatedMessage = await Message.findByIdAndUpdate(messageId, { $addToSet: { seenBy: userId } }, { new: true })
-        console.log("updatedMessage")
         io.to(chatId).emit("seen", updatedMessage)
     })
 

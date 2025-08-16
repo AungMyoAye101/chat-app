@@ -2,7 +2,7 @@ import { axiosInstance } from "@/lib/axios.config"
 import { useAuth } from "@/context/Auth.context"
 import { formatChatTime } from "@/lib/helper"
 import { socket } from "@/lib/socket"
-import type { GroupTypes, MessageType } from "@/lib/types"
+import type { GroupTypes } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useParams, } from "react-router-dom"
 
@@ -52,8 +52,10 @@ const GroupChat = () => {
         const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
 
         setReceivedData(res.data)
+        console.log("get")
 
     }
+
 
     useEffect(() => {
         const getGroup = async () => {
@@ -77,6 +79,7 @@ const GroupChat = () => {
             }
         })
 
+
         // For typing indicator
         socket.on("isTyping", () => {
             setIsTyping(true)
@@ -85,16 +88,24 @@ const GroupChat = () => {
             setIsTyping(false)
         })
 
+
+
         return () => {
             socket.off("received-group-message")
             socket.off("isTyping")
             socket.off("stopped-typing")
+
         }
     }, [groupId])
 
     //seen or unseen message 
     useEffect(() => {
         if (!groupId || !user?._id) return;
+
+
+
+
+
         const unseenMessage = receivedData.filter(m => {
             const seenByIds = m.seenBy.map(u => u._id)
             return !seenByIds.includes(user._id)
@@ -105,14 +116,12 @@ const GroupChat = () => {
         unseenMessage.forEach((msg) => socket.emit("seen-message", ({
             messageId: msg._id, userId: user?._id, chatId: groupId
         })))
-
         getGroupMessage()
-
 
 
     }, [receivedData])
 
-    // socket.emit('seen-message', { messageId: 1, userId: user?._id, chatId: 2 })
+
 
     //Send message to server
     const handleSendMessage = async (e: React.FormEvent) => {
