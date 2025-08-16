@@ -121,7 +121,7 @@ const GroupChat = () => {
         //for sending message
         socket.emit("send-message-group", { groupId: groupId, senderId: user._id, message, });
         setMessage("");
-        // setIsTyping(false)
+        setIsTyping(false)
     };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!user?._id) return;
