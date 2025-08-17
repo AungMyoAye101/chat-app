@@ -1,7 +1,10 @@
 import Button from '@/components/UI/Button'
+import { login } from '@/lib/auth/authSlice'
+import type { AppDispatch } from '@/lib/auth/store'
 import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
 interface LoginType {
@@ -13,22 +16,25 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
-
+    const dispatch: AppDispatch = useDispatch()
     const { register, handleSubmit, formState: { errors } } = useForm<LoginType>()
 
     const onSubmit = handleSubmit(async (data: LoginType) => {
         setIsLoading(true)
-        try {
-            const res = await axiosInstance.post("/api/auth/login", data)
-            console.log(res.data.user)
-            navigate('/')
-        } catch (error: any) {
-            console.log(error)
-            setErrorMessage(error.response.data.message)
+        dispatch(login(data))
 
-        } finally {
-            setIsLoading(false)
-        }
+        // try {
+        //     const res = await axiosInstance.post("/api/auth/login", data)
+        //     console.log(res.data.user)
+        //     navigate('/')
+        // } catch (error: any) {
+        //     console.log(error)
+        //     setErrorMessage(error.response.data.message)
+
+        // } finally {
+        //     setIsLoading(false)
+        // }
+        navigate('/')
     })
     return (
         <form onSubmit={onSubmit} className='flex flex-col gap-4 bg-white p-6 border border-neutral-200 shadow-md max-w-2xl mx-auto mt-4 rounded-lg'>

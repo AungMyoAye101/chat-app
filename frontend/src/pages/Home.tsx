@@ -5,10 +5,13 @@ import GroupList from '@/components/GroupList'
 import UserList from '@/components/UserList'
 import { useAuth } from '@/context/Auth.context'
 import { useLayout } from '@/context/Layout.contex'
+import { fetchUser } from '@/lib/auth/authSlice'
+import type { RootState } from '@/lib/auth/store'
 import { socket } from '@/lib/socket'
 
 
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 
@@ -17,17 +20,15 @@ import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-
 const Home = () => {
 
 
-
+    const { user, error } = useSelector((state: RootState) => state.auth)
 
     const path = useLocation()
-    const user = useAuth()
+
     const { isMobile } = useLayout()
     useEffect(() => {
         if (user?._id) {
 
             socket.emit("setup", user?._id)
-        } else {
-            socket.emit("disconnect")
         }
     }, [user?._id])
 
@@ -35,7 +36,7 @@ const Home = () => {
 
     const isChatRoute = path.pathname.startsWith('/chat')
 
-    const navigate = useNavigate()
+
 
 
     return (

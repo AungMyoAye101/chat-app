@@ -1,7 +1,10 @@
 import Button from '@/components/UI/Button'
+import { register as signup } from '@/lib/auth/authSlice'
+import type { AppDispatch, RootState } from '@/lib/auth/store'
 import { axiosInstance } from '@/lib/axios.config'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 export interface RegisterType {
@@ -45,24 +48,27 @@ const Register = () => {
     })
     const navigate = useNavigate()
 
+    const dispatch: AppDispatch = useDispatch()
+    const data = useSelector((state: RootState) => state.auth)
+    console.log(data, "in redux")
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterType>()
     const onSubmit = handleSubmit(async (data) => {
 
         setStatus(pre => ({ ...pre, isLoading: true }))
 
-        try {
-            const res = await axiosInstance.post("/api/auth/register", data, {
-            })
-            console.log(res.data)
-            navigate('/')
-        } catch (error) {
-            if (error instanceof Error) {
-                console.log(error.message);
-                setStatus(pre => ({ ...pre, errorMessage: error.message }))
-            }
-        } finally {
-            setStatus(pre => ({ ...pre, isLoading: false }))
-        }
+        // try {
+        //     const res = await axiosInstance.post("/api/auth/register", data)
+        //     console.log(res.data)
+        //     navigate('/')
+        // } catch (error) {
+        //     if (error instanceof Error) {
+        //         console.log(error.message);
+        //         setStatus(pre => ({ ...pre, errorMessage: error.message }))
+        //     }
+        // } finally {
+        //     setStatus(pre => ({ ...pre, isLoading: false }))
+        // }
+        dispatch(signup(data))
     })
 
 

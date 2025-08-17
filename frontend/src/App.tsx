@@ -21,13 +21,13 @@ interface ProtectedType {
 
 }
 
-const ProtectedRoute = ({ userId }: ProtectedType) => {
+// const ProtectedRoute = ({ userId }: ProtectedType) => {
 
-  if (!userId) {
-    return <Navigate to={'/login'} replace />
-  }
-  return <Outlet />
-}
+//   if (!userId) {
+//     return <Navigate to={'/login'} replace />
+//   }
+//   return <Outlet />
+// }
 
 
 
@@ -37,13 +37,13 @@ const App = () => {
 
   return (
     <Routes>
-      <Route element={<ProtectedRoute userId={user?._id!} />}>
 
-        <Route path='/' element={<Home />} >
-          <Route index element={<DefaultChat />} />
-          <Route path='/chat/user/:userId' element={<UserChat />} />
-          <Route path='/chat/group/:groupId' element={<GroupChat />} />
-        </Route>
+
+      <Route path='/' element={<Home />} >
+        <Route index element={<DefaultChat />} />
+        <Route path='/chat/user/:userId' element={<UserChat />} />
+        <Route path='/chat/group/:groupId' element={<GroupChat />} />
+
       </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />

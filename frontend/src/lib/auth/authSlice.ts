@@ -1,14 +1,11 @@
 import { createAsyncThunk, createSlice, } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import { axiosInstance } from "../axios.config"
+import type { UserType } from "../types"
 
-interface User {
-    name: string,
-    email: string,
-    password: string,
-}
+
 interface AuthState {
-    user: User | null,
+    user: UserType | null,
     status: 'idle' | 'loading' | 'succeeded' | "failed",
     error: string | null,
 }
@@ -19,8 +16,25 @@ const initialState: AuthState = {
     error: null
 }
 
+//register user
+
+export const register = createAsyncThunk<UserType, { name: string, email: string, password: string }, { rejectValue: string }>(
+    'auth/register',
+    async (crediential, thunkApi) => {
+        try {
+            const res = await axiosInstance.post("/api/auth/register", crediential,
+            )
+            console.log(res.data.user)
+            return res.data.user
+
+        } catch (error: any) {
+            return thunkApi.rejectWithValue(error.response.data.message || "Register failed.")
+        }
+    }
+)
+
 //login User 
-export const login = createAsyncThunk<User, { email: string, password: string }, { rejectValue: string }>(
+export const login = createAsyncThunk<UserType, { email: string, password: string }, { rejectValue: string }>(
     'auth/login',
     async (crediential, thunkApi) => {
         try {
@@ -28,6 +42,7 @@ export const login = createAsyncThunk<User, { email: string, password: string },
             console.log(res.data.user)
             return res.data.user
         } catch (error: any) {
+            console.log(error)
             return thunkApi.rejectWithValue(error.response?.data?.message || "Login failed.")
         }
     }
@@ -40,6 +55,7 @@ export const fetchUser = createAsyncThunk(
     async (_, thunkApi) => {
         try {
             const res = await axiosInstance.get("/api/auth/me")
+            console.log(res.data)
             return res.data.user
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.response?.data?.message || "Unauthorized.")
@@ -61,10 +77,18 @@ const authSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(register.fulfilled, (state, action: PayloadAction<UserType>) => {
+                state.user = action.payload
+                state.status = 'succeeded'
+            })
+            .addCase(register.rejected, (state, action) => {
+                state.error = action.payload as string
+                state.status = "failed"
+            })
+            .addCase(fetchUser.fulfilled, (state, action: PayloadAction<UserType>) => {
                 state.user = action.payload
             })
-            .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(login.fulfilled, (state, action: PayloadAction<UserType>) => {
                 state.user = action.payload
                 state.status = 'succeeded'
             })
