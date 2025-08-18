@@ -1,11 +1,12 @@
 
-
-import { logout } from '@/lib/helper'
 import { Link } from 'react-router-dom'
 import ImageBox from './ImageBox'
 import Button from './UI/Button'
 import { useEffect, useRef, useState, } from 'react'
 import { useAuth } from '@/lib/hooks/useAuth'
+import type { AppDispatch } from '@/lib/auth/store'
+import { useDispatch } from 'react-redux'
+import { logout } from '@/lib/auth/authSlice'
 
 
 
@@ -18,6 +19,8 @@ const Navbar = () => {
             setIsMenuOpen(false)
         }
     }
+
+    const dispatch: AppDispatch = useDispatch()
 
     useEffect(() => {
 
@@ -76,7 +79,7 @@ const Navbar = () => {
                                         <img src="/icons/create.svg" alt="create icon " className='w-10 bg-gray-200 p-2 rounded-full' />
                                         Create Group
                                     </Link>
-                                    <Button type='button' func={logout} className=' justify-start gap-2 bg-inherit text-red-500 border border-neutral-200 py-1 px-2'> <img src="/icons/logout-1.svg" alt="logout icon" className='w-10 bg-gray-200 p-2 rounded-full' />Logout</Button>
+                                    <Button type='button' func={() => { dispatch(logout()); setIsMenuOpen(false) }} className=' justify-start gap-2 bg-inherit text-red-500 border border-neutral-200 py-1 px-2'> <img src="/icons/logout-1.svg" alt="logout icon" className='w-10 bg-gray-200 p-2 rounded-full' />Logout</Button>
                                 </> :
                                     <>
                                         <Link to={"/register"}
@@ -97,7 +100,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-        </nav>
+        </nav >
     )
 }
 

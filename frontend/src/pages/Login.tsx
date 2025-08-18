@@ -2,6 +2,7 @@ import Button from '@/components/UI/Button'
 import { login } from '@/lib/auth/authSlice'
 import type { AppDispatch } from '@/lib/auth/store'
 import { axiosInstance } from '@/lib/axios.config'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -13,14 +14,13 @@ interface LoginType {
 }
 
 const Login = () => {
-    const [isLoading, setIsLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
+    const { user, error, isLoading } = useAuth()
     const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch()
     const { register, handleSubmit, formState: { errors } } = useForm<LoginType>()
 
     const onSubmit = handleSubmit(async (data: LoginType) => {
-        setIsLoading(true)
+
         dispatch(login(data))
 
         // try {
@@ -66,9 +66,9 @@ const Login = () => {
                 }
             </div>
             <Link to='/register' className='text-sm font-medium opacity-60 hover:text-purple-600'>Create new account?</Link>
-            <Button type='submit' isLoading={isLoading}>Submit</Button>
+            <Button type='submit' isLoading={isLoading}>{isLoading ? "Submitting..." : "Submit"}</Button>
             {
-                errorMessage && <p className='text-center text-red-400'>{errorMessage}</p>
+                error && <p className='text-center text-red-400'>{error}</p>
             }
         </form>
     )

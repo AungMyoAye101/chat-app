@@ -102,7 +102,7 @@ const Group = () => {
                 </div>
                 <div className="rounded-lg overflow-hidden border border-neutral-200">
                     {
-                        isLoadingData ? <div className="w-10 h-10 rounded-full border-2 border-blue-400 border-t-0 animate-spin mx-auto my-4"></div> :
+                        isLoadingData ? <div className="font-medium ">Loading user...</div> :
                             members.map(user => (
                                 <div key={user._id} className={`flex justify-between gap-4 px-4 py-1 hover:bg-blue-200 ${data.members.includes(user._id) && "bg-green-100"}`} onClick={() => handleAddMember(user._id)}>
                                     <div className="flex items-center gap-4 ">

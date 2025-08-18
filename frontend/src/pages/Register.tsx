@@ -2,6 +2,7 @@ import Button from '@/components/UI/Button'
 import { register as signup } from '@/lib/auth/authSlice'
 import type { AppDispatch, RootState } from '@/lib/auth/store'
 import { axiosInstance } from '@/lib/axios.config'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,19 +43,13 @@ export const inputData = [{
 
 const Register = () => {
 
-    const [status, setStatus] = useState<{ isLoading: boolean, errorMessage: string }>({
-        isLoading: false,
-        errorMessage: ''
-    })
-    const navigate = useNavigate()
 
     const dispatch: AppDispatch = useDispatch()
-    const data = useSelector((state: RootState) => state.auth)
-    console.log(data, "in redux")
+    const { user, isLoading, error } = useAuth()
+
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterType>()
     const onSubmit = handleSubmit(async (data) => {
 
-        setStatus(pre => ({ ...pre, isLoading: true }))
 
         // try {
         //     const res = await axiosInstance.post("/api/auth/register", data)
@@ -98,11 +93,11 @@ const Register = () => {
 
 
 
-                <Button type='submit' isLoading={status.isLoading}>{status.isLoading ? "Creating" : "Create"}</Button>
+                <Button type='submit' isLoading={isLoading}>{isLoading ? "Creating" : "Create"}</Button>
 
 
                 {
-                    status.errorMessage && <p className='text-red-400  text-center '>{status.errorMessage}</p>
+                    error && <p className='text-red-400  text-center '>{error}</p>
                 }
             </form>
         </section >

@@ -23,11 +23,7 @@ import { useAuth } from './lib/hooks/useAuth';
 
 const ProtectedRoute = () => {
   const { user, isLoading } = useAuth()
-  const dispatch: AppDispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(fetchUser())
-  }, [])
 
   if (isLoading) {
     return <div className=''>Loading....</div>
@@ -43,6 +39,15 @@ const ProtectedRoute = () => {
 
 
 const App = () => {
+  const dispatch: AppDispatch = useDispatch()
+  const { user, isLoading } = useAuth()
+  useEffect(() => {
+    if (!user?._id) {
+
+      dispatch(fetchUser())
+    }
+  }, [])
+
   return (
     <Routes>
 
