@@ -22,7 +22,7 @@ const Home = () => {
     const { user, error } = useSelector((state: RootState) => state.auth)
 
     const path = useLocation()
-
+    console.log(user, error)
     const { isMobile } = useLayout()
     useEffect(() => {
         if (user?._id) {

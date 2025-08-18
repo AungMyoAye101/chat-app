@@ -11,19 +11,15 @@ import { store } from './lib/auth/store.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-
-
-      <LayoutProvider>
-        <Provider store={store}>
-
+    <Provider store={store}>
+      <BrowserRouter>
+        <LayoutProvider>
           <div className='max-w-7xl mx-auto rounded-lg overflow-hidden p-1'>
             <Navbar />
             <App />
           </div>
-        </Provider>
-      </LayoutProvider>
-
-    </BrowserRouter>
-  </StrictMode>,
+        </LayoutProvider>
+      </BrowserRouter>
+    </Provider>
+  </StrictMode >,
 )
