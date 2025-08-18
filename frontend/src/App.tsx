@@ -1,5 +1,5 @@
 
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
@@ -13,27 +13,25 @@ import UserChat from './pages/UserChat';
 import GroupChat from './pages/GroupChat';
 
 import DefaultChat from './pages/DefaultChat';
-import { useAuth } from './context/Auth.context';
+
 import UpdateUser from './pages/UpdateUser';
-import ImageUpload from './components/ImageUpload';
+
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from './lib/auth/store';
 import { useEffect } from 'react';
 import { fetchUser } from './lib/auth/authSlice';
-interface ProtectedType {
-  userId: string,
-
-}
+import { useAuth } from './lib/hooks/useAuth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, isLoading } = useAuth()
   console.log(user)
 
-  if (!user) {
+  if (isLoading) return <div>Loading....</div>
+  if (!user && !isLoading) {
     // if not logged in, redirect to login
     return <Navigate to="/login" replace />;
   }

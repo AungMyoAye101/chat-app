@@ -11,7 +11,7 @@ authRouter.post("/login", login)
 authRouter.get("/me", verifyToken, async (req, res) => {
     try {
         const user = await User.findById(req.id).select("-password")
-        res.status(201).json(user)
+        res.status(201).json({ message: "fetched user", user })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }

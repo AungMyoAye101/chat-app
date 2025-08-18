@@ -1,5 +1,4 @@
 import { axiosInstance } from "@/lib/axios.config"
-import { useAuth } from "@/context/Auth.context"
 import { formatChatTime } from "@/lib/helper"
 import { socket } from "@/lib/socket"
 import type { GroupTypes } from "@/lib/types"
@@ -9,6 +8,7 @@ import { Link, useNavigate, useParams, } from "react-router-dom"
 import ImageBox from "@/components/ImageBox"
 import { useLayout } from "@/context/Layout.contex"
 import TypingIndicator from "@/components/UI/TypingIndicator"
+import { useAuth } from "@/lib/hooks/useAuth"
 
 interface SeenUserType {
     _id: string,
@@ -43,7 +43,7 @@ const GroupChat = () => {
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
     const { groupId } = useParams()
 
-    const user = useAuth()
+    const { user } = useAuth()
     const { isMobile } = useLayout()
 
     const navigate = useNavigate()

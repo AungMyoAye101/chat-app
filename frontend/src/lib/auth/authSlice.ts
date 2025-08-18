@@ -6,13 +6,13 @@ import type { UserType } from "../types"
 
 interface AuthState {
     user: UserType | null,
-    status: 'idle' | 'loading' | 'succeeded' | "failed",
+    isLoading: boolean,
     error: string | null,
 }
 
 const initialState: AuthState = {
     user: null,
-    status: 'idle',
+    isLoading: false,
     error: null
 }
 
@@ -55,7 +55,6 @@ export const fetchUser = createAsyncThunk(
     async (_, thunkApi) => {
         try {
             const res = await axiosInstance.get("/api/auth/me")
-            console.log(res.data)
             return res.data.user
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.response?.data?.message || "Unauthorized.")
@@ -79,22 +78,23 @@ const authSlice = createSlice({
         builder
             .addCase(register.fulfilled, (state, action: PayloadAction<UserType>) => {
                 state.user = action.payload
-                state.status = 'succeeded'
+
             })
             .addCase(register.rejected, (state, action) => {
                 state.error = action.payload as string
-                state.status = "failed"
+            })
+            .addCase(fetchUser.pending, (state) => {
+                state.isLoading = true
             })
             .addCase(fetchUser.fulfilled, (state, action: PayloadAction<UserType>) => {
                 state.user = action.payload
+                state.isLoading = false
             })
             .addCase(login.fulfilled, (state, action: PayloadAction<UserType>) => {
                 state.user = action.payload
-                state.status = 'succeeded'
             })
             .addCase(login.rejected, (state, action) => {
-                state.error = action.payload as string,
-                    state.status = 'failed'
+                state.error = action.payload as string
             })
             .addCase(logout.fulfilled, (state) => {
                 state.user = null

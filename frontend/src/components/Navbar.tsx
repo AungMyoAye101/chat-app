@@ -1,17 +1,18 @@
 
-import { useAuth } from '@/context/Auth.context'
+
 import { logout } from '@/lib/helper'
 import { Link } from 'react-router-dom'
 import ImageBox from './ImageBox'
 import Button from './UI/Button'
 import { useEffect, useRef, useState, } from 'react'
+import { useAuth } from '@/lib/hooks/useAuth'
 
 
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const user = useAuth()
-
+    const { user } = useAuth()
+    console.log(user, "nav bar")
     const dropDownRef = useRef<HTMLDivElement | null>(null)
     const handleClickOutside = (e: MouseEvent) => {
         if (dropDownRef.current && !dropDownRef.current.contains(e.target as Node)) {

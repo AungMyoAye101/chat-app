@@ -1,9 +1,9 @@
 import ChatBox from '@/components/ChatBox';
 import ImageBox from '@/components/ImageBox';
-import { useAuth } from '@/context/Auth.context'
 import { useLayout } from '@/context/Layout.contex';
 import { axiosInstance } from '@/lib/axios.config';
 import { formatLastSeen } from '@/lib/helper';
+import { useAuth } from '@/lib/hooks/useAuth';
 import type { MessageType, UserType } from '@/lib/types';
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -20,7 +20,7 @@ const UserChat = () => {
 
     const [receivedData, setReceivedData] = useState<MessageType[]>([])
     const { userId } = useParams()
-    const user = useAuth()
+    const { user } = useAuth()
     const { isMobile } = useLayout()
 
     const navigate = useNavigate()

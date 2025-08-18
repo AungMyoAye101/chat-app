@@ -3,16 +3,15 @@ import GroupList from '@/components/GroupList'
 
 
 import UserList from '@/components/UserList'
-import { useAuth } from '@/context/Auth.context'
+
 import { useLayout } from '@/context/Layout.contex'
-import { fetchUser } from '@/lib/auth/authSlice'
 import type { RootState } from '@/lib/auth/store'
 import { socket } from '@/lib/socket'
 
 
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { Outlet, useLocation, } from 'react-router-dom'
 
 
 
