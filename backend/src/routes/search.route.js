@@ -1,6 +1,6 @@
 import express from "express"
-import User from "../model/user.model"
-import Group from "../model/group.model"
+import User from "../model/user.model.js"
+import Group from "../model/group.model.js"
 
 const searchRouter = express.Router()
 
