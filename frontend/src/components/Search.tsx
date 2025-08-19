@@ -1,10 +1,35 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserLoadingUi from './UI/UserLoadingUi'
+import { axiosInstance } from '@/lib/axios.config'
+import type { UserType } from '@/lib/types'
 
 
 
 const Search = () => {
     const [searchText, setSearchText] = useState('')
+    const [searchResult, setSearchResult] = useState<UserType[]>([])
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        if (!searchText.trim()) return
+        const debounce = setTimeout(async () => {
+            setIsLoading(true)
+            try {
+                const res = await axiosInstance.get('/api/search/' + searchText)
+                console.log(res.data, "from server")
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsLoading(false)
+            }
+
+        }, 500)
+
+        return () => {
+            clearTimeout(debounce)
+        }
+    }, [searchText])
+
     return (
         <section className='relative  flex items-center min-w-2xs flex-1 max-w-xl   '>
 
@@ -20,10 +45,11 @@ const Search = () => {
             </form>
             <div className='absolute     top-16  w-full z-20'>
                 {
-                    searchText ? <UserLoadingUi /> :
-                        <div>
-                            Search data
-                        </div>
+                    isLoading ? <UserLoadingUi />
+                        : searchResult.map(u => <div className='w-full flex items-center justify-center gap-2 bg-white p-1 rounded-md' key={u._id}>
+                            <div className='w-10 h-10 rounded-full bg-neutral-200'></div>
+                            <div className='flex-1 h-5 bg-neutral-200 rounded-full'>{u.name}</div>
+                        </div>)
 
                 }
             </div>
