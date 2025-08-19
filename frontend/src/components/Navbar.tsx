@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import type { AppDispatch } from '@/lib/auth/store'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/lib/auth/authSlice'
+import Search from './Search'
 
 
 
@@ -41,6 +42,7 @@ const Navbar = () => {
             <Link to={'/'}>
                 <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat app</h1>
             </Link>
+            <Search />
             <div className='flex items-center gap-4'>
                 {user?._id &&
                     <Link to={`/user/` + user?._id} >
