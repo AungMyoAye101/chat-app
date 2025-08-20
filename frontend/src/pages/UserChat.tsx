@@ -43,9 +43,7 @@ const UserChat = () => {
     const getMessage = async () => {
 
         const res = await axiosInstance.get(`/api/messages/${userId}`)
-        console.log(res.data)
         setReceivedData(res.data)
-
     }
 
 
@@ -79,13 +77,16 @@ const UserChat = () => {
 
 
         socket.on("received-message", (data) => {
-            console.log(data)
             setReceivedData(pre => [...pre, data])
         })
 
         // For typing indicator
-        socket.on("isTyping", () => {
-            setIsTyping(true)
+        socket.on("isTyping", (data) => {
+            console.log(data)
+            if (data.receiverId === currUserId) {
+
+                setIsTyping(true)
+            }
         })
         socket.on("stopped-typing", () => {
             setIsTyping(false)
