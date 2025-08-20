@@ -27,69 +27,6 @@ app.use('/api/search', searchRouter);
 app.use("/api/group", groupRouter);
 app.use("/api/image", imageRouter);
 
-//to connect database
-
-
-// Socket.io
-// const onlineUsers = new Map();
-
-// io.on("connection", (socket) => {
-//     console.log("User connected: " + socket.id);
-
-//     socket.on("setup", (userId) => {
-//         socket.join(userId);
-//         socket.userId = userId;
-//         onlineUsers.set(userId, socket.id);
-//         io.emit("online-users", Array.from(onlineUsers.keys()));
-//         console.log("User setup:", userId);
-//     });
-
-//     socket.on("disconnect", () => {
-//         if (socket.userId) {
-//             onlineUsers.delete(socket.userId);
-//             io.emit("online-users", Array.from(onlineUsers.keys()));
-//             console.log("User disconnected:", socket.userId);
-//         }
-//     });
-
-//     // One-to-one messaging
-//     socket.on("send-message", async ({ senderId, receiverId, message }) => {
-//         const newMessage = await Message.create({ sender: senderId, receiver: receiverId, message });
-//         io.to(receiverId).to(senderId).emit("received-message", newMessage);
-//     });
-
-//     // Typing indicator (one-to-one)
-//     socket.on("typing", (receiverId) => {
-//         socket.to(receiverId).emit("typing", socket.userId);
-//     });
-
-//     socket.on("stop-typing", (receiverId) => {
-//         socket.to(receiverId).emit("stop-typing", socket.userId);
-//     });
-
-//     // Group chat events
-//     socket.on("join-group", (groupId) => {
-//         socket.join(groupId);
-//     });
-
-//     socket.on("leave-group", (groupId) => {
-//         socket.leave(groupId);
-//     });
-
-//     socket.on("send-group-message", async ({ groupId, senderId, message }) => {
-//         const newMsg = await Message.create({ group: groupId, sender: senderId, message });
-//         io.to(groupId).emit("receive-group-message", newMsg);
-//     });
-
-//     // Group typing indicator
-//     socket.on("group-typing", ({ groupId, senderId }) => {
-//         socket.to(groupId).emit("group-typing", senderId);
-//     });
-
-//     socket.on("group-stop-typing", ({ groupId, senderId }) => {
-//         socket.to(groupId).emit("group-stop-typing", senderId);
-//     });
-// });
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

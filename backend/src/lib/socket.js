@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
         const createdMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
 
 
-        const newMessage = await Message.findById(createdMessage._id).populate([
+        const newMessage = await createdMessage.populate([
             { path: "sender", select: "id name" },
             { path: "receiver", select: "id name" }
         ])
