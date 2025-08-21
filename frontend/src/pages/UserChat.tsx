@@ -158,9 +158,9 @@ const UserChat = () => {
                                 <p className="font-serif">{m.message}</p>
                                 <span className="text-xs text-neutral-500">{formatChatTime(m.createdAt)}</span>
                             </div>
-                            {/* {(m.seenBy.includes(selectedUser._id) && selectedUser._id !== m.sender._id) &&
+                            {(m.seenBy.includes(selectedUser._id) && selectedUser._id !== m.sender._id) &&
                                 <ImageBox avatar={selectedUser.avatar!} name={selectedUser.name} size="sm" />
-                            } */}
+                            }
 
                         </div>)
                 }

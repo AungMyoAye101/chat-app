@@ -42,7 +42,7 @@ const Navbar = () => {
             <Link to={'/'}>
                 <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat app</h1>
             </Link>
-            <Search />
+
             <div className='flex items-center gap-4'>
                 {user?._id &&
                     <Link to={`/user/` + user?._id} >

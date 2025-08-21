@@ -1,5 +1,6 @@
 
 import GroupList from '@/components/GroupList'
+import Search from '@/components/Search'
 
 
 import UserList from '@/components/UserList'
@@ -43,8 +44,8 @@ const Home = () => {
 
             <div className='flex h-[calc(100vh-80px)]'>
                 {
-                    (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white shadow-lg h-full overflow-hidden  overflow-y-scroll py-4'>
-
+                    (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white shadow-lg h-full overflow-hidden  overflow-y-scroll py-4 px-4'>
+                        <Search />
                         <GroupList />
                         <UserList />
 

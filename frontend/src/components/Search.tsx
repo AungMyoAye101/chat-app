@@ -15,7 +15,7 @@ interface SearchResultType {
 const RenderData = ({ id, name, avatar, url, onClose }: PropType) => {
     return <Link to={url}
         onClick={onClose}
-        className='w-full flex items-center  gap-2 bg-white hover:bg-purple-200 shadow py-1 px-2 rounded-md' key={id}>
+        className='w-full flex items-center  gap-2 bg-gray-100 hover:bg-purple-200 shadow py-1 px-2 rounded-lg' key={id}>
         <ImageBox name={name} avatar={avatar} size='md' />
         <h4 className='font-medium font-serif'>{name}</h4>
     </Link>
@@ -35,8 +35,11 @@ const Search = () => {
             setIsLoading(true)
             try {
                 const res = await axiosInstance.get('/api/search/' + searchText)
-                console.log(res.data, "from server")
-                setSearchResult(res.data)
+                const result = res.data
+
+                setSearchResult(result)
+
+
             } catch (error) {
                 console.log(error)
             } finally {
@@ -45,6 +48,7 @@ const Search = () => {
 
         }, 500)
 
+
         return () => {
             clearTimeout(debounce)
         }
@@ -52,11 +56,39 @@ const Search = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const text = e.target.value
+
         setSearchText(text)
-        if (!searchText.trim()) return
-        setOpenSearchBox(true)
+
+        setOpenSearchBox(text.trim() !== "")
 
     }
+
+
+    const renderResultData = searchResult.groups.length === 0 && searchResult.users.length === 0
+        ? <div className='bg-neutral-200 border border-neutral-200 shadow rounded-lg h-[calc(100vh-150px)] flex justify-center items-center'>
+            <p className='font-serif font-medium text-lg'>No users or groups found!</p>
+        </div>
+        : <div className='flex flex-col gap-2 bg-neutral-200 border border-neutral-200 shadow rounded-lg p-4'>
+
+            {searchResult.groups.length > 0 &&
+                <div className='space-y-2'>
+                    <h2 className='font-medium text-lg font-serif'>Group</h2>
+                    {
+                        searchResult.groups.map(g => <RenderData id={g._id} name={g.name} avatar={g.avatar!} url={'/group/' + g._id} key={g._id} onClose={() => setOpenSearchBox(false)} />)
+
+                    }
+                </div>
+            }
+            {
+
+                searchResult.users.length > 0 &&
+                <div className='space-y-2'>
+                    <h2 className='font-medium text-lg font-serif'>Users</h2>
+                    {searchResult.users.map(u => <RenderData id={u._id} name={u.name} avatar={u.avatar!} url={'/user/' + u._id} key={u._id} onClose={() => setOpenSearchBox(false)} />)}
+                </div>
+            }
+
+        </div>
 
 
     return (
@@ -74,30 +106,9 @@ const Search = () => {
             </form>
             {
                 openSearchBox &&
-                <div className='absolute     top-16  w-full z-20'>
+                <div className='absolute     top-12  w-full z-20'>
                     {
-                        isLoading ? <UserLoadingUi />
-                            : <div className='flex flex-col gap-2 bg-neutral-100 border border-neutral-200 shadow rounded-lg p-4'>
-
-                                {searchResult.groups.length > 0 &&
-                                    <div className='space-y-2'>
-                                        <h2 className='font-medium text-lg font-serif'>Group</h2>
-                                        {
-                                            searchResult.groups.map(g => <RenderData id={g._id} name={g.name} avatar={g.avatar!} url={'/group/' + g._id} key={g._id} onClose={() => setOpenSearchBox(false)} />)
-
-                                        }
-                                    </div>
-                                }
-                                {
-
-                                    searchResult.users.length > 0 &&
-                                    <div className='space-y-2'>
-                                        <h2 className='font-medium text-lg font-serif'>Users</h2>
-                                        {searchResult.users.map(u => <RenderData id={u._id} name={u.name} avatar={u.avatar!} url={'/user/' + u._id} key={u._id} onClose={() => setOpenSearchBox(false)} />)}
-                                    </div>
-                                }
-
-                            </div>
+                        isLoading ? <UserLoadingUi /> : renderResultData
 
                     }
                 </div>
