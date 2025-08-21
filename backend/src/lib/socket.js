@@ -22,6 +22,7 @@ io.on("connection", (socket) => {
         socket.userId = userId
         onlineUsers.set(userId, socket.id)
         socket.join(userId)
+        console.log(Array.from(onlineUsers.keys()))
         io.emit("online-users", Array.from(onlineUsers.keys()))
     })
 

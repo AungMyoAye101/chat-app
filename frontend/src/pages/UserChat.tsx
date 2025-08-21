@@ -21,6 +21,7 @@ const UserChat = () => {
     })
     const [message, setMessage] = useState('')
     const [receivedData, setReceivedData] = useState<MessageType[]>([])
+    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
     const [isTyping, setIsTyping] = useState(false) //for typing indicatior
     const { userId } = useParams()
     const { user } = useAuth()
@@ -74,7 +75,9 @@ const UserChat = () => {
     //socket 
 
     useEffect(() => {
-
+        socket.on("online-users", (data) => {
+            setOnlineUsers(data)
+        })
 
         socket.on("received-message", (data) => {
             setReceivedData(pre => [...pre, data])
@@ -93,6 +96,7 @@ const UserChat = () => {
         })
 
         return () => {
+            socket.off("online-users")
             socket.off("received-message")
             socket.off("isTyping")
             socket.off("stopped-typing")
@@ -137,7 +141,10 @@ const UserChat = () => {
                     <ImageBox avatar={selectedUser?.avatar!} name={selectedUser?.name!} size="lg" />
                     <div className='flex flex-col '>
                         <h2>{selectedUser?.name}</h2>
-                        <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p>
+                        {
+                            onlineUsers.includes(userId!) ? <p className='text-green-400 text-sm font-medium'>Online</p> : <p className='text-xs'>{formatLastSeen(selectedUser?.lastSeen!)}</p>
+                        }
+
                     </div>
                 </Link>
             </div>
