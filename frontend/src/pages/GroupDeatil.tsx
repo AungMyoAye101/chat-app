@@ -1,3 +1,4 @@
+import ImageBox from "@/components/ImageBox"
 import ImageUpload from "@/components/ImageUpload"
 import { axiosInstance } from "@/lib/axios.config"
 import { formatLastSeen } from "@/lib/helper"
@@ -119,7 +120,9 @@ const GroupDeatil = () => {
                     {
                         group.members.map(m => (
                             <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2" key={m._id}>
-                                <img src={m.avatar || '/user-icon.svg'} alt={m.name + "profile photo"} className="w-14 h-14 rounded-full bg-gray-300 object-cover" />
+
+                                <ImageBox avatar={m.avatar!} name={m.name} size="md" />
+
                                 <div className="font-sans">
                                     <h1 className="text-xl font-semibold ">{m.name}
                                         {

@@ -94,7 +94,7 @@ const Search = () => {
     return (
         <section className='relative  flex items-center min-w-2xs flex-1 max-w-xl   '>
 
-            <form className='w-full flex border-2 border-neutral-200 rounded-full '>
+            <form className='w-full flex border-2 border-neutral-200 rounded-full overflow-hidden'>
                 <input
                     type="text"
                     value={searchText}
@@ -102,7 +102,7 @@ const Search = () => {
                     placeholder='Search user or group name'
                     onChange={(e) => handleChange(e)}
                 />
-                <button className='py-2 px-4'><img src="/icons/search.svg" alt="search icon" className='w-6' /></button>
+                <button className='py-2 px-4 bg-blue-400'><img src="/icons/search.svg" alt="search icon" className='w-6 bg-transparent' /></button>
             </form>
             {
                 openSearchBox &&
