@@ -17,7 +17,7 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const containerRef = useRef<HTMLFormElement | null>(null)
-    url = img ? img : "/vite.svg"
+    url = img ? img : "/icons/upload.svg"
     if (image) {
 
         url = URL.createObjectURL(image)
@@ -57,30 +57,29 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
                 ref={containerRef}
                 onSubmit={uploadImage}
 
-                className=" rounded-lg border border-purple-400 flex flex-col py-8 px-6 items-center gap-5 bg-white shadow-lg  h-fit">
+                className=" rounded-xl border-3 border-purple-400 flex flex-col py-8 px-6 items-center gap-5 bg-white shadow-lg  h-fit">
                 <h1 className="font-semibold text-lg font-serif">Select photo to upload</h1>
-                <div className="flex gap-4">
-                    <a href={url} target="_blank">
-                        <img src={url || "/vite.svg"} alt="profile image" className=" w-24 h-24 rounded-full border-4 border-purple-400 object-cover " />
 
-                    </a>
 
-                    <label htmlFor="profile">
 
-                        <div title="upload image" className={`rounded-lg border border-purple-400 bg-neutral-200 w-24 h-24 flex justify-center items-center text-4xl text-neutral-400 ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}>+</div>
-                        <input
-                            disabled={isLoading}
-                            type="file"
-                            accept="image/*"
-                            id="profile"
-                            className="hidden"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                setImage(file);
-                            }}
-                        />
-                    </label>
-                </div>
+                <label htmlFor="profile" >
+
+
+                    <img src={url} alt="profile image" className=" w-28 h-28 rounded-full border-4 border-purple-400 object-cover cursor-pointer " />
+
+                    <input
+                        disabled={isLoading}
+                        type="file"
+                        accept="image/*"
+                        id="profile"
+                        className="hidden"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            setImage(file);
+                        }}
+                    />
+                </label>
+
                 {
                     isLoading ?
                         <div className="btn !bg-neutral-300 cursor-wait !w-full text-center">Uploading...</div> :

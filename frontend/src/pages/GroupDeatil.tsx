@@ -94,6 +94,11 @@ const GroupDeatil = () => {
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
                             Set Photo
                         </button>
+                        <Link to={`/chat/group/${groupId}`}
+                            onClick={() => setIsImageBoxOpen(pre => !pre)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            Send message
+                        </Link>
 
                         {
                             isEditGroupModalOpen && (
