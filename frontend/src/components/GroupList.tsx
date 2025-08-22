@@ -22,7 +22,7 @@ const GroupList = () => {
     return (
         <section className='py-2' >
 
-            <h1 className='text-lg font-semibold px-4'>Group</h1>
+            <h1 className='text-lg font-semibold px-4 font-serif'>Group</h1>
             <div>
                 {
                     data.map((g) => (

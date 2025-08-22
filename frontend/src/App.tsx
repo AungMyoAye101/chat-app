@@ -40,7 +40,7 @@ const ProtectedRoute = () => {
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch()
-  const { user, isLoading } = useAuth()
+  const { user } = useAuth()
   useEffect(() => {
     if (!user?._id) {
 

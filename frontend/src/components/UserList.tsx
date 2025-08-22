@@ -41,7 +41,7 @@ const UserList = () => {
     return (
         <section className="">
             <div className='flex flex-col'>
-                <h1 className="text-xl font-serif font-medium px-4">User</h1>
+                <h1 className="text-xl font-serif font-semibold px-4">User</h1>
                 {
                     users.map(user => (
                         <Link to={`/chat/user/${user._id}`} className='flex gap-2 px-4 py-2 cursor-pointer hover:bg-gray-200' key={user._id} >

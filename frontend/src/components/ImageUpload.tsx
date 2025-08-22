@@ -17,7 +17,7 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const containerRef = useRef<HTMLFormElement | null>(null)
-    url = img ? img : "/icons/upload.svg"
+    url = img ? img : "/icons/user.svg"
     if (image) {
 
         url = URL.createObjectURL(image)
@@ -62,11 +62,12 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
 
 
 
-                <label htmlFor="profile" >
+                <label htmlFor="profile" className="relative" >
 
 
-                    <img src={url} alt="profile image" className=" w-28 h-28 rounded-full border-4 border-purple-400 object-cover cursor-pointer " />
+                    <img src={url} alt="profile image" className=" w-28 h-28 rounded-full border-4 border-black object-cover cursor-pointer " />
 
+                    <img src="/icons/upload.svg" alt="" className="w-10 absolute -right-4 top-1/2 bg-white rounded-full p-1 cursor-pointer   border-2 border-green-500 shadow " />
                     <input
                         disabled={isLoading}
                         type="file"

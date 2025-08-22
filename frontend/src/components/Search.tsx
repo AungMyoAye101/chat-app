@@ -102,7 +102,7 @@ const Search = () => {
                     placeholder='Search user or group name'
                     onChange={(e) => handleChange(e)}
                 />
-                <button className='py-2 px-4 bg-blue-400'><img src="/icons/search.svg" alt="search icon" className='w-6 bg-transparent' /></button>
+                <button className='py-2 px-4 bg-neutral-200'><img src="/icons/maginifying-glass-icon.svg" alt="search icon" className='w-6 bg-transparent' /></button>
             </form>
             {
                 openSearchBox &&

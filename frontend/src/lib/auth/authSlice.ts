@@ -11,7 +11,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-    user: null,
+    user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") as string) : null,
     isLoading: false,
     error: null
 }
@@ -24,8 +24,9 @@ export const register = createAsyncThunk<UserType, { name: string, email: string
         try {
             const res = await axiosInstance.post("/api/auth/register", crediential,
             )
-            console.log(res.data.user)
-            return res.data.user
+            const { user } = res.data
+            localStorage.setItem("user", JSON.stringify(user))
+            return user
 
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.response.data.message || "Register failed.")
@@ -39,8 +40,9 @@ export const login = createAsyncThunk<UserType, { email: string, password: strin
     async (crediential, thunkApi) => {
         try {
             const res = await axiosInstance.post("/api/auth/login", crediential)
-            console.log(res.data.user)
-            return res.data.user
+            const { user } = res.data
+            localStorage.setItem("user", JSON.stringify(user))
+            return user
         } catch (error: any) {
             console.log(error)
             return thunkApi.rejectWithValue(error.response?.data?.message || "Login failed.")
@@ -55,7 +57,9 @@ export const fetchUser = createAsyncThunk(
     async (_, thunkApi) => {
         try {
             const res = await axiosInstance.get("/api/auth/me")
-            return res.data.user
+            const { user } = res.data
+            localStorage.setItem("user", JSON.stringify(user))
+            return user
         } catch (error: any) {
             return thunkApi.rejectWithValue(error.response?.data?.message || "Unauthorized.")
         }
@@ -67,6 +71,7 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async () => {
         await axiosInstance.post('/api/auth/logout')
+        localStorage.removeItem('user')
     }
 )
 
@@ -93,6 +98,10 @@ const authSlice = createSlice({
             })
             .addCase(fetchUser.fulfilled, (state, action: PayloadAction<UserType>) => {
                 state.user = action.payload
+                state.isLoading = false
+            })
+            .addCase(fetchUser.rejected, (state) => {
+
                 state.isLoading = false
             })
             .addCase(login.pending, (state) => {

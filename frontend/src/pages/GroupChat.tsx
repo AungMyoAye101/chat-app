@@ -218,18 +218,21 @@ const GroupChat = () => {
 
 
 
-            <form onSubmit={handleSendMessage} className='flex bg-white h-[10%] w-full border-t border-neutral-200'>
-                <input
-                    type="text"
-                    value={message}
+            <form onSubmit={handleSendMessage} className=' bg-white h-[10%] w-full border-t border-neutral-200 px-4 py-1.5'>
+                <div className="flex items-center bg-gray-100 border border-neutral-400 shadow rounded-full overflow-hidden">
 
-                    onChange={(e) => handleChange(e)}
-                    placeholder="Aa"
-                    className='flex-1 bg-white px-4 py-3'
-                />
-                <button className='px-4 py-1 bg-blue-500 cursor-pointer '><img src="/icons/send-2.svg" alt="send icon" className="w-8 " />
+                    <input
+                        type="text"
+                        value={message}
 
-                </button>
+                        onChange={(e) => handleChange(e)}
+                        placeholder="Aa"
+                        className='flex-1  px-4 py-1 '
+                    />
+                    <button className=' cursor-pointer border-l border-l-inherit  h-full  px-4 py-1.5'><img src="/icons/send-icon.svg" alt="send icon" className="w-6 " />
+
+                    </button>
+                </div>
             </form>
         </section>
     )
