@@ -36,17 +36,17 @@ const Navbar = () => {
         setIsMenuOpen(false)
     }
     return (
-        <nav className="bg-white shadow border border-neutral-100 p-4 sticky top-0 left-0 right-0 z-40 h-16 flex justify-between items-center" >
+        <nav className="py-2 border-b border-neutral-200      flex justify-between items-center" >
 
 
             <Link to={'/'}>
-                <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat app</h1>
+                <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat</h1>
             </Link>
 
             <div className='flex items-center gap-4'>
                 {user?._id &&
                     <Link to={`/user/` + user?._id} >
-                        <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' />
+                        <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' className='' />
                     </Link>
                 }
 
@@ -56,12 +56,12 @@ const Navbar = () => {
                     <button
                         onClick={() => setIsMenuOpen(pre => !pre)}
                         className='cursor-pointer bg-white  rounded-full p-1 shadow border border-neutral-200'>
-                        <img src="/icons/menu.svg" alt="menu icon" className='w-7' />
+                        <img src="/icons/menu.svg" alt="menu icon" className='w-8' />
                     </button>
 
 
                     {
-                        isMenuOpen && <div className='absolute mt-4 right-0 w-60 py-6 px-4 rounded-lg bg-white shadow border border-neutral-200 flex flex-col gap-1 '>
+                        isMenuOpen && <div className='absolute mt-2 right-0 w-60 py-6 px-4 z-10 rounded-lg bg-white shadow border border-neutral-200 flex flex-col gap-1 '>
                             {
                                 user?._id ? <>
                                     <Link

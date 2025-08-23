@@ -45,25 +45,14 @@ const Register = () => {
 
 
     const dispatch: AppDispatch = useDispatch()
-    const { user, isLoading, error } = useAuth()
+    const { isLoading, error } = useAuth()
+    const navigate = useNavigate()
 
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterType>()
     const onSubmit = handleSubmit(async (data) => {
 
-
-        // try {
-        //     const res = await axiosInstance.post("/api/auth/register", data)
-        //     console.log(res.data)
-        //     navigate('/')
-        // } catch (error) {
-        //     if (error instanceof Error) {
-        //         console.log(error.message);
-        //         setStatus(pre => ({ ...pre, errorMessage: error.message }))
-        //     }
-        // } finally {
-        //     setStatus(pre => ({ ...pre, isLoading: false }))
-        // }
         dispatch(signup(data))
+        navigate('/')
     })
 
 

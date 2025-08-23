@@ -14,8 +14,8 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <BrowserRouter>
         <LayoutProvider>
-          <div className='max-w-7xl mx-auto rounded-lg overflow-hidden p-1'>
-            <Navbar />
+          <div className='max-w-7xl mx-auto rounded-lg overflow-hidden p-4'>
+            {/* <Navbar /> */}
             <App />
           </div>
         </LayoutProvider>

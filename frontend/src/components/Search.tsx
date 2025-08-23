@@ -92,21 +92,21 @@ const Search = () => {
 
 
     return (
-        <section className='relative  flex items-center min-w-2xs flex-1 max-w-xl   '>
+        <section className='relative  flex items-center  flex-1   '>
 
-            <form className='w-full flex border-2 border-neutral-200 rounded-full overflow-hidden'>
+            <form className='w-full flex bg-neutral-200 rounded-full overflow-hidden'>
                 <input
                     type="text"
                     value={searchText}
-                    className='flex-1 px-4 py-2 border-r border-neutral-200 text-neutral-700'
+                    className='flex-1 px-4 py-2  text-neutral-700 '
                     placeholder='Search user or group name'
                     onChange={(e) => handleChange(e)}
                 />
-                <button className='py-2 px-4 bg-neutral-200'><img src="/icons/maginifying-glass-icon.svg" alt="search icon" className='w-6 bg-transparent' /></button>
+                <button className='py-2 px-4 '><img src="/icons/maginifying-glass-icon.svg" alt="search icon" className='w-5 bg-transparent' /></button>
             </form>
             {
                 openSearchBox &&
-                <div className='absolute     top-12  w-full z-20'>
+                <div className='absolute  top-12  w-full z-20'>
                     {
                         isLoading ? <UserLoadingUi /> : renderResultData
 

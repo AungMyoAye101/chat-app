@@ -1,5 +1,6 @@
 
 import GroupList from '@/components/GroupList'
+import Navbar from '@/components/Navbar'
 import Search from '@/components/Search'
 
 
@@ -40,27 +41,34 @@ const Home = () => {
 
 
     return (
-        <section className='relative bg-neutral-100'>
+        <section className='relative '>
 
-            <div className='flex h-[calc(100vh-80px)]'>
+            <div className='flex gap-4 h-[calc(100vh-2rem)]'>
                 {
-                    (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white shadow-lg h-full overflow-hidden  overflow-y-scroll py-4 px-4'>
-                        <Search />
-                        <GroupList />
-                        <UserList />
+                    (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white  rounded-xl  shadow-md h-full  px-4  flex flex-col'>
+                        <div className='space-y-2 py-4'>
+
+                            <Navbar />
+                            <Search />
+                        </div>
+                        <div className=' flex-1  overflow-hidden  overflow-y-scroll no-scrollbar'>
+
+                            <GroupList />
+                            <UserList />
+                        </div>
 
                     </div>
                 }
 
 
                 {
-                    (!isMobile || isChatRoute) && <div className='flex-1 p-4 rounded-lg overflow-hidden'>
+                    (!isMobile || isChatRoute) && <div className='flex-1  rounded-xl  shadow-md overflow-hidden'>
                         <Outlet />
                     </div>
                 }
 
             </div>
-        </section>
+        </section >
     )
 }
 
