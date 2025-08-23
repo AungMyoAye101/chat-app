@@ -25,9 +25,9 @@ const Login = () => {
         navigate('/')
     })
     return (
-        <section className='h-[calc(100vh-90px)] max-w-2xl mx-auto '>
+        <section className='mt-4 max-w-lg mx-auto '>
 
-            <form onSubmit={onSubmit} className='flex flex-col h-fit gap-4 bg-white p-6 border border-neutral-200 shadow-md  mt-4 rounded-lg '>
+            <form onSubmit={onSubmit} className='flex flex-col h-fit gap-4 bg-white px-6 py-12 border border-white/10 shadow-md  mt-4 rounded-lg '>
 
                 <h1 className='text-2xl font-semibold font-serif text-center'>Login</h1>
                 <div className='flex flex-col gap-1'>
@@ -58,7 +58,7 @@ const Login = () => {
                 <Link to='/register' className='text-sm font-medium opacity-60 hover:text-purple-600'>Create new account?</Link>
                 <Button type='submit' isLoading={isLoading}>{isLoading ? "Submitting..." : "Submit"}</Button>
                 {
-                    error && <p className='text-center text-red-400'>{error}</p>
+                    error && <p className='text-center bg-red-400 text-white/80 rounded-lg p-1'>{error}</p>
                 }
             </form>
         </section>

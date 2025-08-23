@@ -59,7 +59,7 @@ const Register = () => {
     return (
         <section className='container flex justify-center mt-4'>
 
-            <form onSubmit={onSubmit} className=' shadow-xl rounded-lg border border-neutral-100 bg-white  px-4 py-6 flex flex-col gap-4 min-w-xs w-full max-w-xl'>
+            <form onSubmit={onSubmit} className=' shadow rounded-lg border border-white/20 bg-white  px-6 py-12 flex flex-col gap-4 min-w-xs w-full max-w-lg'>
 
                 <h1 className='text-2xl font-bold font-serif text-center'>Signup </h1>
                 {
@@ -71,10 +71,10 @@ const Register = () => {
                                 id={field.name}
                                 placeholder={field.placeholder}
                                 className='shadow border border-neutral-200 px-4 py-1.5 rounded-lg'
-                                {...register(field.name as keyof RegisterType, { required: "Name is required.", minLength: { value: 3, message: "Name at least 3 characters long." } })} />
+                                {...register(field.name as keyof RegisterType, field.validation)} />
 
                             {
-                                errors?.[field.name as keyof RegisterType] && <p className='text-red-400 text-sm'>{errors[field.name as keyof RegisterType]?.message}</p>
+                                errors?.[field.name as keyof RegisterType] && <p className='text-red-400 text-sm' >{errors[field.name as keyof RegisterType]?.message}</p>
                             }
                         </div>
                     ))
@@ -86,7 +86,7 @@ const Register = () => {
 
 
                 {
-                    error && <p className='text-red-400  text-center '>{error}</p>
+                    error && <p className='bg-red-400 text-white/90 p-1 rounded-lg'>{error}</p>
                 }
             </form>
         </section >

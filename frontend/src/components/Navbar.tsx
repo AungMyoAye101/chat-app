@@ -61,12 +61,12 @@ const Navbar = () => {
 
 
                     {
-                        isMenuOpen && <div className='absolute mt-2 right-0 w-60 py-6 px-4 z-10 rounded-lg bg-white shadow border border-neutral-200 flex flex-col gap-1 '>
+                        isMenuOpen && <div className='absolute mt-2 right-0 w-60 py-6 px-4 z-10 rounded-lg bg-white shadow border border-purple-400 flex flex-col gap-1 '>
                             {
                                 user?._id ? <>
                                     <Link
                                         to={`/user/` + user._id}
-                                        className='flex items-center gap-2  hover:bg-neutral-200 cursor-pointer rounded-lg py-1.5 px-2'
+                                        className='flex items-center gap-2  hover:bg-purple-200 cursor-pointer rounded-lg py-1.5 px-2'
                                         onClick={handleCLose}
                                     >
                                         <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' />
@@ -75,7 +75,7 @@ const Navbar = () => {
 
                                     <Link
                                         to={"/create-group"}
-                                        className=' nav-link-btn'
+                                        className=' nav-link-btn hover:bg-purple-200 '
                                         onClick={handleCLose}
                                     >
                                         <img src="/icons/create.svg" alt="create icon " className='w-10 bg-gray-200 p-2 rounded-full' />
@@ -86,10 +86,10 @@ const Navbar = () => {
                                     <>
                                         <Link to={"/register"}
                                             onClick={handleCLose}
-                                            className=' nav-link-btn'> <img src="/icons/user.svg" alt="register icon " className='w-10 bg-gray-200 p-2 rounded-full' />Register</Link>
+                                            className=' nav-link-btn hover:bg-purple-200 '> <img src="/icons/user.svg" alt="register icon " className='w-10 bg-gray-200 p-2 rounded-full' />Register</Link>
                                         <Link to={"/login"}
                                             onClick={handleCLose}
-                                            className='nav-link-btn'> <img src="/icons/login.svg" alt="login icon " className='w-10 bg-gray-200 p-2 rounded-full' />Login</Link>
+                                            className='nav-link-btn hover:bg-purple-200 '> <img src="/icons/login.svg" alt="login icon " className='w-10 bg-gray-200 p-2 rounded-full' />Login</Link>
 
 
                                     </>

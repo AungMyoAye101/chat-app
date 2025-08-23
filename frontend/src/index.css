@@ -15,7 +15,7 @@
      }
 
      .btn {
-         @apply px-4 py-1.5 rounded-lg text-white bg-orange-400 w-fit font-serif
+         @apply px-4 py-1.5 rounded-lg text-white bg-purple-400 w-fit font-serif
      }
 
 

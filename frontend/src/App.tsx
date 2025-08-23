@@ -58,18 +58,19 @@ const App = () => {
           <Route path='/chat/user/:userId' element={<UserChat />} />
           <Route path='/chat/group/:groupId' element={<GroupChat />} />
         </Route>
+        <Route path='/user/:userId' element={<UserDeatil />} />
+        <Route path='/user/update/:userId' element={<UpdateUser />} />
+        <Route path='/create-group' element={<Group />} />
+        <Route path='/group/:groupId' element={<GroupDeatil />} />
+        <Route path='/group/update/:groupId' element={<UpdateGroup />} />
+        <Route path='/group/update/:groupId/add-members' element={<AddMembers />} />
       </Route>
 
 
 
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/user/:userId' element={<UserDeatil />} />
-      <Route path='/user/update/:userId' element={<UpdateUser />} />
-      <Route path='/create-group' element={<Group />} />
-      <Route path='/group/:groupId' element={<GroupDeatil />} />
-      <Route path='/group/update/:groupId' element={<UpdateGroup />} />
-      <Route path='/group/update/:groupId/add-members' element={<AddMembers />} />
+
       <Route path='*' element={<NotFound />} />
     </Routes>
   )
