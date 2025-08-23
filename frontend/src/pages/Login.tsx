@@ -14,7 +14,7 @@ interface LoginType {
 }
 
 const Login = () => {
-    const { user, error, isLoading } = useAuth()
+    const { error, isLoading } = useAuth()
     const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch()
     const { register, handleSubmit, formState: { errors } } = useForm<LoginType>()
@@ -22,18 +22,6 @@ const Login = () => {
     const onSubmit = handleSubmit(async (data: LoginType) => {
 
         dispatch(login(data))
-
-        // try {
-        //     const res = await axiosInstance.post("/api/auth/login", data)
-        //     console.log(res.data.user)
-        //     navigate('/')
-        // } catch (error: any) {
-        //     console.log(error)
-        //     setErrorMessage(error.response.data.message)
-
-        // } finally {
-        //     setIsLoading(false)
-        // }
         navigate('/')
     })
     return (

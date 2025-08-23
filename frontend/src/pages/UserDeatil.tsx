@@ -1,10 +1,11 @@
 import { axiosInstance } from '@/lib/axios.config'
 import type { UserType } from '@/lib/types'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import ImageUpload from '../components/ImageUpload'
 import ImageBox from '@/components/ImageBox'
 import { useAuth } from '@/lib/hooks/useAuth'
+import UpdateForm from '@/components/UpdateForm'
 
 const UserDeatil = () => {
     const [user, setUser] = useState<UserType>({
@@ -17,6 +18,7 @@ const UserDeatil = () => {
 
     const currUser = useAuth().user
     const [isOpenUploadImg, setIsOpenUploadImg] = useState(false)
+    const [isUpdateBoxOpen, setIsUpdateBoxOpen] = useState(false)
     const { userId } = useParams()
 
 
@@ -24,8 +26,6 @@ const UserDeatil = () => {
         try {
             const res = await axiosInstance.get(`/api/user/${userId}`)
             setUser(res.data)
-
-
         } catch (error) {
             console.log(error)
         }
@@ -50,15 +50,20 @@ const UserDeatil = () => {
                 </div>
             </div>
             {
-                user._id === currUser?._id ? <div>
-                    <button onClick={() => setIsOpenUploadImg(pre => !pre)} className='btn '>Set Profile</button>
-                </div> : <button>Send message</button>
+                user._id === currUser?._id ? <div className='flex gap-4 self-end'>
+                    <button onClick={() => setIsOpenUploadImg(pre => !pre)} className='btn '>Add Profile</button>
+                    <button onClick={() => setIsOpenUploadImg(pre => !pre)} className='btn '>Upload</button>
+                    <button onClick={() => setIsOpenUploadImg(pre => !pre)} className='px-4 py-2 font-serif bg-neutral-300 rounded-lg text-red-500 '>Logout</button>
+
+
+                </div> : <Link to={`/chat/user/${userId}`} className='bg-neutral-200 px-4 py-1.5 rounded-lg w-fit font-serif text-neutral-800'>Send message</Link>
             }
 
 
             {
                 isOpenUploadImg && <ImageUpload id={userId!} onClose={onClose} img={user?.avatar!} type='user' />
             }
+            <UpdateForm />
 
         </section>
     )

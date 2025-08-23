@@ -6,6 +6,6 @@ const userRouter = express.Router()
 
 userRouter.get('/', verifyToken, getAllUsers)
 userRouter.get('/:userId', getUserById)
-userRouter.put('/update/:userId', upload.single('avatar'), updateUser)
+userRouter.put('/update/:userId', updateUser)
 
 export default userRouter

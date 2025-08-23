@@ -51,7 +51,7 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     }
 
     return (
-        <section className="absolute inset-0 flex justify-center items-center " style={{ background: "#00000080" }} onClick={handleClickOutside}>
+        <section className="absolute inset-0 flex justify-center items-center z-50" style={{ background: "#00000080" }} onClick={handleClickOutside}>
 
             <form
                 ref={containerRef}
