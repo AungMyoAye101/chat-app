@@ -61,8 +61,8 @@ const UserDeatil = () => {
                 </div>
                 {
                     user._id === currUser?._id ? <div className='flex gap-4 self-end'>
-                        <button onClick={() => setIsOpen(pre => ({ ...pre, updateBox: true }))} className='btn '>Add Profile</button>
-                        <button onClick={() => setIsOpen(pre => ({ ...pre, uploadImg: true }))} className='btn '>Upload</button>
+                        <button onClick={() => setIsOpen(pre => ({ ...pre, updateBox: true }))} className='btn '>Update Profile</button>
+                        <button onClick={() => setIsOpen(pre => ({ ...pre, uploadImg: true }))} className='btn '>Upload Photo</button>
                         <button onClick={() => dispatch(logout())} className='px-4 py-2 font-serif text-neutral-50 rounded-lg bg-red-500 '>Logout</button>
 
 

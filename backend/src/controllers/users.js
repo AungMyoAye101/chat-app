@@ -29,5 +29,20 @@ export const getUserById = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-    console.log(req.body)
+    const { userId } = req.params
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: "UserId is not valid!" })
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(userId, req.body)
+        if (!user) {
+            return res.status(400).json({ message: "UserId is not valid!" })
+        }
+        res.status(200).json({ user })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal server error!" })
+
+    }
 }
