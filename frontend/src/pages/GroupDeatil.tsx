@@ -72,8 +72,8 @@ const GroupDeatil = () => {
 
 
     return (
-        <section>
-            <div className="border-2 border-gray-300 rounded-lg shadow-md max-w-4xl mx-auto ">
+        <section className="mt-14">
+            <div className="border-2 border-gray-300 rounded-lg shadow-md  bg-white ">
                 <div className="flex items-center justify-between gap-4 border-b-2 border-gray-200 p-4 relative">
                     <div className="flex gap-2 items-center">
 

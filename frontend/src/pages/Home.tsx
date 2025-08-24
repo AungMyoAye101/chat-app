@@ -43,18 +43,17 @@ const Home = () => {
     return (
 
 
-        <div className='flex gap-4 h-[calc(100vh-2rem)]'>
+        <div className='flex  h-[90vh] mt-12  '>
             {
-                (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white  rounded-xl  shadow-md h-full  px-4  flex flex-col'>
+                (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white/90   shadow-md h-full  px-4 py-6 flex flex-col border-r border-neutral-300'>
                     <div className='space-y-2 py-4'>
-
-                        <Navbar />
                         <Search />
                     </div>
                     <div className=' flex-1  overflow-hidden  overflow-y-scroll no-scrollbar'>
 
                         <GroupList />
                         <UserList />
+
                     </div>
 
                 </div>
@@ -62,7 +61,7 @@ const Home = () => {
 
 
             {
-                (!isMobile || isChatRoute) && <div className='flex-1  rounded-xl  shadow-md overflow-hidden'>
+                (!isMobile || isChatRoute) && <div className='flex-1  overflow-hidden'>
                     <Outlet />
                 </div>
             }
