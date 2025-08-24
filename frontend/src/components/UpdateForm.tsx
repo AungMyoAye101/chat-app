@@ -13,15 +13,21 @@ interface UpdateUserType {
 }
 
 interface UpdateUserPropType {
-    onClose: () => void
+    onClose: () => void,
+    updateUser: UpdateUserType
 }
 
-const UpdateForm: FC<UpdateUserPropType> = ({ onClose }) => {
+const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
 
     const containerRef = useRef<HTMLFormElement | null>(null) // for handle click outside
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm<UpdateUserType>()
+    const { register, handleSubmit, formState: { errors } } = useForm<UpdateUserType>({
+        defaultValues: {
+            name: updateUser.name,
+            email: updateUser.email
+        }
+    })
 
     const dispatch: AppDispatch = useDispatch()
     const { user } = useAuth()
@@ -52,7 +58,7 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose }) => {
                         type="name"
                         placeholder='name'
                         className='w-full border border-neutral-200 shadow px-4 py-2 rounded-md  bg-neutral-300'
-                        {...register("name", { required: "Name is required.", minLength: { value: 1, message: "Name conatin at least 1 character." } })}
+                        {...register("name")}
                     />
                     {
                         errors.name && <p className='text-sm text-red-500'>{errors.name.message}</p>
@@ -65,7 +71,7 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose }) => {
                         id="email"
                         placeholder='email'
                         className='w-full border border-neutral-200 shadow px-4 py-2 rounded-md bg-neutral-300 '
-                        {...register("email", { required: "Email is required." })}
+                        {...register("email")}
                     />
                     {
                         errors.email && <p className='text-sm text-red-500'>{errors.email.message}</p>

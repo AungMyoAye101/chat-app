@@ -74,7 +74,7 @@ const UserDeatil = () => {
                     isOpen.uploadImg && <ImageUpload id={userId!} onClose={onClose} img={user?.avatar!} type='user' />
                 }
                 {
-                    isOpen.updateBox && <UpdateForm onClose={onClose} />
+                    isOpen.updateBox && <UpdateForm onClose={onClose} updateUser={user} />
                 }
 
 

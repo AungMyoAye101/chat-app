@@ -41,34 +41,34 @@ const Home = () => {
 
 
     return (
-        <section className='relative '>
 
-            <div className='flex gap-4 h-[calc(100vh-2rem)]'>
-                {
-                    (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white  rounded-xl  shadow-md h-full  px-4  flex flex-col'>
-                        <div className='space-y-2 py-4'>
 
-                            <Navbar />
-                            <Search />
-                        </div>
-                        <div className=' flex-1  overflow-hidden  overflow-y-scroll no-scrollbar'>
+        <div className='flex gap-4 h-[calc(100vh-2rem)]'>
+            {
+                (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white  rounded-xl  shadow-md h-full  px-4  flex flex-col'>
+                    <div className='space-y-2 py-4'>
 
-                            <GroupList />
-                            <UserList />
-                        </div>
-
+                        <Navbar />
+                        <Search />
                     </div>
-                }
+                    <div className=' flex-1  overflow-hidden  overflow-y-scroll no-scrollbar'>
 
-
-                {
-                    (!isMobile || isChatRoute) && <div className='flex-1  rounded-xl  shadow-md overflow-hidden'>
-                        <Outlet />
+                        <GroupList />
+                        <UserList />
                     </div>
-                }
 
-            </div>
-        </section >
+                </div>
+            }
+
+
+            {
+                (!isMobile || isChatRoute) && <div className='flex-1  rounded-xl  shadow-md overflow-hidden'>
+                    <Outlet />
+                </div>
+            }
+
+        </div>
+
     )
 }
 
