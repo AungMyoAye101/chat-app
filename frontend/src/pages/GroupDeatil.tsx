@@ -71,13 +71,14 @@ const GroupDeatil = () => {
     }
 
 
+
     return (
         <section className="mt-14">
-            <div className="border-2 border-gray-300 rounded-lg shadow-md  bg-white ">
+            <div className="border-2 border-gray-300 rounded-lg shadow-md  bg-white h-[calc(100vh-4rem)] flex flex-col">
                 <div className="flex items-center justify-between gap-4 border-b-2 border-gray-200 p-4 relative">
                     <div className="flex gap-2 items-center">
+                        <ImageBox avatar={group.avatar} name={group.name} size="xl" />
 
-                        <img src={group.avatar || "/vite.svg"} alt="Group avatar photo" className="w-32 h-32 rounded-full bg-gray-300 object-cover" />
                         <div>
                             <h1 className="text-xl font-semibold font-serif">{group.name}</h1>
                             <p>Created by <span className="font-medium"> {group.createdBy.name} </span> </p>
@@ -95,6 +96,7 @@ const GroupDeatil = () => {
                             Set Photo
                         </button>
                         <Link to={`/chat/group/${groupId}`}
+
                             onClick={() => setIsImageBoxOpen(pre => !pre)}
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
                             Send message
@@ -102,10 +104,10 @@ const GroupDeatil = () => {
 
                         {
                             isEditGroupModalOpen && (
-                                <div className="absolute top-12 right-0 bg-white border border-gray-300  shadow-lg rounded-lg p-4 w-64 flex flex-col gap-1 font-serif">
+                                <div className="absolute top-4 right-4 bg-neutral-50 border-2 border-purple-500 text-white shadow-lg rounded-lg px-4 py-7 w-60 flex flex-col gap-2 font-medium">
 
-                                    <Link to={`/group/update/${group._id}`} className=" font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Update </Link>
-                                    <button onClick={() => deleteGroup(groupId!)} className="text-red-400 font-medium text-center px-4 py-1 bg-neutral-200 hover:bg-blue-200 rounded">Delete</button>
+                                    <Link to={`/group/update/${group._id}`} className=" text-center px-4 py-1.5 bg-blue-500 hover:bg-blue-200 rounded-md">Update </Link>
+                                    <button onClick={() => deleteGroup(groupId!)} className="bg-red-400 text-center px-4 py-1.5  hover:bg-blue-200 rounded-md">Delete</button>
                                 </div>
                             )
                         }
@@ -115,16 +117,16 @@ const GroupDeatil = () => {
                 {
                     isImageBoxOpen && <ImageUpload type="group" id={group._id} img={group.avatar} onClose={() => setIsImageBoxOpen(false)} />
                 }
+                <div className="flex justify-between items-center  p-4">
 
-                <div className="flex flex-col gap-4 p-4">
-                    <div className="flex justify-between items-center font-serif font-medium text-lg">
+                    <h2 className="text-xl font-semibold font-serif">Members</h2>
+                    <Link to={`/group/update/${groupId}/add-members`} className="bg-green-500  text-white px-4 py-1.5 rounded-md ">Add members</Link>
+                </div>
+                <div className="flex-1 overflow-hidden overflow-y-scroll flex flex-col gap-4 p-4 scroll-smooth">
 
-                        <h2 className="text-xl font-semibold ">Members</h2>
-                        <Link to={`/group/update/${groupId}/add-members`}>Add members</Link>
-                    </div>
                     {
                         group.members.map(m => (
-                            <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2" key={m._id}>
+                            <Link to={`/user/${m._id}`} className="flex items-center gap-4 border-b-2 border-gray-200 p-2 hover:bg-purple-200" key={m._id}>
 
                                 <ImageBox avatar={m.avatar!} name={m.name} size="md" />
 

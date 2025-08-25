@@ -22,12 +22,8 @@ import { useAuth } from './lib/hooks/useAuth';
 
 
 const ProtectedRoute = () => {
-  const { user, isLoading } = useAuth()
+  const { user } = useAuth()
 
-
-  if (isLoading) {
-    return <div className=''>Loading....</div>
-  }
 
   if (user?._id) {
     return <Outlet />;

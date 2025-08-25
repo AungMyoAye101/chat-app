@@ -85,7 +85,7 @@ const Group = () => {
 
     }
     return (
-        <form onSubmit={handelSubmit} className='flex flex-col gap-4 bg-white p-6 border border-neutral-200 mt-4 rounded-lg shadow max-w-2xl mx-auto'>
+        <form onSubmit={handelSubmit} className='flex flex-col gap-4 bg-white p-6 border border-neutral-200  rounded-lg shadow mt-16'>
             <h1 className="text-2xl font-semibold  text-center font-serif">Create Group</h1>
             {
                 errorMessage && <p className="text-red-400 font-serif text-center">{errorMessage}</p>
