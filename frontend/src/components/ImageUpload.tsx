@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/lib/axios.config"
 import { useRef, useState } from "react"
-import { useNavigate } from "react-router-dom"
 
 // For Props type 
 

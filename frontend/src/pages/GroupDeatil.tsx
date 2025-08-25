@@ -2,11 +2,12 @@ import ImageBox from "@/components/ImageBox"
 import ImageUpload from "@/components/ImageUpload"
 import { axiosInstance } from "@/lib/axios.config"
 import { formatLastSeen } from "@/lib/helper"
+import { useAuth } from "@/lib/hooks/useAuth"
 import type { MembersType } from "@/lib/types"
 import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 
-interface GroupTypes {
+export interface GroupTypes {
     _id: string,
     name: string,
     createdBy: { _id: string, name: string },
@@ -27,6 +28,7 @@ const GroupDeatil = () => {
     const [isEditGroupModalOpen, setIsEditGroupModalOpen] = useState(false)
     const [isImageBoxOpen, setIsImageBoxOpen] = useState(false)
     const { groupId } = useParams()
+    const { user } = useAuth()
     const containerRef = useRef<HTMLDivElement>(null)
 
     const navigate = useNavigate()
@@ -71,11 +73,21 @@ const GroupDeatil = () => {
     }
 
 
+    const navigateToChat = (userId: string) => {
+        const isMember = group.members.some(m => m._id === userId)
+        if (isMember) {
+            navigate(`/chat/group/${groupId}`)
+        } else {
+            alert("You are not a group member yet.")
+        }
+    }
 
     return (
         <section className="mt-14">
             <div className="border-2 border-gray-300 rounded-lg shadow-md  bg-white h-[calc(100vh-4rem)] flex flex-col">
-                <div className="flex items-center justify-between gap-4 border-b-2 border-gray-200 p-4 relative">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b-2 border-gray-200 p-4 relative">
+
+                    {/* group info container */}
                     <div className="flex gap-2 items-center">
                         <ImageBox avatar={group.avatar} name={group.name} size="xl" />
 
@@ -84,23 +96,30 @@ const GroupDeatil = () => {
                             <p>Created by <span className="font-medium"> {group.createdBy.name} </span> </p>
                         </div>
                     </div>
-                    <div ref={containerRef} className=" flex flex-col gap-2">
+
+                    {/* buttons conatiner */}
+                    <div ref={containerRef} className=" flex flex-row  md:flex-col gap-1 text-sm">
                         <button
                             onClick={() => setIsEditGroupModalOpen(pre => !pre)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            className="bg-blue-500 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition-colors">
                             Edit Group
                         </button>
                         <button
                             onClick={() => setIsImageBoxOpen(pre => !pre)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            className="bg-blue-500 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition-colors">
                             Set Photo
                         </button>
-                        <Link to={`/chat/group/${groupId}`}
+                        {/* <Link to={`/chat/group/${groupId}`}
 
                             onClick={() => setIsImageBoxOpen(pre => !pre)}
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
                             Send message
-                        </Link>
+                        </Link> */}
+                        <button onClick={() => navigateToChat(user?._id!)}
+                            className="bg-neutral-400 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition-colors">
+                            Send message
+
+                        </button>
 
                         {
                             isEditGroupModalOpen && (

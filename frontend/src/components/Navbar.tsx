@@ -37,7 +37,7 @@ const Navbar = () => {
     }
     return (
         <nav className="max-w-7xl mx-auto  px-4  fixed top-0 left-0 right-0 z-40" >
-            <div className='flex justify-between items-center bg-white border-b border-neutral-400 px-4 py-2 rounded-lg '>
+            <div className='flex justify-between items-center bg-white border-b border-neutral-300 px-4 py-2 rounded-lg '>
 
                 <Link to={'/'}>
                     <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat</h1>
