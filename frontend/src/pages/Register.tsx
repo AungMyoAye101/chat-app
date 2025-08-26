@@ -57,7 +57,7 @@ const Register = () => {
 
 
     return (
-        <section className='container flex justify-center mt-4'>
+        <section className='container flex justify-center mt-16'>
 
             <form onSubmit={onSubmit} className=' shadow rounded-lg border border-white/20 bg-white  px-6 py-12 flex flex-col gap-4 min-w-xs w-full max-w-lg'>
 

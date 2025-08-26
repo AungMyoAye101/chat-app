@@ -25,7 +25,7 @@ const Login = () => {
         navigate('/')
     })
     return (
-        <section className='mt-4 max-w-lg mx-auto '>
+        <section className='mt-16 max-w-lg mx-auto '>
 
             <form onSubmit={onSubmit} className='flex flex-col h-fit gap-4 bg-white px-6 py-12 border border-white/10 shadow-md  mt-4 rounded-lg '>
 

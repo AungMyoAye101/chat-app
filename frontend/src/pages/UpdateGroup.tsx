@@ -17,6 +17,7 @@ const UpdateGroup = () => {
         avatar: ''
     })
     const [isImageBoxOpen, setIsImageBoxOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const { groupId } = useParams()
 
     const navogate = useNavigate()
@@ -39,6 +40,7 @@ const UpdateGroup = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setIsLoading(true)
         try {
             const res = await axiosInstance.put(`/api/group/update/${groupId}`, data)
             if (res.status === 200) {
@@ -46,6 +48,8 @@ const UpdateGroup = () => {
             }
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -122,12 +126,8 @@ const UpdateGroup = () => {
                     }
                 </div>
 
+                <button disabled={isLoading} className='px-4 py-2 bg-orange-400 text-white rounded-lg self-end'>{isLoading ? "Updating" : "Update"}</button>
 
-
-
-                {/* {
-                errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
-            } */}
             </form>
         </section>
     )
