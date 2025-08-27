@@ -4,6 +4,8 @@ import { axiosInstance } from "../axios.config"
 import type { UserType } from "../types"
 
 
+
+
 interface AuthState {
     user: UserType | null,
     isLoading: boolean,
@@ -26,6 +28,7 @@ export const register = createAsyncThunk<UserType, { name: string, email: string
             )
             const { user } = res.data
             localStorage.setItem("user", JSON.stringify(user))
+
             return user
 
         } catch (error: any) {

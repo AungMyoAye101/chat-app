@@ -43,10 +43,10 @@ const Navbar = () => {
                     <h1 className='text-2xl font-serif font-bold text-neutral-700'>Chat</h1>
                 </Link>
 
-                <div className='flex items-center gap-4'>
+                <div className='flex items-center gap-3'>
                     {user?._id &&
                         <Link to={`/user/` + user?._id} >
-                            <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' className='' />
+                            <ImageBox avatar={user?.avatar!} name={user?.name!} size='md' />
                         </Link>
                     }
 
@@ -56,7 +56,7 @@ const Navbar = () => {
                         <button
                             onClick={() => setIsMenuOpen(pre => !pre)}
                             className='cursor-pointer bg-white  rounded-full p-1 shadow border border-neutral-200'>
-                            <img src="/icons/menu.svg" alt="menu icon" className='w-8' />
+                            <img src="/icons/menu.svg" alt="menu icon" className='w-7' />
                         </button>
 
 

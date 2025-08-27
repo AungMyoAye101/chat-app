@@ -1,12 +1,10 @@
 import Button from '@/components/UI/Button'
 import { register as signup } from '@/lib/auth/authSlice'
-import type { AppDispatch, RootState } from '@/lib/auth/store'
-import { axiosInstance } from '@/lib/axios.config'
+import type { AppDispatch } from '@/lib/auth/store'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 export interface RegisterType {
     name: string,
@@ -51,8 +49,10 @@ const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<RegisterType>()
     const onSubmit = handleSubmit(async (data) => {
 
-        dispatch(signup(data))
-        navigate('/')
+        const result = await dispatch(signup(data))
+        if (signup.fulfilled.match(result)) {
+            navigate('/')
+        }
     })
 
 
@@ -81,7 +81,7 @@ const Register = () => {
                 }
 
 
-
+                <Link to={'/login'} className='text-sm font-medium opacity-60 hover:text-purple-600'>Already have an account? Login</Link>
                 <Button type='submit' isLoading={isLoading}>{isLoading ? "Creating" : "Create"}</Button>
 
 

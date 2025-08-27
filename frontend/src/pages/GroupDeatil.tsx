@@ -144,7 +144,7 @@ const GroupDeatil = () => {
                                 <ImageBox avatar={m.avatar!} name={m.name} size="md" />
 
                                 <div className="font-sans">
-                                    <h1 className="text-xl font-semibold ">{m.name}
+                                    <h1 className=" font-semibold ">{m.name}
                                         {
                                             m._id === group.createdBy._id && <span className="text-sm text-green-500"> (Admin)</span>
                                         }

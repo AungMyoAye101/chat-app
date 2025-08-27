@@ -8,7 +8,7 @@ interface ImageBoxPropsType {
     size: "sm" | "md" | 'lg' | 'xl'
 }
 
-const colors = ['bg-red-600', "bg-purple-600", "bg-orange-600", "bg-blue-600"]
+const colors = ['bg-red-600', "bg-purple-600", "bg-orange-600", "bg-blue-600", "bg-green-600", "bg-yellow-500", "bg-sky-600", "bg-indigo-600", "bg-pink-600"]
 
 const ImageBox: FC<ImageBoxPropsType> = ({ avatar, name, className, size = "md" }) => {
 
@@ -26,7 +26,7 @@ const ImageBox: FC<ImageBoxPropsType> = ({ avatar, name, className, size = "md" 
         imageSize = "w-10 h-10 text-lg"
     }
 
-    const randomColors = colors[Math.floor(Math.random() * 4)]
+    const randomColors = colors[name.length > colors.length ? 1 : name.length]
 
     const style = cn(`rounded-full object-cover ${avatar ? "bg-gray-300 " : ' flex justify-center items-center  capitalize text-white'} ${randomColors} ${className} ${imageSize}`)
     return (

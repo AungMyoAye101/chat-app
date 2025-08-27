@@ -1,10 +1,9 @@
 import Button from '@/components/UI/Button'
 import { login } from '@/lib/auth/authSlice'
 import type { AppDispatch } from '@/lib/auth/store'
-import { axiosInstance } from '@/lib/axios.config'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { useState } from 'react'
-import { useForm, type SubmitHandler } from 'react-hook-form'
+
+import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -20,9 +19,10 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginType>()
 
     const onSubmit = handleSubmit(async (data: LoginType) => {
-
-        dispatch(login(data))
-        navigate('/')
+        const result = await dispatch(login(data))
+        if (login.fulfilled.match(result)) {
+            navigate('/')
+        }
     })
     return (
         <section className='mt-16 max-w-lg mx-auto '>

@@ -1,5 +1,8 @@
+import { fetchUser } from "@/lib/auth/authSlice";
+import type { AppDispatch } from "@/lib/auth/store";
 import { axiosInstance } from "@/lib/axios.config"
 import { useRef, useState } from "react"
+import { useDispatch } from "react-redux";
 
 // For Props type 
 
@@ -14,7 +17,7 @@ let url: string;
 const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     const [image, setImage] = useState<File | undefined>(undefined)
     const [isLoading, setIsLoading] = useState(false)
-
+    const dispatch: AppDispatch = useDispatch()
     const containerRef = useRef<HTMLFormElement | null>(null)
     url = img ? img : "/icons/user.svg"
     if (image) {
@@ -28,8 +31,10 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
         }
         setIsLoading(true)
         try {
-            const res = await axiosInstance.post(`/api/image/upload/${type + '/' + id}`, { avatar: image }, { headers: { "Content-Type": "multipart/form-data", } })
-            console.log(res.data)
+            await axiosInstance.post(`/api/image/upload/${type + '/' + id}`, { avatar: image }, { headers: { "Content-Type": "multipart/form-data", } })
+            if (type === "user") {
+                dispatch(fetchUser())
+            }
             onClose()
         } catch (error) {
             if (error instanceof Error) {

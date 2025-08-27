@@ -46,13 +46,13 @@ const UserDeatil = () => {
     }
 
     return (
-        <section className=' mt-12 flex justify-center items-center'>
+        <section className=' mt-12  h-[calc(100vh-4rem)] py-12  '>
 
 
-            < div className="min-w- sm w-full max-w-xl px-4 py-6 bg-white shadow rounded-lg  border border-neutral-200 mt-4 flex flex-col gap-4 " >
+            < div className="max-w-2xl mx-auto  px-4 py-6 bg-white shadow rounded-lg  border border-neutral-200 mt-4 flex flex-col gap-4 " >
                 < h1 className='text-lg font-serif text-neutral-600 font-semibold ' > User info</h1 >
 
-                <div className='flex items-center gap-2 border-b border-b-neutral-200 py-4'>
+                <div className='flex items-center gap-4 border-b border-b-neutral-200 py-4'>
                     <ImageBox avatar={user?.avatar!} name={user?.name!} size='lg' />
                     <div>
                         <h1 className='text-lg font-serif font-bold'>{user?.name}</h1>
@@ -60,10 +60,10 @@ const UserDeatil = () => {
                     </div>
                 </div>
                 {
-                    user._id === currUser?._id ? <div className='flex gap-4 self-end'>
-                        <button onClick={() => setIsOpen(pre => ({ ...pre, updateBox: true }))} className='btn '>Update Profile</button>
-                        <button onClick={() => setIsOpen(pre => ({ ...pre, uploadImg: true }))} className='btn '>Upload Photo</button>
-                        <button onClick={() => dispatch(logout())} className='px-4 py-2 font-serif text-neutral-50 rounded-lg bg-red-500 '>Logout</button>
+                    user._id === currUser?._id ? <div className='flex flex-wrap gap-2 self-end'>
+                        <button onClick={() => setIsOpen(pre => ({ ...pre, updateBox: true }))} className='px-4 py-2 font-serif text-neutral-50 rounded-lg bg-purple-500 flex-1 min-w-fit '>Update Profile</button>
+                        <button onClick={() => setIsOpen(pre => ({ ...pre, uploadImg: true }))} className='px-4 py-2 font-serif text-neutral-50 rounded-lg bg-purple-500 flex-1 min-w-fit '>Upload Photo</button>
+                        <button onClick={() => dispatch(logout())} className='px-4 py-2 font-serif text-neutral-50 rounded-lg bg-red-500 flex-1'>Logout</button>
 
 
                     </div> : <Link to={`/chat/user/${userId}`} className='self-end bg-neutral-200 px-4 py-1.5 rounded-lg w-fit font-serif text-neutral-800'>Send message</Link>
