@@ -1,6 +1,5 @@
-import Button from '@/components/UI/Button'
+
 import { axiosInstance } from '@/lib/axios.config'
-import type { GroupWithMembers } from '@/lib/types'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { GroupTypes } from './GroupDeatil'

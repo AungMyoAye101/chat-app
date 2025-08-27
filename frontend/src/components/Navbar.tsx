@@ -7,7 +7,6 @@ import { useAuth } from '@/lib/hooks/useAuth'
 import type { AppDispatch } from '@/lib/auth/store'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/lib/auth/authSlice'
-import Search from './Search'
 
 
 

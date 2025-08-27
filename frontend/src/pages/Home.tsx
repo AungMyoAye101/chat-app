@@ -1,16 +1,10 @@
 
 import GroupList from '@/components/GroupList'
-import Navbar from '@/components/Navbar'
 import Search from '@/components/Search'
-
-
 import UserList from '@/components/UserList'
-
 import { useLayout } from '@/context/Layout.contex'
 import type { RootState } from '@/lib/auth/store'
 import { socket } from '@/lib/socket'
-
-
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, useLocation, } from 'react-router-dom'

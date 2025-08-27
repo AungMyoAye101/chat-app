@@ -1,5 +1,6 @@
-import { useAuth } from '@/context/Auth.context'
+
 import { axiosInstance } from '@/lib/axios.config'
+import { useAuth } from '@/lib/hooks/useAuth'
 import { socket } from '@/lib/socket'
 import type { UserType } from '@/lib/types'
 import { useEffect, useRef, useState } from 'react'
@@ -11,7 +12,7 @@ interface ChatPropsType {
 
 
 const Chat = ({ selectedUser }: ChatPropsType) => {
-    const user = useAuth()
+    const { user } = useAuth()
     const [receivedData, setReceivedData] = useState<any[]>([])
     const [message, setMessage] = useState('')
     const [typing, setTyping] = useState(false)

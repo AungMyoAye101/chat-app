@@ -1,5 +1,4 @@
 import ImageBox from "@/components/ImageBox"
-import Button from "@/components/UI/Button"
 import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
 import { useEffect, useState } from "react"

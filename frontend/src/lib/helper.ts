@@ -1,6 +1,3 @@
-import axios from "axios";
-import { axiosInstance } from "./axios.config";
-
 
 export const formatLastSeen = (dateString: string) => {
     const date = new Date(dateString);
@@ -40,10 +37,3 @@ export function formatChatTime(dateString: string) {
 //         return `${months[date.getMonth()]} ${date.getDate()}, ${hours}:${minutes} ${ampm}`;
 //     }
 
-export const logout = async () => {
-    try {
-        await axiosInstance.post('/api/auth/logout')
-    } catch (error) {
-        console.log(error)
-    }
-}
