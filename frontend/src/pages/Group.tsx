@@ -31,8 +31,6 @@ const Group = () => {
         const fetchUser = async () => {
             setIsLoadingData(true)
             try {
-
-
                 const res = await axiosInstance.get('/api/user')
                 setMembers(res.data)
             } catch (error) {
@@ -85,45 +83,43 @@ const Group = () => {
 
     }
     return (
-        <form onSubmit={handelSubmit} className='flex flex-col gap-4 bg-white p-6 border border-neutral-200  rounded-lg shadow mt-16'>
-            <h1 className="text-2xl font-semibold  text-center font-serif">Create Group</h1>
+        <form onSubmit={handelSubmit} className='flex flex-col gap-3 bg-white p-6 border border-neutral-200  rounded-lg shadow mt-14  h-[calc(100vh-4rem)] '>
+            <h1 className="text-2xl font-semibold  text-center font-serif">Create  Group</h1>
             {
                 errorMessage && <p className="text-red-400 font-serif text-center">{errorMessage}</p>
             }
-            <div className="flex flex-col gap-1">
-                <label htmlFor="group-name" className="font-medium ">Group name</label>
-                <input type="name" id="group-name" placeholder='group name' name="name" onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className='w-full border border-neutral-200 px-4 py-2 rounded-lg ' />
+            <div className="flex flex-col">
+                <label htmlFor="group-name" className="font-medium text-lg ">Group Name</label>
+                <input type="name" id="group-name" placeholder='group name' name="name" onChange={(e) => setData(pre => ({ ...pre, 'name': e.target.value }))} className='w-full border border-neutral-200 bg-gray-200 px-4 py-2 rounded-lg ' />
             </div>
             <div>
-                <h1 className="font-semibold text-lg font-serif ">Add members</h1>
-                <div className="flex border border-neutral-200 pl-4  rounded-lg overflow-hidden my-2">
+                <h1 className="font-medium text-lg ">Add Members</h1>
+                <div className="flex border border-neutral-200 bg-gray-200  pl-4  rounded-lg overflow-hidden ">
                     <input type="text" placeholder="Search user name" className="flex-1 !rounded-none" />
-                    <button type="button" className="px-4 py-2 bg-orange-400 text-white">Search</button>
+                    <button type="button" className="px-4 py-2 bg-purple-500 text-white">Search</button>
                 </div>
-                <div className="rounded-lg overflow-hidden border border-neutral-200">
-                    {
-                        isLoadingData ? <div className="font-medium ">Loading user...</div> :
-                            members.map(user => (
-                                <div key={user._id} className={`flex justify-between gap-4 px-4 py-1 hover:bg-blue-200 ${data.members.includes(user._id) && "bg-green-100"}`} onClick={() => handleAddMember(user._id)}>
-                                    <div className="flex items-center gap-4 ">
 
-                                        <ImageBox avatar={user.avatar} name={user.name} size="md" />
-                                        <h1 className="font-medium text-lg font-serif">{user.name}</h1>
-
-                                    </div>
-                                    <button type="button" className="font-serif text-green-500  "
-                                    >{data.members.includes(user._id) ? "Added" : "Add"}</button>
-                                </div>
-                            ))
-                    }
-                </div>
             </div>
-            <button type="submit" className={`px-4 py-1.5 bg-orange-400 text-white rounded-lg ${isLoading ? "cursor-wait" : "cursor-pointer"}`}>
+            <div className="rounded-lg overflow-hidden border border-neutral-200 flex-1 overflow-y-scroll">
+                {
+                    isLoadingData ? <div className="font-medium ">Loading user...</div> :
+                        members.map(user => (
+                            <div key={user._id} className={`flex justify-between gap-4 px-4 py-1 hover:bg-blue-200 ${data.members.includes(user._id) && "bg-green-100"}`} onClick={() => handleAddMember(user._id)}>
+                                <div className="flex items-center gap-4 ">
+
+                                    <ImageBox avatar={user.avatar} name={user.name} size="md" />
+                                    <h1 className="font-medium text-lg font-serif">{user.name}</h1>
+
+                                </div>
+                                <button type="button" className="font-serif text-green-500  "
+                                >{data.members.includes(user._id) ? "Added" : "Add"}</button>
+                            </div>
+                        ))
+                }
+            </div>
+            <button type="submit" className={`px-4 py-1.5 bg-purple-500 text-white rounded-lg self-end ${isLoading ? "cursor-wait" : "cursor-pointer"}`}>
                 {isLoading ? "Creating..." : "Create"}
             </button>
-            {/* {
-                errorMessage && <p className='text-sm text-red-400'>{errorMessage}</p>
-            } */}
         </form>
     )
 }

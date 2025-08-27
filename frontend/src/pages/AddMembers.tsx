@@ -1,3 +1,4 @@
+import ImageBox from "@/components/ImageBox"
 import Button from "@/components/UI/Button"
 import { axiosInstance } from "@/lib/axios.config"
 import type { UserType } from "@/lib/types"
@@ -63,23 +64,29 @@ const AddMembers = () => {
                     />
                     <button className='py-2 px-4 '><img src="/icons/maginifying-glass-icon.svg" alt="search icon" className='w-5 bg-transparent' /></button>
                 </form>
-                <div className=' flex-1 flex flex-col  border border-neutral-200 rounded-md bg-neutral-50 gap-1 justify-center items-center '>
+                <div className=' flex-1 overflow-hidden overflow-y-scroll scroll-smooth flex flex-col  border border-neutral-200 rounded-md  '>
 
 
                     {
-                        isLoading ? <div className="w-14 h-14 rounded-full border-4 border-purple-500 border-r-transparent animate-spin"></div> : users.length === 0 ? <div className="font-semibold text-lg ">No user found.</div> : users.map((user) => (
-                            <div key={user._id} className={`flex items-center justify-between px-4 py-1  cursor-pointer ${selectedUser.includes(user._id) ? 'bg-blue-400' : 'bg-blue-50'}`} onClick={() => setSelectedUser(pre => pre.includes(user._id) ? pre.filter(id => id !== user._id) : [...pre, user._id])}>
+                        isLoading
+                            ? <div className="w-full h-full flex justify-center items-center"><div className="w-14 h-14 rounded-full border-4 border-purple-500 border-r-transparent animate-spin"></div> </div>
+                            : users.length === 0
+                                ? <div className="w-full h-full flex justify-center items-center"><div className="font-semibold text-lg ">No user found.</div></div>
+                                : users.map((user) => (
+                                    <div key={user._id}
+                                        className={`w-full flex items-center justify-between px-4 py-1  cursor-pointer ${selectedUser.includes(user._id) ? 'bg-blue-300' : 'bg-blue-50'}`}
+                                        onClick={() => setSelectedUser(pre => pre.includes(user._id) ? pre.filter(id => id !== user._id) : [...pre, user._id])}>
 
-                                <div className='flex items-center gap-2'>
-                                    <div className='w-10 h-10 rounded-full bg-gray-300 flex justify-center items-center'>{user.name[0]}</div>
-                                    <span>{user.name}</span>
-                                </div>
-                                {
-                                    selectedUser.includes(user._id) ? <span className='text-white'>Selected</span> : <span className='text-green-500'>Select</span>
-                                }
+                                        <div className='flex items-center gap-2'>
+                                            <ImageBox avatar={user.avatar!} name={user.name} size="md" />
+                                            <span>{user.name}</span>
+                                        </div>
+                                        {
+                                            selectedUser.includes(user._id) ? <span className='text-white'>Selected</span> : <span className='text-green-500'>Select</span>
+                                        }
 
-                            </div>
-                        ))
+                                    </div>
+                                ))
                     }
 
                 </div>

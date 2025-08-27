@@ -110,7 +110,7 @@ const GroupDeatil = () => {
                             Set Photo
                         </button>
                         <button onClick={() => navigateToChat(user?._id!)}
-                            className="bg-neutral-400 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition-colors">
+                            className="bg-gray-200  px-3 py-1.5 rounded-md hover:bg-blue-200 transition-colors">
                             Send message
 
                         </button>

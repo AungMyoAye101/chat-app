@@ -19,7 +19,7 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     const [isLoading, setIsLoading] = useState(false)
     const dispatch: AppDispatch = useDispatch()
     const containerRef = useRef<HTMLFormElement | null>(null)
-    url = img ? img : "/icons/user.svg"
+    url = img ? img : "/icons/image-icon.svg"
     if (image) {
 
         url = URL.createObjectURL(image)
@@ -69,7 +69,7 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
                 <label htmlFor="profile" className="relative" >
 
 
-                    <img src={url} alt="profile image" className=" w-28 h-28 rounded-full border-4 border-purple-400 object-cover cursor-pointer " />
+                    <img src={url} alt="profile image" className=" w-28 h-28 rounded-full border-4 border-purple-400 bg-gray-200 object-cover cursor-pointer " />
 
                     <img src="/icons/upload.svg" alt="" className="w-10 absolute -right-4 top-1/2 bg-white rounded-full p-1 cursor-pointer   border-2 border-green-500 shadow " />
                     <input
