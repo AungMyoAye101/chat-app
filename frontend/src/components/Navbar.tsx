@@ -85,7 +85,7 @@ const Navbar = () => {
                                         <>
                                             <Link to={"/register"}
                                                 onClick={handleCLose}
-                                                className=' nav-link-btn hover:bg-purple-200 '> <img src="/icons/user.svg" alt="register icon " className='w-10 bg-gray-200 p-2 rounded-full' />Register</Link>
+                                                className=' nav-link-btn hover:bg-purple-200 '> <img src="/icons/add-profile.svg" alt="register icon " className='w-10 bg-gray-200 p-2 rounded-full' />Register</Link>
                                             <Link to={"/login"}
                                                 onClick={handleCLose}
                                                 className='nav-link-btn hover:bg-purple-200 '> <img src="/icons/login.svg" alt="login icon " className='w-10 bg-gray-200 p-2 rounded-full' />Login</Link>
