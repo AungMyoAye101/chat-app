@@ -1,6 +1,5 @@
-
-// import dotenv from "dotenv"
-// import express from "express"
+import dotenv from "dotenv"
+import express from "express"
 // import cors from "cors"
 // import messageRouter from "./routes/message.route.js"
 // import groupRouter from "./routes/group.route.js"
@@ -10,12 +9,12 @@
 // import cookiePaser from "cookie-parser"
 // import imageRouter from "./routes/imageUpload.route.js"
 // import searchRouter from "./routes/search.route.js"
-// import type { Request, Response } from "express"
+import type { Request, Response } from "express"
 // import authRouter from "./routes/auth.route.js"
-// //to config env file 
-// dotenv.config()
+// //to config env file
+dotenv.config()
 // connectToDb()
-
+const app = express()
 // app.use(cors({ origin: process.env.FRONTEND_UR, credentials: true }));
 // app.use(express.json());
 // app.use(cookiePaser())
@@ -28,21 +27,18 @@
 // app.use("/api/group", groupRouter);
 // app.use("/api/image", imageRouter);
 
-// app.get("/", (req: Request, res: Response) => {
-//     res.send("server is running.")
-// });
+app.get("/", (req: Request, res: Response) => {
+    res.send("server is running.")
+});
 
-// app.use((req: Request, res: Response) => {
-//     res.status(404).json({ message: "No route match." })
-// })
-// const PORT = process.env.PORT || 5000;
-// server.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// });
+app.use((req: Request, res: Response) => {
+    res.status(404).json({ message: "No route match." })
+})
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
 
-import express from "express";
 
-const app = express()
 
-app.listen(3000, () => console.log("server is listening..."))
