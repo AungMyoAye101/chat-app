@@ -1,10 +1,11 @@
 import express from "express"
-import User from "../model/user.model.js"
-import Group from "../model/group.model.js"
+import User from "../model/user.model"
+import Group from "../model/group.model"
+import type { Request, Response } from "express"
 
 const searchRouter = express.Router()
 
-searchRouter.get('/:searchText', async (req, res) => {
+searchRouter.get('/:searchText', async (req: Request, res: Response) => {
     const { searchText } = req.params
     if (!searchText.trim()) {
         return res.status(400).json({ message: "Missiing search query  " })
