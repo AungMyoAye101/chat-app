@@ -1,16 +1,14 @@
 
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import User from "../model/user.model.js"
-import fs from "fs"
-import cloudinary from "../lib/cloundinary.js"
+
 import type { Request, Response } from "express"
+import User from "../model/user.model"
 
 export const createUser = async (req: Request, res: Response) => {
 
     const { email, password } = req.body
 
-    console.log("creating....")
 
     try {
 
@@ -23,8 +21,6 @@ export const createUser = async (req: Request, res: Response) => {
 
         const newUser = await User.create({ ...req.body, password: hashed, })
 
-
-        console.log("created")
         const token = jwt.sign({
             id: newUser._id
         }, process.env.SECRET_KEY as string, {

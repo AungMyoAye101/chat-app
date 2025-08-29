@@ -1,9 +1,9 @@
 import express from "express"
-import cloudinary, { upload } from "../lib/cloundinary.js"
 import mongoose from "mongoose"
-import User from "../model/user.model.js"
-import Group from "../model/group.model.js"
 import fs from "fs"
+import cloudinary, { upload } from "../lib/cloundinary"
+import User, { IUser } from "../model/user.model"
+import Group from "../model/group.model"
 const imageRouter = express.Router()
 
 
@@ -16,11 +16,13 @@ imageRouter.post('/upload/user/:id', upload.single('avatar'), async (req, res) =
     const images = req.file
     if (!images) {
         res.status(400).json("Image not found.")
+        return;
     }
     try {
         const user = await User.findById(id)
         if (!user) {
             res.status(400).json("Invalid userId!")
+            return;
         }
         if (user.avatarPublicId) {
             await cloudinary.uploader.destroy(user.avatarPublicId)
@@ -46,35 +48,36 @@ imageRouter.post('/upload/group/:id', upload.single('avatar'), async (req, res) 
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(400).json("UserId is not valid")
-    }
-    const images = req.file
-    if (!images) {
-        res.status(400).json("Image not found.")
-    }
-    try {
-        const group = await Group.findById(id)
-        if (!group) {
-            res.status(400).json("Invalid userId!")
+        const images = req.file
+        if (!images) {
+            res.status(400).json("Image not found.")
+            return;
         }
-        console.log(group.avatarPublicId)
-        if (group.avatarPublicId) {
-            await cloudinary.uploader.destroy(group.avatarPublicId)
-            console.log("delete old photo from cloudinary.")
+        try {
+            const group = await Group.findById(id)
+            const group = await Group.findById(id)
+            if (!group) {
+                res.status(400).json("Invalid userId!")
+                return;
+            }
+            if (group.avatarPublicId) {
+                await cloudinary.uploader.destroy(group.avatarPublicId)
+                console.log("delete old photo from cloudinary.")
+            }
+
+            const uploaded = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
+            group.avatar = uploaded.secure_url;
+            group.avatarPublicId = uploaded.public_id
+            await group.save()
+            fs.unlinkSync(images.path)
+            res.status(201).json(group)
+
+        } catch (error) {
+            if (error instanceof Error)
+                console.log(error.message)
+            res.status(500).json("internal server error.")
         }
 
-        const uploaded = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
-        console.log("uploaded")
-        group.avatar = uploaded.secure_url;
-        group.avatarPublicId = uploaded.public_id
-        await group.save()
-        fs.unlinkSync(images.path)
-        res.status(201).json(group)
-
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).json("internal server error.")
-    }
-
-})
+    })
 
 export default imageRouter

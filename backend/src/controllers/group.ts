@@ -1,11 +1,12 @@
 import mongoose from "mongoose"
-import Group from "../model/group.model.js"
-import User from "../model/user.model.js"
+import type { Request, Response } from "express"
+import Group from "../model/group.model"
+import User from "../model/user.model"
 
 
-export const createGroup = async (req, res) => {
+export const createGroup = async (req: Request, res: Response) => {
     const { name, members } = req.body
-    const userId = req.id
+    const userId = req.id as string
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "Invaild user id!" })
     }
@@ -20,11 +21,13 @@ export const createGroup = async (req, res) => {
 
         res.status(201).json({ message: "group created succeeful", group: newGroup })
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        if (error instanceof Error)
+            console.error(error.message)
+        res.status(500).json({ message: "Internal server error!" })
     }
 
 }
-export const getGroups = async (req, res) => {
+export const getGroups = async (req: Request, res: Response) => {
     const userId = req.id
 
     try {
@@ -35,12 +38,13 @@ export const getGroups = async (req, res) => {
 
         res.status(200).json({ message: 'success', groups })
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Interval server error" })
     }
 }
 
-export const updateGroup = async (req, res) => {
+export const updateGroup = async (req: Request, res: Response) => {
     const { groupId } = req.params
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
         return res.status(400).json({ message: "Invalid group Id." })
@@ -49,12 +53,13 @@ export const updateGroup = async (req, res) => {
         const updatedGroup = await Group.findOneAndUpdate({ _id: groupId }, { ...req.body }, { new: true })
         res.status(200).json({ message: 'Group updated successful', })
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Interval server error" })
     }
 }
 
-export const getGroupById = async (req, res) => {
+export const getGroupById = async (req: Request, res: Response) => {
     const { groupId } = req.params
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
         return res.status(400).json({ message: "Invalid group Id." })
@@ -66,18 +71,16 @@ export const getGroupById = async (req, res) => {
         }
         res.status(200).json({ message: 'success', group })
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Interval server error" })
     }
 }
 
-export const checkAvailableGroupMembers = async (req, res) => {
+export const checkAvailableGroupMembers = async (req: Request, res: Response) => {
     const { groupId } = req.params
     const { name } = req.query
 
-    // if (!name) {
-    //     return res.status(400).json({ message: "Name query parameter is required." })
-    // }
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
         return res.status(400).json({ message: "Invalid group Id." })
     }
@@ -92,13 +95,14 @@ export const checkAvailableGroupMembers = async (req, res) => {
 
         res.status(200).json({ message: 'success', avaliableUser: allUsers })
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Interval server error" })
     }
 
 }
 
-export const addMembersToGroup = async (req, res) => {
+export const addMembersToGroup = async (req: Request, res: Response) => {
     const { groupId } = req.params
     const { memberId } = req.body
     if (!mongoose.Types.ObjectId.isValid(groupId)) {
@@ -118,14 +122,15 @@ export const addMembersToGroup = async (req, res) => {
         }
         res.status(200).json({ message: 'Members added successfully', group: updatedGroup })
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Interval server error" })
     }
 }
 
-export const deleteGroup = async (req, res) => {
+export const deleteGroup = async (req: Request, res: Response) => {
     const { groupId } = req.params
-    const userId = req.id
+    const userId = req.id as string
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "Invaild user id!" })
     }
@@ -140,7 +145,8 @@ export const deleteGroup = async (req, res) => {
         await User.findByIdAndUpdate(userId, { $pull: { groups: groupId } })
         res.status(200).json({ message: 'Group deleted successfully' })
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Interval server error" })
     }
 }

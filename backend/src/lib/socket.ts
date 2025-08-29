@@ -1,8 +1,9 @@
 import http from "http"
 import express from "express"
 import { Server } from "socket.io"
-import Message from "../model/message.model.js"
-import User from "../model/user.model.js"
+import Message from "../model/message.model";
+import User from "../model/user.model";
+
 
 
 declare module "socket.io" {

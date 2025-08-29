@@ -1,20 +1,23 @@
 import mongoose from "mongoose"
-import User from "../model/user.model.js"
-import cloudinary from "../lib/cloundinary.js"
+import User from "../model/user.model"
+import type { Request, Response } from "express"
 
-export const getAllUsers = async (req, res) => {
-    if (!mongoose.Types.ObjectId.isValid(req.id)) {
+
+export const getAllUsers = async (req: Request, res: Response) => {
+    const id = req.id as string;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: "Invalid userId" })
     }
     try {
-        const users = await User.find({ _id: { $ne: req.id } }).select("-password")
+        const users = await User.find({ _id: { $ne: id } }).select("-password")
         res.status(200).json(users)
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Internal server error" })
     }
 }
-export const getUserById = async (req, res) => {
+export const getUserById = async (req: Request, res: Response) => {
     const { userId } = req.params
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "Invalid userId" })
@@ -23,12 +26,13 @@ export const getUserById = async (req, res) => {
         const users = await User.findById(userId).select("-password").populate('groups')
         res.status(200).json(users)
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Internal server error" })
     }
 }
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req: Request, res: Response) => {
     const { userId } = req.params
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json({ message: "UserId is not valid!" })
@@ -41,7 +45,8 @@ export const updateUser = async (req, res) => {
         }
         res.status(200).json({ user })
     } catch (error) {
-        console.log(error)
+        if (error instanceof Error)
+            console.log(error.message)
         res.status(500).json({ message: "Internal server error!" })
 
     }

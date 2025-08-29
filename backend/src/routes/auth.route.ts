@@ -1,9 +1,8 @@
-// import { createUser, login } from "../controllers/auth.js";
-import { upload } from "../lib/cloundinary.js";
-import { verifyToken } from "../middleware/verify.js";
-import User from "../model/user.model.js";
+
 import express from "express"
 import type { Request, Response } from "express"
+import { verifyToken } from "../middleware/verify";
+import User from "../model/user.model";
 
 const authRouter = express.Router()
 

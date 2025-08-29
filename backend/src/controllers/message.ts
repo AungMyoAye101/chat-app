@@ -1,9 +1,10 @@
 import mongoose from "mongoose"
-import Message from "../model/message.model.js"
+import type { Request, Response } from "express"
+import Message from "../model/message.model"
 
-export const getMessages = async (req, res) => {
+export const getMessages = async (req: Request, res: Response) => {
     const { receiverId } = req.params
-    const senderId = req.id
+    const senderId = req.id as string
     if (!mongoose.Types.ObjectId.isValid(senderId)) {
         return res.status(400).json({ message: "Invalid senderId" })
     }
@@ -29,7 +30,7 @@ export const getMessages = async (req, res) => {
     }
 }
 
-export const getGroupMessage = async (req, res) => {
+export const getGroupMessage = async (req: Request, res: Response) => {
     const { groupId } = req.params
     try {
         const message = await Message.find({ group: groupId }).populate([
@@ -42,9 +43,9 @@ export const getGroupMessage = async (req, res) => {
     }
 }
 
-export const messageSeenBy = async (req, res) => {
+export const messageSeenBy = async (req: Request, res: Response) => {
     const { messageId } = req.params
-    const userId = req.id
+    const userId = req.id as string
 
     if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(messageId)) {
         return res.status(400).json({ message: "Invalid Id" })
@@ -64,8 +65,8 @@ export const messageSeenBy = async (req, res) => {
 
 }
 
-export const getMessageById = async (req, res) => {
-    const { messageId } = req.messageId
+export const getMessageById = async (req: Request, res: Response) => {
+    const { messageId } = req.params
     if (!mongoose.Types.ObjectId.isValid(messageId)) {
         return res.status(400).json({ message: "Invalid message Id!" })
     }

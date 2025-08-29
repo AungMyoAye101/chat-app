@@ -1,6 +1,6 @@
 import express from "express"
-import { verifyToken } from "../middleware/verify.js"
 import { addMembersToGroup, checkAvailableGroupMembers, createGroup, deleteGroup, getGroupById, getGroups, updateGroup } from "../controllers/group.js"
+import { verifyToken } from "../middleware/verify.js"
 
 const groupRouter = express.Router()
 groupRouter.get("/", verifyToken, getGroups)
