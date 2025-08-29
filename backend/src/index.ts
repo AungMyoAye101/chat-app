@@ -1,23 +1,24 @@
 import dotenv from "dotenv"
 import express from "express"
-// import cors from "cors"
 // import messageRouter from "./routes/message.route.js"
 // import groupRouter from "./routes/group.route.js"
 // import userRouter from "./routes/user.route.js"
-// import { connectToDb } from "./lib/db.js"
 // import { app, server } from "./lib/socket.js"
 // import cookiePaser from "cookie-parser"
 // import imageRouter from "./routes/imageUpload.route.js"
 // import searchRouter from "./routes/search.route.js"
 import type { Request, Response } from "express"
+import { connectToDb } from "./lib/db"
+import cookieParser from "cookie-parser"
+import cors from "cors"
 // import authRouter from "./routes/auth.route.js"
 // //to config env file
 dotenv.config()
-// connectToDb()
+connectToDb()
 const app = express()
-// app.use(cors({ origin: process.env.FRONTEND_UR, credentials: true }));
-// app.use(express.json());
-// app.use(cookiePaser())
+app.use(cors({ origin: process.env.FRONTEND_UR, credentials: true }));
+app.use(express.json());
+app.use(cookieParser())
 
 // // Routes
 // app.use("/api/auth", authRouter)

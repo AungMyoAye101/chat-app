@@ -1,22 +1,25 @@
-import { createUser, login } from "../controllers/auth.js";
+// import { createUser, login } from "../controllers/auth.js";
 import { upload } from "../lib/cloundinary.js";
 import { verifyToken } from "../middleware/verify.js";
 import User from "../model/user.model.js";
 import express from "express"
+import type { Request, Response } from "express"
 
 const authRouter = express.Router()
 
-authRouter.post("/register", createUser)
-authRouter.post("/login", login)
-authRouter.get("/me", verifyToken, async (req, res) => {
+// authRouter.post("/register", createUser)
+// authRouter.post("/login", login)
+authRouter.get("/me", verifyToken, async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.id).select("-password")
-        res.status(201).json({ message: "fetched user", user })
+        // Assuming verifyToken middleware attaches user info to req.user
+        const userId = req.id
+        const user = await User.findById(userId).select("-password");
+        res.status(201).json({ message: "fetched user", user });
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: (error instanceof Error ? error.message : String(error)) });
     }
-})
-authRouter.post('/logout', async (req, res) => {
+});
+authRouter.post('/logout', async (req: Request, res: Response) => {
     res.clearCookie('token')
     res.status(200).json({ message: "Logout ." })
 })

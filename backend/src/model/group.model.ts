@@ -1,5 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
+export interface IGroup extends Document {
+    name: string,
+    members: string[],
+    createdBy: string,
+    avatar: string,
+    avatarPublicId: string
+}
 
 const groupSchema = new mongoose.Schema(
     {
@@ -12,5 +19,5 @@ const groupSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const Group = mongoose.model("Group", groupSchema);
+const Group = mongoose.model<IGroup>("Group", groupSchema);
 export default Group

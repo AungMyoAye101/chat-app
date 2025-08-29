@@ -4,8 +4,9 @@ import jwt from "jsonwebtoken"
 import User from "../model/user.model.js"
 import fs from "fs"
 import cloudinary from "../lib/cloundinary.js"
+import type { Request, Response } from "express"
 
-export const createUser = async (req, res) => {
+export const createUser = async (req: Request, res: Response) => {
 
     const { email, password } = req.body
 
@@ -26,7 +27,7 @@ export const createUser = async (req, res) => {
         console.log("created")
         const token = jwt.sign({
             id: newUser._id
-        }, process.env.SECRET_KEY, {
+        }, process.env.SECRET_KEY as string, {
             expiresIn: "7d"
         })
 
@@ -38,7 +39,8 @@ export const createUser = async (req, res) => {
         res.status(201).json({ message: "User created", user: newUser })
 
     } catch (error) {
-        console.log(error.message)
+        if (error instanceof Error)
+            console.error(error.message)
         res.status(500).json("Internal server error.")
     }
 
@@ -46,23 +48,22 @@ export const createUser = async (req, res) => {
 
 }
 
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body
-    console.log(req.file)
     try {
         const userExit = await User.findOne({ email })
         if (!userExit) {
             return res.status(404).json({ message: "User doesn't exist." })
 
         }
-        console.log(password, "__AND__", userExit.password)
+
         const checkPassword = await bcrypt.compare(password, userExit.password)
-        console.log(checkPassword)
+
         if (!checkPassword) {
             return res.status(400).json({ message: "Email or password doesn't match." })
 
         }
-        const token = jwt.sign({ id: userExit._id }, process.env.SECRET_KEY, { expiresIn: "7d" })
+        const token = jwt.sign({ id: userExit._id }, process.env.SECRET_KEY as string, { expiresIn: "7d" })
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000
@@ -70,7 +71,8 @@ export const login = async (req, res) => {
         res.status(200).json({ message: "User logged in.", user: userExit })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        if (error instanceof Error)
+            res.status(500).json({ message: error.message })
     }
 }
 
