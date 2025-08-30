@@ -3,11 +3,12 @@ import express from "express"
 import type { Request, Response } from "express"
 import { verifyToken } from "../middleware/verify";
 import User from "../model/user.model";
+import { createUser, login } from "../controllers/auth";
 
 const authRouter = express.Router()
 
-// authRouter.post("/register", createUser)
-// authRouter.post("/login", login)
+authRouter.post("/register", createUser)
+authRouter.post("/login", login)
 authRouter.get("/me", verifyToken, async (req: Request, res: Response) => {
     try {
         // Assuming verifyToken middleware attaches user info to req.user

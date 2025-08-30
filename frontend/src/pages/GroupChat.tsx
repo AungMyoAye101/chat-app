@@ -52,7 +52,6 @@ const GroupChat = () => {
         const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
 
         setReceivedData(res.data)
-        console.log("get")
 
     }
 
