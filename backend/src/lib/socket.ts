@@ -3,8 +3,9 @@ import express from "express"
 import { Server } from "socket.io"
 import Message from "../model/message.model";
 import User from "../model/user.model";
+import dotenv from "dotenv"
 
-
+dotenv.config()
 
 declare module "socket.io" {
     interface Socket {
@@ -18,10 +19,16 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: process.env.FORNTEND_URL,
+        origin: process.env.FRONTEND_URL,
         credentials: true,
     },
 });
+//  {
+//     cors: {
+//         origin: process.env.FORNTEND_URL,
+//         credentials: true,
+//     },
+//  }
 
 const onlineUsers = new Map()
 io.on("connection", (socket) => {
