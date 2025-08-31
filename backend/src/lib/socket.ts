@@ -23,12 +23,6 @@ const io = new Server(server, {
         credentials: true,
     },
 });
-//  {
-//     cors: {
-//         origin: process.env.FORNTEND_URL,
-//         credentials: true,
-//     },
-//  }
 
 const onlineUsers = new Map()
 io.on("connection", (socket) => {
@@ -37,14 +31,11 @@ io.on("connection", (socket) => {
         socket.userId = userId
         onlineUsers.set(userId, socket.id)
         socket.join(userId)
-        console.log(Array.from(onlineUsers.keys()))
         io.emit("online-users", Array.from(onlineUsers.keys()))
     })
 
     socket.on("send-message", async ({ senderId, receiverId, message, }) => {
         const createdMessage = await Message.create({ sender: senderId, receiver: receiverId, message })
-
-
         const newMessage = await createdMessage.populate([
             { path: "sender", select: "id name" },
             { path: "receiver", select: "id name" }
@@ -85,7 +76,7 @@ io.on("connection", (socket) => {
     //For Group Chat 
     socket.on("join-group", ({ groupId, userId }) => {
         socket.join(groupId)
-        console.log(`User ${userId} joined group ${groupId}`);
+
     })
     socket.on("send-message-group", async ({ groupId, senderId, message }) => {
         try {
