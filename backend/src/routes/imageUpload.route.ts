@@ -1,6 +1,6 @@
 import express from "express"
 import mongoose from "mongoose"
-import fs from "fs"
+import fs from 'fs/promises'
 import cloudinary, { upload } from "../lib/cloundinary"
 import User, { IUser } from "../model/user.model"
 import Group from "../model/group.model"
@@ -30,12 +30,17 @@ imageRouter.post('/upload/user/:id', upload.single('avatar'), async (req, res) =
         }
 
         const uploaded = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
-        console.log("uploaded")
         user.avatar = uploaded.secure_url;
         user.avatarPublicId = uploaded.public_id
         await user.save()
-        fs.unlinkSync(images.path)
-        res.status(201).json(user)
+        try {
+            await fs.unlink(images.path)
+        } catch (error) {
+            if (error instanceof Error)
+                console.warn("Tem file not deleted .", + error.message)
+        }
+
+        return res.status(201).json(user)
 
     } catch (error) {
         if (error instanceof Error)
@@ -53,26 +58,36 @@ imageRouter.post('/upload/group/:id', upload.single('avatar'), async (req, res) 
     }
 
     if (!images) {
-        res.status(400).json("Image not found.")
-        return;
+        return res.status(400).json("Image not found.")
+
     }
     try {
         const group = await Group.findById(id)
         if (!group) {
-            res.status(400).json("Invalid userId!")
-            return;
+            return res.status(400).json("Invalid userId!")
+
         }
         if (group.avatarPublicId) {
-            await cloudinary.uploader.destroy(group.avatarPublicId)
-            console.log("delete old photo from cloudinary.")
+            try {
+                await cloudinary.uploader.destroy(group.avatarPublicId)
+                console.log("delete old photo from cloudinary.")
+            } catch (error) {
+                console.warn("Failed to delete old image " + error)
+            }
+
         }
 
         const uploaded = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
         group.avatar = uploaded.secure_url;
         group.avatarPublicId = uploaded.public_id
         await group.save()
-        fs.unlinkSync(images.path)
-        res.status(201).json(group)
+        try {
+            await fs.unlink(images.path)
+        } catch (error) {
+            if (error instanceof Error)
+                console.warn("Tem file not deleted .", + error.message)
+        }
+        return res.status(201).json(group)
 
     } catch (error) {
         if (error instanceof Error)
