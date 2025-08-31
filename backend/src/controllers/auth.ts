@@ -29,6 +29,8 @@ export const createUser = async (req: Request, res: Response) => {
 
         res.cookie("token", token, {
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -62,6 +64,8 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ id: userExit._id }, process.env.SECRET_KEY as string, { expiresIn: "7d" })
         res.cookie("token", token, {
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
         res.status(200).json({ message: "User logged in.", user: userExit })
