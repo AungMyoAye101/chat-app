@@ -2,7 +2,7 @@ import { axiosInstance } from "@/lib/axios.config"
 import { formatChatTime } from "@/lib/helper"
 import { socket } from "@/lib/socket"
 import type { GroupTypes } from "@/lib/types"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useParams, } from "react-router-dom"
 
 import ImageBox from "@/components/ImageBox"
@@ -38,9 +38,10 @@ const GroupChat = () => {
 
     const [message, setMessage] = useState('')
     const [isTyping, setIsTyping] = useState(false)
+    //useRef hook for perfomance
     const containerRef = useRef<HTMLDivElement>(null) //for autoscrolling to bottom 
-
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null) //for auto sending stop typing
+    const fetchRef = useRef(false) //for preventing duplicate api call
     const { groupId } = useParams()
 
     const { user } = useAuth()
@@ -48,21 +49,24 @@ const GroupChat = () => {
 
     const navigate = useNavigate()
     //Get group or user 
-    const getGroupMessage = async () => {
+    const getGroupMessage = useCallback(async () => {
+        console.log("getting group message")
         const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
-
         setReceivedData(res.data)
+    }, [])
 
-    }
-
+    const getGroup = useCallback(async () => {
+        console.log("getting group")
+        const res = await axiosInstance.get(`/api/group/${groupId}`)
+        setGroup(res.data.group)
+    }, [])
 
     useEffect(() => {
-        const getGroup = async () => {
-            const res = await axiosInstance.get(`/api/group/${groupId}`)
-            setGroup(res.data.group)
-        }
+        if (fetchRef.current) return;
+        fetchRef.current = true
         getGroup()
         getGroupMessage()
+        console.log('fetching.....')
     }, [groupId])
 
     useEffect(() => {

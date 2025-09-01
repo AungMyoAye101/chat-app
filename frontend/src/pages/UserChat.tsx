@@ -7,7 +7,7 @@ import { formatChatTime, formatLastSeen } from '@/lib/helper';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { socket } from '@/lib/socket';
 import type { MessageType, UserType } from '@/lib/types';
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 
@@ -26,23 +26,27 @@ const UserChat = () => {
     const { userId } = useParams()
     const { user } = useAuth()
     const { isMobile } = useLayout()
+
+    //use ref hook for performace 
     const containerRef = useRef<HTMLDivElement>(null) //for autoscrolling to bottom 
     const timeoutRef = useRef<NodeJS.Timeout | null>(null) //for typing timeout ref
+    const fetchRef = useRef(false)
     const navigate = useNavigate()
     const currUserId = user?._id
 
 
-    const getUser = async () => {
+    const getUser = useCallback(async () => {
+        console.log("getting user....")
         if (userId) {
             const res = await axiosInstance.get("/api/user/" + userId)
             setSelectedUser(res.data)
         }
     }
-
+        , [])
 
 
     const getMessage = async () => {
-
+        console.log("getting message....")
         const res = await axiosInstance.get(`/api/messages/${userId}`)
         setReceivedData(res.data)
     }
@@ -50,6 +54,9 @@ const UserChat = () => {
 
 
     useEffect(() => {
+        if (fetchRef.current) return
+        fetchRef.current = true
+        console.log("fetching...")
         getUser()
         getMessage()
     }, [userId])
