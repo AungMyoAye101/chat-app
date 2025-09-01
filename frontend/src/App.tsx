@@ -12,7 +12,6 @@ import UserDeatil from './pages/UserDeatil';
 import UserChat from './pages/UserChat';
 import GroupChat from './pages/GroupChat';
 import DefaultChat from './pages/DefaultChat';
-import UpdateUser from './pages/UpdateUser';
 import { useDispatch, } from 'react-redux';
 import type { AppDispatch, } from './lib/auth/store';
 import { useEffect } from 'react';
@@ -55,7 +54,6 @@ const App = () => {
           <Route path='/chat/group/:groupId' element={<GroupChat />} />
         </Route>
         <Route path='/user/:userId' element={<UserDeatil />} />
-        <Route path='/user/update/:userId' element={<UpdateUser />} />
         <Route path='/create-group' element={<Group />} />
         <Route path='/group/:groupId' element={<GroupDeatil />} />
         <Route path='/group/update/:groupId' element={<UpdateGroup />} />

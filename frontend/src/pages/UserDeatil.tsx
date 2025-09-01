@@ -47,8 +47,6 @@ const UserDeatil = () => {
 
     return (
         <section className=' mt-12  h-[calc(100vh-4rem)] py-12  '>
-
-
             < div className="max-w-2xl mx-auto  px-4 py-6 bg-white shadow rounded-lg  border border-neutral-200 mt-4 flex flex-col gap-4 " >
                 < h1 className='text-lg font-serif text-neutral-600 font-semibold ' > User info</h1 >
 

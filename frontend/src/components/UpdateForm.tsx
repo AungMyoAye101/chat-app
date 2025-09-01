@@ -1,4 +1,4 @@
-import React, { useRef, type FC } from 'react'
+import React, { useRef, useState, type FC } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from './UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '@/lib/auth/store'
 import { fetchUser } from '@/lib/auth/authSlice'
 import { useAuth } from '@/lib/hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 interface UpdateUserType {
     name: string,
@@ -18,9 +19,9 @@ interface UpdateUserPropType {
 }
 
 const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
-
     const containerRef = useRef<HTMLFormElement | null>(null) // for handle click outside
 
+    const [errorMessage, setErrorMessage] = useState('') // for rendering error message
 
     const { register, handleSubmit, formState: { errors } } = useForm<UpdateUserType>({
         defaultValues: {
@@ -36,9 +37,12 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
         try {
             axiosInstance.put(`/api/user/update/${user?._id}`, data)
             dispatch(fetchUser())
-
+            onClose()
         } catch (error) {
             console.log(error)
+            if (error instanceof Error) {
+                setErrorMessage(error.message)
+            }
         }
     })
 
@@ -52,6 +56,9 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
 
             <form onSubmit={onSubmit} className='bg-white border-2 border-purple-400 rounded-lg px-4 py-6 flex flex-col gap-4 min-w-xs' ref={containerRef}>
                 <h1 className='text-2xl font-semibold font-serif text-center'>Update</h1>
+                {
+                    errorMessage && <p className='text-red-400 text-sm font-serif'>{errorMessage}</p>
+                }
                 <div className='flex flex-col gap-1'>
                     <label htmlFor="name" className='font-medium text-neutral-600'>Name</label>
                     <input
