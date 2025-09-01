@@ -5,6 +5,14 @@ import fs from "fs"
 import dotenv from "dotenv"
 dotenv.config()
 
+console.log(
+    {
+        cloud_name: process.env.CLOUNDINARY_NAME,
+        api_key: process.env.CLOUNDINARY_API_key,
+        api_secret: process.env.CLOUNDINARY_API_SECRECT
+    }
+
+)
 cloudinary.config({
     cloud_name: process.env.CLOUNDINARY_NAME,
     api_key: process.env.CLOUNDINARY_API_key,
