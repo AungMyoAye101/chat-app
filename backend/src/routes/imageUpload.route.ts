@@ -21,12 +21,17 @@ imageRouter.post('/upload/user/:id', upload.single('avatar'), async (req, res) =
     try {
         const user = await User.findById(id)
         if (!user) {
-            res.status(400).json("Invalid userId!")
-            return;
+            return res.status(400).json("Invalid userId!")
+
         }
         if (user.avatarPublicId) {
-            await cloudinary.uploader.destroy(user.avatarPublicId)
-            console.log("delete old photo from cloudinary.")
+            try {
+                await cloudinary.uploader.destroy(user.avatarPublicId)
+                console.log("delete old photo from cloudinary.")
+            } catch (error) {
+                console.warn("Faild to delete old photo", error)
+            }
+
         }
 
         const uploaded = await cloudinary.uploader.upload(images.path, { folder: "chat-app/profile" })
@@ -45,7 +50,7 @@ imageRouter.post('/upload/user/:id', upload.single('avatar'), async (req, res) =
     } catch (error) {
         if (error instanceof Error)
             console.log(error.message)
-        res.status(500).json("internal server error.")
+        return res.status(500).json("internal server error.")
     }
 
 })

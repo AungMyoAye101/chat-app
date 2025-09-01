@@ -16,6 +16,7 @@ interface PropsType {
 let url: string;
 const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
     const [image, setImage] = useState<File | undefined>(undefined)
+    const [errorMessage, setErrorMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const dispatch: AppDispatch = useDispatch()
     const containerRef = useRef<HTMLFormElement | null>(null)
@@ -39,6 +40,7 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
         } catch (error) {
             if (error instanceof Error) {
                 console.log(error.message)
+                setErrorMessage(error.message)
             }
 
         } finally {
@@ -64,7 +66,9 @@ const ImageUpload = ({ id, onClose, img, type }: PropsType) => {
                 className=" rounded-xl border-3 border-purple-400 flex flex-col py-8 px-6 items-center gap-5 bg-white shadow-lg  h-fit">
                 <h1 className="font-semibold text-lg font-serif">Select photo to upload</h1>
 
-
+                {
+                    errorMessage && <p className="text-red-400 ">{errorMessage}</p>
+                }
 
                 <label htmlFor="profile" className="relative" >
 
