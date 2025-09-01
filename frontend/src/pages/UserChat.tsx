@@ -36,7 +36,6 @@ const UserChat = () => {
 
 
     const getUser = useCallback(async () => {
-        console.log("getting user....")
         if (userId) {
             const res = await axiosInstance.get("/api/user/" + userId)
             setSelectedUser(res.data)
@@ -46,7 +45,6 @@ const UserChat = () => {
 
 
     const getMessage = async () => {
-        console.log("getting message....")
         const res = await axiosInstance.get(`/api/messages/${userId}`)
         setReceivedData(res.data)
     }
@@ -56,7 +54,6 @@ const UserChat = () => {
     useEffect(() => {
         if (fetchRef.current) return
         fetchRef.current = true
-        console.log("fetching...")
         getUser()
         getMessage()
     }, [userId])

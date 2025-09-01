@@ -50,13 +50,11 @@ const GroupChat = () => {
     const navigate = useNavigate()
     //Get group or user 
     const getGroupMessage = useCallback(async () => {
-        console.log("getting group message")
         const res = await axiosInstance.get(`/api/messages/group/${groupId}`)
         setReceivedData(res.data)
     }, [])
 
     const getGroup = useCallback(async () => {
-        console.log("getting group")
         const res = await axiosInstance.get(`/api/group/${groupId}`)
         setGroup(res.data.group)
     }, [])
@@ -66,7 +64,6 @@ const GroupChat = () => {
         fetchRef.current = true
         getGroup()
         getGroupMessage()
-        console.log('fetching.....')
     }, [groupId])
 
     useEffect(() => {

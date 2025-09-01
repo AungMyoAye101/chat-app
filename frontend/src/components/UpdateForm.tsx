@@ -1,12 +1,11 @@
 import React, { useRef, useState, type FC } from 'react'
 import { useForm } from 'react-hook-form'
-import Button from './UI/Button'
 import { axiosInstance } from '@/lib/axios.config'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '@/lib/auth/store'
 import { fetchUser } from '@/lib/auth/authSlice'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
+
 
 interface UpdateUserType {
     name: string,
@@ -22,7 +21,7 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
     const containerRef = useRef<HTMLFormElement | null>(null) // for handle click outside
 
     const [errorMessage, setErrorMessage] = useState('') // for rendering error message
-
+    const [isLoading, setIsLoading] = useState(false) // for loading indicator
     const { register, handleSubmit, formState: { errors } } = useForm<UpdateUserType>({
         defaultValues: {
             name: updateUser.name,
@@ -34,6 +33,7 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
     const { user } = useAuth()
 
     const onSubmit = handleSubmit((data) => {
+        setIsLoading(true)
         try {
             axiosInstance.put(`/api/user/update/${user?._id}`, data)
             dispatch(fetchUser())
@@ -43,6 +43,8 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
             if (error instanceof Error) {
                 setErrorMessage(error.message)
             }
+        } finally {
+            setIsLoading(false)
         }
     })
 
@@ -84,7 +86,7 @@ const UpdateForm: FC<UpdateUserPropType> = ({ onClose, updateUser }) => {
                         errors.email && <p className='text-sm text-red-500'>{errors.email.message}</p>
                     }
                 </div>
-                <Button type='submit'>update</Button>
+                <button className={` px-4 py-2 font-serif text-white rounded-md ${isLoading ? "bg-neutral-400 cursor-pointer" : "bg-purple-500 cursor-wait"}`}> {isLoading ? "Updating" : "Update"}</button>
 
             </form>
         </section>

@@ -37,9 +37,9 @@ const Home = () => {
     return (
 
 
-        <div className='flex  h-[90vh] mt-12  '>
+        <div className='flex  h-[calc(100dvh-4rem)] mt-12  '>
             {
-                (!isMobile || !isChatRoute) && <div className='min-w-xs w-full max-w-sm mx-auto bg-white/90   shadow-md h-full  px-4 py-6 flex flex-col border-r border-neutral-300'>
+                (!isMobile || !isChatRoute) && <div className='w-full md:max-w-sm bg-white/90   shadow-md h-full   py-4 flex flex-col border-r border-neutral-300'>
                     <div className='space-y-2 py-4'>
                         <Search />
                     </div>
