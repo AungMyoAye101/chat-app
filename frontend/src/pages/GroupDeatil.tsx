@@ -33,6 +33,9 @@ const GroupDeatil = () => {
 
     const navigate = useNavigate()
 
+
+    const isMember = group.members.some(m => m._id === user?._id)
+
     const handleClickOutside = (event: MouseEvent) => {
         if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
             setIsEditGroupModalOpen(false)
@@ -73,8 +76,8 @@ const GroupDeatil = () => {
     }
 
 
-    const navigateToChat = (userId: string) => {
-        const isMember = group.members.some(m => m._id === userId)
+    const navigateToChat = () => {
+
         if (isMember) {
             navigate(`/chat/group/${groupId}`)
         } else {
@@ -109,7 +112,7 @@ const GroupDeatil = () => {
                             className="bg-blue-500 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition-colors">
                             Set Photo
                         </button>
-                        <button onClick={() => navigateToChat(user?._id!)}
+                        <button onClick={() => navigateToChat()}
                             className="bg-gray-200  px-3 py-1.5 rounded-md hover:bg-blue-200 transition-colors">
                             Send message
 
@@ -133,7 +136,9 @@ const GroupDeatil = () => {
                 <div className="flex justify-between items-center  p-4">
 
                     <h2 className="text-xl font-semibold font-serif">Members</h2>
-                    <Link to={`/group/update/${groupId}/add-members`} className="bg-green-500  text-white px-4 py-1.5 rounded-md ">Add members</Link>
+                    {
+                        isMember ? <Link to={`/group/update/${groupId}/add-members`} className="bg-green-500  text-white px-4 py-1.5 rounded-md ">Add members</Link> : <Link to={`/group/update/${groupId}/add-members`} className="bg-green-500  text-white px-4 py-1.5 rounded-md ">Join Group</Link>
+                    }
                 </div>
                 <div className="flex-1 overflow-hidden overflow-y-scroll flex flex-col gap-4 p-4 scroll-smooth">
 

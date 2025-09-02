@@ -40,7 +40,7 @@ const Home = () => {
         <div className='flex  h-[calc(100dvh-4rem)] mt-12  '>
             {
                 (!isMobile || !isChatRoute) && <div className='w-full md:max-w-sm bg-white/90   shadow-md h-full   py-4 flex flex-col border-r border-neutral-300'>
-                    <div className='space-y-2 py-4'>
+                    <div className='space-y-2 py-4 '>
                         <Search />
                     </div>
                     <div className=' flex-1  overflow-hidden  overflow-y-scroll no-scrollbar'>

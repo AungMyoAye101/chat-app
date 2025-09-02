@@ -94,7 +94,7 @@ const Search = () => {
     return (
         <section className='relative  flex items-center  flex-1   '>
 
-            <form className='w-full flex bg-neutral-200 rounded-full overflow-hidden'>
+            <form className='w-full flex bg-neutral-200 rounded-full overflow-hidden mx-4'>
                 <input
                     type="text"
                     value={searchText}
@@ -106,7 +106,7 @@ const Search = () => {
             </form>
             {
                 openSearchBox &&
-                <div className='absolute  top-12  w-full z-20'>
+                <div className='absolute  top-12  w-full z-20 '>
                     {
                         isLoading ? <UserLoadingUi /> : renderResultData
 
