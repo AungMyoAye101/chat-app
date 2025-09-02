@@ -18,6 +18,7 @@ const UserList = () => {
         const fetchUser = async () => {
             try {
                 const res = await axiosInstance.get("/api/user")
+                console.log(res.data)
                 setUsers(res.data)
             } catch (error) {
                 if (error instanceof Error) console.log(error.message)
@@ -51,8 +52,10 @@ const UserList = () => {
                                 <div className={`absolute left-0 top-1 w-3 h-3 rounded-full ${onlineUsers.includes(user._id) ? "bg-green-400" : "bg-gray-400"} `}></div>
                             </div>
                             <div className="flex-1 flex justify-between items-center  ">
-
-                                <h1 className="font-serif font-medium ">{user.name}</h1>
+                                <div>
+                                    <h1 className="font-serif font-medium ">{user.name}</h1>
+                                    <p className="text-sm ">{user.lastMessage}</p>
+                                </div>
 
                                 {!onlineUsers.includes(user._id) && <div className="text-sm">{formatLastSeen(user.lastSeen)}</div>}
                             </div>

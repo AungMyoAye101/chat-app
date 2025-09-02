@@ -3,7 +3,8 @@ export interface UserType {
     name: string,
     email: string,
     avatar?: string,
-    lastSeen: string
+    lastSeen: string,
+    lastMessage?: string
 }
 
 export interface GroupTypes {
