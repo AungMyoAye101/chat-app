@@ -56,8 +56,14 @@ const UserList = () => {
                                     <h1 className="font-serif font-medium ">{user.name}</h1>
                                     <p className="text-sm ">{user.lastMessage}</p>
                                 </div>
+                                <div className="flex flex-col ">
 
-                                {!onlineUsers.includes(user._id) && <div className="text-sm">{formatLastSeen(user.lastSeen)}</div>}
+                                    {!onlineUsers.includes(user._id) && <div className="text-sm">{formatLastSeen(user.lastSeen)}</div>}
+                                    {
+                                        user.unreadMessage && user.unreadMessage > 0 && <p className="px-2 py-1 bg-neutral-300 rounded-xl w-fit self-end text-sm text-neutral-600">{user.unreadMessage}</p>
+                                    }
+
+                                </div>
                             </div>
 
                         </Link>

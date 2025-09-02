@@ -4,7 +4,8 @@ export interface UserType {
     email: string,
     avatar?: string,
     lastSeen: string,
-    lastMessage?: string
+    lastMessage?: string,
+    unreadMessage?: number
 }
 
 export interface GroupTypes {
