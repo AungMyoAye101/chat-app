@@ -40,7 +40,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
                                 }
                             }
                         },
-                        { $sort: { createAt: -1 } },
+                        { $sort: { createdAt: -1 } },
                         { $limit: 1 },
                         { $project: { message: 1 } }
                     ]

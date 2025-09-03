@@ -60,8 +60,11 @@ const UserList = () => {
 
                                     {!onlineUsers.includes(user._id) && <div className="text-sm">{formatLastSeen(user.lastSeen)}</div>}
                                     {
-                                        user.unreadMessage && user.unreadMessage > 0 && <p className="px-2 py-1 bg-neutral-300 rounded-xl w-fit self-end text-sm text-neutral-600">{user.unreadMessage}</p>
+                                        user?.unreadMessage! > 0 && <p className="px-2 py-1 bg-neutral-300 rounded-xl w-fit self-end text-sm text-neutral-600">{user.unreadMessage}</p>
                                     }
+                                    {/* {
+                                        user.unreadMessage ? user.unreadMessage > 0 && <p className="px-2 py-1 bg-neutral-300 rounded-xl w-fit self-end text-sm text-neutral-600">{user.unreadMessage}</p> : null
+                                    } */}
 
                                 </div>
                             </div>

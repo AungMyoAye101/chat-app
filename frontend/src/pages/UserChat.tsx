@@ -84,14 +84,17 @@ const UserChat = () => {
         })
 
         socket.on("received-message", (data) => {
-            setReceivedData(pre => [...pre, data])
+
+            if (data.sender._id === currUserId && data.receiver._id === userId) {
+                setReceivedData(pre => [...pre, data])
+            }
+
         })
 
         // For typing indicator
         socket.on("isTyping", (data) => {
-            console.log(data)
-            if (data.receiverId === currUserId) {
 
+            if (data.receiverId === currUserId) {
                 setIsTyping(true)
             }
         })
