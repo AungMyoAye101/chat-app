@@ -65,7 +65,7 @@ const Search = () => {
 
 
     const renderResultData = searchResult.groups.length === 0 && searchResult.users.length === 0
-        ? <div className='bg-neutral-200 border border-neutral-200 shadow rounded-lg h-[calc(100vh-150px)] flex justify-center items-center'>
+        ? <div className='bg-neutral-200 border border-neutral-200 shadow rounded-lg h-[calc(100vh-150px)] flex justify-center items-center overflow-hidden overscroll-y-auto no-scrollbar'>
             <p className='font-serif font-medium text-lg'>No users or groups found!</p>
         </div>
         : <div className='flex flex-col gap-2 bg-neutral-200 border border-neutral-200 shadow rounded-lg p-4'>
