@@ -6,6 +6,7 @@ import { formatLastSeen } from "@/lib/helper"
 import { Link } from "react-router-dom"
 import { socket } from "@/lib/socket"
 import ImageBox from "./ImageBox"
+import UserLoadingUi from "./UI/UserLoadingUi"
 
 
 
@@ -14,14 +15,18 @@ const UserList = () => {
     const [users, setUsers] = useState<UserType[]>([])
     const [onlineUsers, setOnlineUsers] = useState<string[]>([])
 
+    const [isLoading, setIsLoading] = useState(false)
+
     useEffect(() => {
         const fetchUser = async () => {
+            setIsLoading(true)
             try {
                 const res = await axiosInstance.get("/api/user")
-                console.log(res.data)
                 setUsers(res.data)
             } catch (error) {
                 if (error instanceof Error) console.log(error.message)
+            } finally {
+                setIsLoading(false)
             }
 
         }
@@ -43,7 +48,7 @@ const UserList = () => {
         <section className="">
             <div className='flex flex-col'>
                 {
-                    users.map(user => (
+                    isLoading ? <UserLoadingUi /> : users.map(user => (
                         <Link to={`/chat/user/${user._id}`} className='flex gap-2 px-4 py-2 cursor-pointer hover:bg-gray-200' key={user._id} >
 
                             <div className="relative ">
@@ -62,9 +67,6 @@ const UserList = () => {
                                     {
                                         user?.unreadMessage! > 0 && <p className="px-2 py-1 bg-neutral-300 rounded-xl w-fit self-end text-sm text-neutral-600">{user.unreadMessage}</p>
                                     }
-                                    {/* {
-                                        user.unreadMessage ? user.unreadMessage > 0 && <p className="px-2 py-1 bg-neutral-300 rounded-xl w-fit self-end text-sm text-neutral-600">{user.unreadMessage}</p> : null
-                                    } */}
 
                                 </div>
                             </div>
